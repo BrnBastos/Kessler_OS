@@ -56,16 +56,38 @@ export function ObjectPassportScreen({ objectId }: ObjectPassportScreenProps) {
                 description="The passport collects technical metadata, confidence labels, deterministic scores and the recommended next action for a single orbital object."
                 action={
                   isDesktop ? (
-                    <Button variant="secondary" onPress={() => router.push('/orbit')}>
-                      Back to Orbit
-                    </Button>
+                    <View style={styles.heroActions}>
+                      <Button variant="secondary" onPress={() => router.push('/orbit')}>
+                        Back to Orbit
+                      </Button>
+                      <Button
+                        onPress={() =>
+                          router.push({
+                            pathname: '/missions',
+                            params: { objectId: object.id },
+                          })
+                        }>
+                        Simulate Mission
+                      </Button>
+                    </View>
                   ) : undefined
                 }
               />
               {!isDesktop && (
-                <Button variant="secondary" onPress={() => router.push('/orbit')}>
-                  Back to Orbit
-                </Button>
+                <View style={styles.heroActions}>
+                  <Button variant="secondary" onPress={() => router.push('/orbit')}>
+                    Back to Orbit
+                  </Button>
+                  <Button
+                    onPress={() =>
+                      router.push({
+                        pathname: '/missions',
+                        params: { objectId: object.id },
+                      })
+                    }>
+                    Simulate Mission
+                  </Button>
+                </View>
               )}
             </View>
 
@@ -112,6 +134,12 @@ const styles = StyleSheet.create({
   },
   hero: {
     gap: spacing[5],
+  },
+  heroActions: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing[3],
   },
   grid: {
     gap: spacing[5],

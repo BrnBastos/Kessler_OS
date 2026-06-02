@@ -1,6 +1,13 @@
 import { DataConfidence } from './orbital-object';
 
-export type MissionType = 'avoidance' | 'inspection' | 'deorbit' | 'recovery';
+export type MissionType =
+  | 'monitor'
+  | 'inspect'
+  | 'avoid'
+  | 'deorbit'
+  | 'move_to_safer_orbit'
+  | 'capture'
+  | 'recycle';
 export type MissionRiskLevel = 'low' | 'medium' | 'high';
 
 export interface MissionScenario {

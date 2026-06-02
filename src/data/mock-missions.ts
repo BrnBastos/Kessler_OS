@@ -10,7 +10,7 @@ export const mockMissions: MissionScenario[] = [
     objective: 'Inspect attitude, tumble state and potential capture points before any removal plan.',
     riskLevel: 'medium',
     targetObjectId: 'obj-envisat',
-    type: 'inspection',
+    type: 'inspect',
   },
   {
     dataConfidence: 'simulated',
@@ -32,6 +32,6 @@ export const mockMissions: MissionScenario[] = [
     objective: 'Compare a low-disruption avoidance decision against maintaining mission operations.',
     riskLevel: 'low',
     targetObjectId: 'obj-hubble',
-    type: 'avoidance',
+    type: 'avoid',
   },
 ];

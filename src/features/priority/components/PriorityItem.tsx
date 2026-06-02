@@ -77,7 +77,14 @@ export function PriorityItem({ object, rank }: PriorityItemProps) {
           }>
           Open Passport
         </Button>
-        <Button size="small" onPress={() => router.push('/missions')}>
+        <Button
+          size="small"
+          onPress={() =>
+            router.push({
+              pathname: '/missions',
+              params: { objectId: object.id },
+            })
+          }>
           Simulate Mission
         </Button>
       </View>
