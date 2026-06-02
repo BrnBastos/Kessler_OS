@@ -1,6 +1,6 @@
 <div align="center">
 
-# OrbitForge
+# Kessler Platform
 
 ### Inteligência orbital para risco, prevenção e economia circular do lixo espacial.
 
@@ -12,11 +12,11 @@
 
 ## 1. Ideia central
 
-O **OrbitForge** é uma plataforma web para explorar o problema do lixo espacial de forma visual, inteligente e prática.
+O **KesslerOS** é uma plataforma web para explorar o problema do lixo espacial de forma visual, inteligente e prática.
 
 A aplicação não tenta substituir empresas, agências ou sistemas profissionais de rastreamento orbital. A proposta é outra: criar uma camada acessível de **visualização, educação, análise de risco, simulação e reaproveitamento** em cima de dados e conceitos reais da área espacial.
 
-Hoje, boa parte da conversa sobre lixo espacial gira em torno de remover ou monitorar objetos. O OrbitForge amplia essa visão:
+Hoje, boa parte da conversa sobre lixo espacial gira em torno de remover ou monitorar objetos. O KesslerOS amplia essa visão:
 
 > E se o lixo espacial não fosse apenas um risco, mas também o primeiro estoque de matéria-prima da economia espacial?
 
@@ -55,7 +55,7 @@ Cuidar da órbita também é cuidar da infraestrutura invisível que sustenta pa
 
 Já existem iniciativas para rastrear, prevenir e remover detritos. Mas a ideia de transformar parte desse material em recurso ainda é pouco madura.
 
-O OrbitForge entra nesse espaço: ele olha para o lixo espacial como **risco técnico** e também como **possível recurso futuro**.
+O KesslerOS entra nesse espaço: ele olha para o lixo espacial como **risco técnico** e também como **possível recurso futuro**.
 
 ---
 
@@ -76,7 +76,7 @@ O OrbitForge entra nesse espaço: ele olha para o lixo espacial como **risco té
 
 ## 4. Posicionamento do projeto
 
-O OrbitForge deve ser apresentado como um **protótipo acadêmico de inteligência orbital**, não como uma solução operacional para segurança espacial real.
+O KesslerOS deve ser apresentado como um **protótipo acadêmico de inteligência orbital**, não como uma solução operacional para segurança espacial real.
 
 ### O que o projeto não promete
 
@@ -99,7 +99,7 @@ Esse cuidado deixa a ideia mais honesta e mais forte.
 
 # 5. Produto
 
-O OrbitForge pode ser desenvolvido como um **web app em Next.js**, com navegação simples e visual limpo.
+O KesslerOS pode ser desenvolvido como um **web app em Next.js**, com navegação simples e visual limpo.
 
 A experiência ideal parece menos com um sistema burocrático e mais com um painel moderno de exploração: poucas palavras por tela, dados bem distribuídos, gráficos discretos, mapa em destaque e explicações claras.
 
@@ -109,7 +109,7 @@ A experiência ideal parece menos com um sistema burocrático e mais com um pain
 
 ### Papel na aplicação
 
-Apresentar o problema e posicionar o OrbitForge.
+Apresentar o problema e posicionar o KesslerOS.
 
 A Home deve funcionar como a porta de entrada da ideia. O usuário precisa entender em poucos segundos que lixo espacial é um problema real, atual e ligado ao futuro da economia espacial.
 
@@ -267,13 +267,13 @@ A ideia não é criar um sistema real de segurança espacial, mas demonstrar com
 
 ### Valor
 
-Essa página conecta o OrbitForge ao problema de congestionamento orbital. Ela mostra que o desafio não é apenas ter muitos objetos em órbita, mas entender quais deles exigem atenção primeiro.
+Essa página conecta o KesslerOS ao problema de congestionamento orbital. Ela mostra que o desafio não é apenas ter muitos objetos em órbita, mas entender quais deles exigem atenção primeiro.
 
 ---
 
 # 6. Núcleo inteligente
 
-O coração do OrbitForge está nos scores. Eles transformam dados técnicos em decisões simples.
+O coração do KesslerOS está nos scores. Eles transformam dados técnicos em decisões simples.
 
 ---
 
@@ -313,7 +313,7 @@ O Risk Score simplifica a leitura técnica. Ele ajuda o usuário a entender rapi
 
 Estimar o potencial de reaproveitamento de um objeto.
 
-Esse é o ponto mais autoral do OrbitForge.
+Esse é o ponto mais autoral do KesslerOS.
 
 ### Critérios possíveis
 
@@ -337,7 +337,7 @@ Esse é o ponto mais autoral do OrbitForge.
 
 A maioria das soluções olha para detritos como ameaça. O Forge Value Score propõe outra camada: detritos como matéria-prima.
 
-É aqui que o OrbitForge deixa de ser apenas um rastreador e vira uma plataforma de economia circular espacial.
+É aqui que o KesslerOS deixa de ser apenas um rastreador e vira uma plataforma de economia circular espacial.
 
 ---
 
@@ -370,7 +370,7 @@ Orbital Priority Score =
 
 ### Valor
 
-A fila de prioridade é o cérebro da aplicação. Ela mostra que o OrbitForge não apenas exibe dados; ele organiza decisões.
+A fila de prioridade é o cérebro da aplicação. Ela mostra que o KesslerOS não apenas exibe dados; ele organiza decisões.
 
 ---
 
@@ -430,7 +430,7 @@ A plataforma não remove lixo espacial de verdade. Ela mostra como uma decisão 
 
 ### Valor
 
-O simulador transforma a ideia em ação. Ele mostra como o OrbitForge poderia apoiar decisões estratégicas sobre remoção, inspeção e reaproveitamento.
+O simulador transforma a ideia em ação. Ele mostra como o KesslerOS poderia apoiar decisões estratégicas sobre remoção, inspeção e reaproveitamento.
 
 ---
 
@@ -465,7 +465,7 @@ Essa é a parte mais inovadora do produto.
 
 ### Valor
 
-O laboratório apresenta a visão mais forte do OrbitForge:
+O laboratório apresenta a visão mais forte do KesslerOS:
 
 > transformar lixo espacial em cadeia de suprimentos orbital.
 
@@ -494,7 +494,7 @@ Explicar as decisões do sistema em linguagem natural.
 
 ### Valor
 
-A IA torna o sistema mais claro. Em vez de entregar apenas números, o OrbitForge mostra o raciocínio por trás da recomendação.
+A IA torna o sistema mais claro. Em vez de entregar apenas números, o KesslerOS mostra o raciocínio por trás da recomendação.
 
 Isso ajuda muito na defesa do projeto.
 
@@ -682,7 +682,7 @@ O MVP deve ser grande o suficiente para parecer completo, mas simples o bastante
 
 # 17. Por que funciona para Engenharia de Software
 
-O OrbitForge permite demonstrar várias áreas do curso em uma única solução.
+O KesslerOS permite demonstrar várias áreas do curso em uma única solução.
 
 | Área | Aplicação no projeto |
 |---|---|
@@ -700,7 +700,7 @@ O OrbitForge permite demonstrar várias áreas do curso em uma única solução.
 
 # 18. Diferencial
 
-O OrbitForge não é apenas um mapa de lixo espacial.
+O KesslerOS não é apenas um mapa de lixo espacial.
 
 Ele combina:
 
@@ -724,13 +724,13 @@ A visão final é simples:
 
 # 19. Pitch
 
-> **OrbitForge** é uma plataforma web de inteligência orbital que usa dados públicos, IA e simulação para visualizar lixo espacial, estimar riscos, priorizar detritos críticos e explorar como esses materiais poderiam ser reaproveitados em uma futura economia circular espacial.
+> **KesslerOS** é uma plataforma web de inteligência orbital que usa dados públicos, IA e simulação para visualizar lixo espacial, estimar riscos, priorizar detritos críticos e explorar como esses materiais poderiam ser reaproveitados em uma futura economia circular espacial.
 
 ---
 
 # 20. Versão curta para apresentar
 
-O OrbitForge ajuda a entender e priorizar o problema do lixo espacial. A plataforma mostra objetos em órbita, calcula risco, sugere prioridade de atenção e estima como certos detritos poderiam ser reaproveitados no futuro.
+O KesslerOS ajuda a entender e priorizar o problema do lixo espacial. A plataforma mostra objetos em órbita, calcula risco, sugere prioridade de atenção e estima como certos detritos poderiam ser reaproveitados no futuro.
 
 A proposta une conscientização, rastreamento, controle de tráfego, simulação de remoção e economia circular em uma experiência interativa.
 
@@ -752,7 +752,7 @@ O protótipo não pretende remover lixo espacial fisicamente. Ele demonstra como
 
 <div align="center">
 
-## OrbitForge
+## KesslerOS
 
 **Transformando lixo espacial em inteligência orbital.**
 
