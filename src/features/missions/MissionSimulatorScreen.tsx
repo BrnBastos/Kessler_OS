@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Badge, Card, DataSourceNotice, Metric, SectionHeader } from '@/components/ui';
+import { Badge, Button, Card, DataSourceNotice, Metric, SectionHeader } from '@/components/ui';
 import { MissionType } from '@/domain/models';
 import {
   getOrbitalObjectRepositoryStatus,
@@ -12,9 +12,16 @@ import {
 } from '@/domain/repositories';
 import { estimateMission, missionProfiles, ScoredOrbitalObject } from '@/domain/scoring';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
+import {
+  listSavedMissionScenarios,
+  removeSavedMissionScenario,
+  saveMissionScenario,
+  SavedMissionScenario,
+} from '@/services/persistence';
 import { colors, layout, spacing, typography } from '@/theme';
 
 import { MissionResultPanel } from './components/MissionResultPanel';
+import { SavedMissionScenarios } from './components/SavedMissionScenarios';
 import { MissionSimulatorForm } from './components/MissionSimulatorForm';
 
 const initialObjects = listScoredOrbitalObjects().sort(
@@ -38,12 +45,14 @@ export function MissionSimulatorScreen() {
     requestedObjectId ?? initialObjects[0]?.id
   );
   const [missionType, setMissionType] = useState<MissionType>(requestedMissionType);
+  const [savedScenarios, setSavedScenarios] = useState<SavedMissionScenario[]>([]);
+  const [persistenceMessage, setPersistenceMessage] = useState('Local persistence ready.');
 
   useEffect(() => {
     let isMounted = true;
 
-    loadScoredOrbitalObjects()
-      .then((result) => {
+    Promise.all([loadScoredOrbitalObjects(), listSavedMissionScenarios()])
+      .then(([result, scenarios]) => {
         if (!isMounted) {
           return;
         }
@@ -54,6 +63,7 @@ export function MissionSimulatorScreen() {
           )
         );
         setRepositoryStatus(result.status);
+        setSavedScenarios(scenarios);
       })
       .finally(() => {
         if (isMounted) {
@@ -78,6 +88,28 @@ export function MissionSimulatorScreen() {
   const removableCount = catalogObjects.filter((object) =>
     ['Inspect before removal', 'Prioritize removal'].includes(object.scores.priority.decision)
   ).length;
+
+  async function handleSaveScenario() {
+    if (!selectedObject || !result) {
+      return;
+    }
+
+    const nextScenarios = await saveMissionScenario(selectedObject, result);
+    setSavedScenarios(nextScenarios);
+    setPersistenceMessage('Scenario saved locally for comparison.');
+  }
+
+  async function handleRemoveScenario(scenarioId: string) {
+    const nextScenarios = await removeSavedMissionScenario(scenarioId);
+    setSavedScenarios(nextScenarios);
+    setPersistenceMessage('Saved scenario removed.');
+  }
+
+  function handleApplyScenario(scenario: SavedMissionScenario) {
+    setSelectedObjectId(scenario.objectId);
+    setMissionType(scenario.missionType);
+    setPersistenceMessage('Saved scenario loaded into the simulator.');
+  }
 
   return (
     <View style={styles.root}>
@@ -124,6 +156,13 @@ export function MissionSimulatorScreen() {
                 value={result ? result.feasibilityScore.toString() : '0'}
                 style={styles.metricCard}
               />
+              <Metric
+                detail="Stored on this device"
+                label="Saved scenarios"
+                tone="teal"
+                value={savedScenarios.length.toString()}
+                style={styles.metricCard}
+              />
             </View>
 
             <DataSourceNotice isLoading={isLoadingPublicData} status={repositoryStatus} />
@@ -141,6 +180,13 @@ export function MissionSimulatorScreen() {
                 </View>
 
                 <View style={styles.resultColumn}>
+                  <Card style={styles.saveCard} variant="action">
+                    <View style={styles.saveCopy}>
+                      <Text style={styles.saveTitle}>Current scenario</Text>
+                      <Text style={styles.saveBody}>{persistenceMessage}</Text>
+                    </View>
+                    <Button onPress={handleSaveScenario}>Save Scenario</Button>
+                  </Card>
                   <MissionResultPanel object={selectedObject} result={result} />
                 </View>
               </View>
@@ -153,6 +199,12 @@ export function MissionSimulatorScreen() {
                 </Text>
               </Card>
             )}
+
+            <SavedMissionScenarios
+              scenarios={savedScenarios}
+              onApplyScenario={handleApplyScenario}
+              onRemoveScenario={handleRemoveScenario}
+            />
           </View>
         </SafeAreaView>
       </ScrollView>
@@ -208,7 +260,28 @@ const styles = StyleSheet.create({
   },
   resultColumn: {
     flex: 1.05,
+    gap: spacing[5],
     minWidth: 0,
+  },
+  saveCard: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing[4],
+    justifyContent: 'space-between',
+  },
+  saveCopy: {
+    flex: 1,
+    gap: spacing[2],
+    minWidth: 220,
+  },
+  saveTitle: {
+    ...typography.h3,
+    color: colors.text.primary,
+  },
+  saveBody: {
+    ...typography.bodySmall,
+    color: colors.text.secondary,
   },
   emptyCard: {
     gap: spacing[2],
