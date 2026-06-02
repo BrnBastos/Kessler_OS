@@ -47,7 +47,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "qa": "npm run lint && npm run typecheck && npm run test",
-    "smoke:routes": "node scripts/route-smoke.mjs"
+    "smoke:routes": "node scripts/route-smoke.mjs",
+    "export:web": "expo export --platform web"
   },
   "private": true
 }

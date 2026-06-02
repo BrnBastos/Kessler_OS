@@ -20,6 +20,12 @@ With the Expo dev server running:
 npm run smoke:routes
 ```
 
+Before demo or static web handoff:
+
+```bash
+npm run export:web
+```
+
 ## Manual Route Smoke
 
 - `/`

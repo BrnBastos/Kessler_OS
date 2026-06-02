@@ -33,7 +33,7 @@ function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
       <Card style={styles.detailCard}>
         <Text style={styles.detailTitle}>Select an object to open details.</Text>
         <Text style={styles.detailBody}>
-          The next phase will turn this focused summary into a full object passport route.
+          Focus an object from the catalog or map to review scores, then open its full passport.
         </Text>
       </Card>
     );
