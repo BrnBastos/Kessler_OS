@@ -1,506 +1,284 @@
-# Kessler — Universal App Implementation Guide
+# Kessler - Expo Universal App Implementation Guide
 
-> **Kessler OS** means **Kessler Orbital System**.
+> **Space debris intelligence for a circular orbital future.**
 >
-> Kessler is a universal app for **iOS, Android and Web** that helps users understand space debris, evaluate orbital risk, simulate mission decisions and explore how orbital waste can become part of a circular space economy.
+> This guide is for the current **Expo React Native universal app** in this repository. Do not migrate this project to Next.js, Tailwind, Vercel, or a web-only architecture unless the team explicitly decides to restart the project.
 
 ---
 
-## 0. What this guide is for
+## 0. Product Intent
 
-This guide is meant to be used by a developer team, or by an AI coding assistant, to build Kessler from scratch.
+**Kessler OS** means **Kessler Orbital System**.
 
-The app must never be treated as a web-only dashboard. Every decision in this document assumes the product must run as:
+Kessler is a universal app for **iOS, Android, and Web** that helps users understand space debris, evaluate orbital risk, simulate mission decisions, and explore how orbital waste could become part of a circular space economy.
+
+The app is a **prototype and decision-support experience**, not a professional orbital safety tool.
+
+The app should help users answer five questions:
+
+1. **What is in orbit?**
+   Explore tracked, estimated, and simulated orbital objects.
+
+2. **Why does it matter?**
+   Explain debris prevention, end-of-life planning, passivation, disposal, and responsible orbital behavior.
+
+3. **Which objects deserve attention first?**
+   Score objects using transparent risk, reuse, and priority models.
+
+4. **What could we do about them?**
+   Simulate monitoring, inspection, avoidance, deorbit, capture, or recycling missions.
+
+5. **Can waste become infrastructure?**
+   Estimate reuse potential and frame debris as a possible future material source.
+
+The product should feel calm, technical, and premium: minimal interface, strong hierarchy, clear metrics, dark aerospace visual language, and honest labels for public, estimated, unknown, or simulated data.
+
+---
+
+## 1. Non-Negotiable Technical Direction
+
+This repository is an **Expo React Native app**, not a Next.js app.
+
+Use:
 
 ```txt
-iOS + Android + Web
+Expo SDK 56
+React Native
+Expo Router
+TypeScript
+React Native StyleSheet
+Custom design tokens
+Local mock data first
+Domain services and repositories before external APIs
+```
+
+Do **not** use:
+
+```txt
+Next.js App Router
+Tailwind CSS
+Server-only API routes as the main app architecture
+Vercel-only assumptions
+Desktop-only tables without mobile alternatives
+Hover-only interactions
+Web-only layouts
+```
+
+Every feature should work on:
+
+```txt
+iOS
+Android
+Web
 ```
 
 That means:
 
-- no hover-only interactions;
-- no desktop-only tables without mobile alternatives;
-- no fixed-width dashboards;
-- no features that only work on web;
-- no layout that breaks on small screens;
-- every major feature must have a phone, tablet and desktop behavior.
+- touch-first controls;
+- responsive layouts;
+- bottom navigation for phone/native;
+- top navigation only when useful on desktop web;
+- no dense table as the only way to use a feature;
+- no complex 3D dependency before the app is already useful.
 
 ---
 
-# 1. Product definition
+## 2. Current Project Setup
 
-## 1.1 Core idea
+The app has already been created with Expo and committed.
 
-Kessler turns the problem of space debris into an interactive intelligence platform.
+Current command style:
 
-The app combines:
+```bash
+npm install
+npm run start
+npm run ios
+npm run android
+npm run web
+npm run lint
+npx tsc --noEmit
+```
 
-- educational awareness about orbital debris prevention;
-- simplified orbital object exploration;
-- risk scoring;
-- priority ranking;
-- simulated mission planning;
-- circular-economy analysis;
-- AI-style decision explanations.
+The local dev server can be tested with:
 
-The app should be honest about its scope. It is a **prototype and decision-support experience**, not a professional orbital safety tool.
+```bash
+npm run web -- --port 8081
+```
 
-## 1.2 Product promise
+Current package direction:
 
-> Kessler helps users understand which orbital objects deserve attention, why they matter, and how future missions could reduce risk or recover value from space debris.
-
-## 1.3 What the app should not claim
-
-Avoid these claims in the interface, README, pitch or presentation:
-
-- “Kessler predicts real collisions with professional precision.”
-- “Kessler is better than LeoLabs, Slingshot or CelesTrak.”
-- “Kessler knows the exact material composition of every object.”
-- “Kessler proves whether a real mission complied with NASA or ESA rules.”
-- “Kessler can remove or recycle debris in practice today.”
-
-Use safer wording:
-
-- “Kessler uses public data and simplified models.”
-- “Kessler simulates risk and recovery decisions.”
-- “Kessler estimates priority using transparent scoring.”
-- “Kessler explores a future circular orbital economy.”
+```txt
+Expo Router for routes
+expo-linear-gradient for CTA gradients
+React Native StyleSheet for UI
+Custom tokens in src/theme
+Mock data in src/data
+Domain models in src/domain
+Feature modules in src/features
+```
 
 ---
 
-# 2. Visual identity
+## 3. Current Folder Organization
 
-This identity is based on the main-screen concept image created for Kessler: a clean dark interface with a large Earth/orbit hero visual, blue-cyan accents, rounded cards, clear typography and a premium aerospace SaaS feel.
+Keep this structure. Extend it, do not replace it.
 
-The design direction should be:
+```txt
+kessler_os/
+  assets/
+
+  src/
+    app/
+      _layout.tsx
+      index.tsx
+
+      orbit/
+        index.tsx
+        [id].tsx              # planned
+
+      priority.tsx
+      missions.tsx
+      circular.tsx
+      prevention.tsx
+
+    components/
+      app-shell/
+        AppShell.tsx
+        SectionPlaceholderScreen.tsx
+
+      navigation/
+        BottomTabs.tsx
+        TopNavigation.tsx
+        navigation-items.ts
+
+      ui/
+        Badge.tsx
+        Button.tsx
+        Card.tsx
+        Metric.tsx
+        SectionHeader.tsx
+        index.ts
+
+    data/
+      index.ts
+      mock-orbital-objects.ts
+      mock-missions.ts
+      mock-reuse-materials.ts
+
+    domain/
+      models/
+        index.ts
+        orbital-object.ts
+        mission.ts
+        reuse-material.ts
+
+      repositories/           # planned
+        orbital-object-repository.ts
+
+      scoring/                # planned
+        risk-score.ts
+        forge-value-score.ts
+        priority-score.ts
+        responsible-orbit-score.ts
+
+    features/
+      home/
+        HomeScreen.tsx
+        components/
+
+      objects/
+        ObjectExplorerScreen.tsx
+        ObjectPassportScreen.tsx      # planned
+        object-formatters.ts
+        components/
+
+      priority/                       # planned
+      prevention/                     # planned
+      missions/                       # planned
+      circular/                       # planned
+
+    hooks/
+      use-breakpoint.ts
+      use-platform-layout.ts
+      use-color-scheme.ts
+
+    theme/
+      colors.ts
+      gradients.ts
+      layout.ts
+      radius.ts
+      shadows.ts
+      spacing.ts
+      typography.ts
+      index.ts
+
+    types/
+      styles.d.ts
+```
+
+### Folder Rules
+
+- `src/app` should stay thin. Route files should import feature screens.
+- `src/features` owns screen-specific composition and components.
+- `src/components/ui` owns reusable visual primitives.
+- `src/domain` owns types, repositories, and scoring logic.
+- `src/data` owns mock data only.
+- Screens should eventually call repositories instead of importing mock data directly.
+
+---
+
+## 4. Visual Identity
+
+Design direction:
 
 ```txt
 Premium space-tech
-Clean and modern
-Dark, calm and cinematic
+Dark, calm, cinematic
 Data-driven but not overloaded
-Apple-like hierarchy with aerospace UI details
+Technical but understandable
+Mobile-first
 ```
 
-## 2.1 Brand personality
-
-Kessler should feel like:
-
-- precise;
-- calm;
-- intelligent;
-- futuristic;
-- trustworthy;
-- technical, but still understandable.
-
-It should not feel like:
-
-- a game HUD;
-- a noisy sci-fi poster;
-- a generic NASA clone;
-- a crypto dashboard;
-- a cluttered admin panel.
-
-## 2.2 Visual principles
-
-### 1. One strong visual per screen
-
-Each screen should have one main visual or decision area. Do not show every metric at once.
-
-Examples:
-
-- Home: Earth/orbit hero.
-- Object detail: object passport + score summary.
-- Priority: ranked queue.
-- Circular economy: material potential and reuse paths.
-- Mission simulator: selected object + mission decision.
-
-### 2. Calm density
-
-Use fewer cards with better spacing. Prefer 3 strong cards over 8 weak cards.
-
-### 3. Explain before showing data
-
-Every complex number needs a short human explanation.
-
-Example:
+Use the existing tokens in:
 
 ```txt
-Risk Score 82
-High attention recommended due to orbit density and estimated object size.
+src/theme/colors.ts
+src/theme/spacing.ts
+src/theme/typography.ts
+src/theme/radius.ts
+src/theme/shadows.ts
+src/theme/layout.ts
 ```
 
-### 4. Desktop can be rich, mobile must be focused
+UI principles:
 
-Desktop can show panels side by side. Mobile should show one decision at a time.
-
-### 5. Do not use color only as meaning
-
-Risk should use color + label + icon.
-
-Example:
-
-```txt
-High Risk
-red icon + red accent + text label
-```
+- one strong visual or decision area per screen;
+- explain complex numbers in human language;
+- use color + text label, never color only;
+- show confidence labels for public, estimated, unknown, and simulated values;
+- phone layouts must stack content clearly;
+- desktop web can be richer, but must not define the only usable experience.
 
 ---
 
-# 3. Design tokens
+## 5. Data Strategy
 
-Create all styling from shared tokens. No random colors or one-off spacing inside screens.
-
-## 3.1 Color palette
-
-```ts
-export const colors = {
-  background: {
-    app: '#030712',
-    surface: '#07111F',
-    surfaceElevated: '#0B1628',
-    surfaceSoft: '#101C2F',
-  },
-
-  border: {
-    subtle: 'rgba(148, 163, 184, 0.16)',
-    strong: 'rgba(148, 163, 184, 0.28)',
-  },
-
-  text: {
-    primary: '#F8FAFC',
-    secondary: '#CBD5E1',
-    muted: '#94A3B8',
-    disabled: '#64748B',
-  },
-
-  accent: {
-    blue: '#2563EB',
-    blueBright: '#3B82F6',
-    cyan: '#22D3EE',
-    teal: '#14B8A6',
-  },
-
-  semantic: {
-    success: '#22C55E',
-    warning: '#F59E0B',
-    danger: '#EF4444',
-    info: '#38BDF8',
-  },
-
-  chart: {
-    blue: '#3B82F6',
-    cyan: '#22D3EE',
-    teal: '#14B8A6',
-    orange: '#F97316',
-    red: '#EF4444',
-    violet: '#8B5CF6',
-  },
-};
-```
-
-## 3.2 Gradients
-
-Use gradients only for hero visuals, key CTAs and major chart accents.
-
-```ts
-export const gradients = {
-  primaryButton: ['#2563EB', '#0EA5E9'],
-  earthGlow: ['rgba(37,99,235,0.35)', 'rgba(34,211,238,0.12)'],
-  surfaceGlow: ['rgba(59,130,246,0.16)', 'rgba(20,184,166,0.08)'],
-};
-```
-
-## 3.3 Typography
-
-Use one clean sans-serif family.
-
-Recommended:
-
-- Web: `Inter`, `SF Pro Display`, system fallback.
-- Native: system font through React Native.
-
-Type scale:
-
-```ts
-export const typography = {
-  display: {
-    fontSize: 48,
-    lineHeight: 56,
-    fontWeight: '700',
-  },
-  h1: {
-    fontSize: 36,
-    lineHeight: 44,
-    fontWeight: '700',
-  },
-  h2: {
-    fontSize: 28,
-    lineHeight: 36,
-    fontWeight: '700',
-  },
-  h3: {
-    fontSize: 20,
-    lineHeight: 28,
-    fontWeight: '600',
-  },
-  body: {
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '400',
-  },
-  bodySmall: {
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: '400',
-  },
-  caption: {
-    fontSize: 12,
-    lineHeight: 16,
-    fontWeight: '500',
-  },
-};
-```
-
-Responsive typography rule:
+Build in this order:
 
 ```txt
-Phone: reduce display headings by 25–35%.
-Tablet: reduce display headings by 10–15%.
-Desktop: use full display scale.
+1. Mock data
+2. Repository layer
+3. Deterministic scoring engines
+4. Optional external data adapters
+5. Optional persistence/database
+6. Optional AI report adapter
 ```
 
-## 3.4 Spacing
+The app should be useful before external APIs are connected.
 
-Use an 8-point spacing system.
+### Data Confidence Labels
 
-```ts
-export const spacing = {
-  1: 4,
-  2: 8,
-  3: 12,
-  4: 16,
-  5: 20,
-  6: 24,
-  8: 32,
-  10: 40,
-  12: 48,
-  16: 64,
-};
-```
-
-## 3.5 Radius
-
-```ts
-export const radius = {
-  sm: 10,
-  md: 16,
-  lg: 22,
-  xl: 28,
-  pill: 999,
-};
-```
-
-## 3.6 Shadows and glow
-
-Keep shadows subtle. The interface should feel premium, not cartoonish.
-
-```ts
-export const shadows = {
-  card: {
-    shadowColor: '#000',
-    shadowOpacity: 0.28,
-    shadowRadius: 18,
-    shadowOffset: { width: 0, height: 10 },
-    elevation: 6,
-  },
-  glowBlue: {
-    shadowColor: '#2563EB',
-    shadowOpacity: 0.22,
-    shadowRadius: 24,
-    shadowOffset: { width: 0, height: 0 },
-    elevation: 8,
-  },
-};
-```
-
----
-
-# 4. Layout identity
-
-## 4.1 Global layout behavior
-
-Kessler should use a responsive shell.
-
-```txt
-Phone: single-column, scroll-first, bottom tabs
-Tablet: two-column where useful, larger cards
-Web/Desktop: wide content, top navigation, multi-column cards
-```
-
-Breakpoints:
-
-```ts
-export const breakpoints = {
-  phone: 0,
-  tablet: 768,
-  desktop: 1024,
-  wide: 1280,
-};
-```
-
-## 4.2 Max content width
-
-On web, keep content centered and refined.
-
-```txt
-max-width: 1280px
-horizontal padding: 24–48px
-```
-
-Avoid stretching cards across huge monitors.
-
-## 4.3 Screen composition rule
-
-Each screen should follow this hierarchy:
-
-```txt
-1. Screen title / hero
-2. Short explanation
-3. Primary action or main metric
-4. Main content area
-5. Secondary panels
-6. Educational notes / limitations
-```
-
-## 4.4 Mobile composition rule
-
-On mobile, each screen should show:
-
-```txt
-1. Header
-2. Main summary card
-3. Primary action
-4. One section at a time
-```
-
-Avoid showing dense tables on phone. Use stacked cards instead.
-
----
-
-# 5. Component identity
-
-All screens should be built from shared components.
-
-## 5.1 App Shell
-
-Responsible for:
-
-- safe area handling;
-- app background;
-- navigation placement;
-- max-width on web;
-- bottom tabs on native/mobile;
-- top nav on desktop web.
-
-Behavior:
-
-```txt
-Phone native: bottom tabs
-Phone web: bottom tabs or compact header
-Tablet: compact top/bottom hybrid
-Desktop web: top nav
-```
-
-## 5.2 Card
-
-Base visual unit of the app.
-
-Style:
-
-- dark elevated surface;
-- 1px subtle border;
-- 16–22px radius;
-- 16–24px padding;
-- subtle glow only when important.
-
-Card variants:
-
-```txt
-DefaultCard
-FeatureCard
-MetricCard
-ScoreCard
-ObjectCard
-ActionCard
-```
-
-## 5.3 Button
-
-Variants:
-
-```txt
-Primary: blue gradient, main action
-Secondary: transparent/dark with border
-Ghost: text/icon only
-Danger: red accent for high-risk actions
-```
-
-Rules:
-
-- Primary button appears once per screen section.
-- Button labels should be action-oriented.
-- Avoid generic labels like “Submit”.
-
-Good labels:
-
-```txt
-Explore Orbit
-Assess Object
-Simulate Mission
-View Priority
-Generate Report
-```
-
-## 5.4 Score Badge
-
-Used for risk, reuse and priority.
-
-Format:
-
-```txt
-Score number + level + short reason
-```
-
-Example:
-
-```txt
-82 High Risk
-Dense LEO region · close approach window
-```
-
-Levels:
-
-```txt
-0–39 Low
-40–69 Medium
-70–100 High
-```
-
-Colors:
-
-```txt
-Low: blue/info
-Medium: orange/warning
-High: red/danger
-Reuse high: teal/success
-```
-
-## 5.5 Data Confidence Label
-
-Use this whenever data is estimated.
-
-Labels:
+Use these labels in UI:
 
 ```txt
 Confirmed public data
@@ -509,597 +287,161 @@ Unknown
 Simulated
 ```
 
-This is important for credibility.
+Do not imply:
 
-## 5.6 Priority Item
+- exact material composition;
+- professional collision prediction;
+- real legal compliance verification;
+- guaranteed mission feasibility.
 
-Desktop:
+Use safer wording:
 
-- row inside a table;
-- object ID;
-- type;
-- orbit;
-- score;
-- closest approach;
-- action.
-
-Mobile:
-
-- stacked card;
-- object ID at top;
-- score badge;
-- orbit and type;
-- action button.
-
-## 5.7 Circular Economy Chart
-
-Use simple charts. Do not overload with tiny labels.
-
-Preferred:
-
-- donut chart;
-- 2–3 material categories;
-- short explanation;
-- one CTA.
+- "Kessler uses public data and simplified models."
+- "Kessler simulates risk and recovery decisions."
+- "Kessler estimates priority using transparent scoring."
+- "Kessler explores a future circular orbital economy."
 
 ---
 
-# 6. Homepage identity
+## 6. External Data Strategy
 
-The homepage should follow the visual reference image: clean dark hero, Earth visual, three feature cards, compact stats, and two preview panels.
+External APIs are future phases. They should be added through adapters and repositories, not directly inside screens.
 
-## 6.1 Desktop homepage layout
+Recommended future sources:
 
-```txt
-Top Navigation
-Hero Section
-  Left: headline, short text, CTAs
-  Right: Earth/orbit visual
-Feature Cards Row
-Metric Strip
-Preview Panels
-  Priority Queue
-  Circular Economy Snapshot
-```
+| Source | Use | Notes |
+|---|---|---|
+| CelesTrak | TLE/object lists | Best first public integration |
+| Space-Track | Catalog enrichment | May require account/API credentials |
+| ESA DISCOSweb | Object metadata | Useful for object passport enrichment |
+| NASA ODPO references | Education/prevention content | Static educational source |
+| ESA Space Debris Office references | Education/prevention content | Static educational source |
 
-## 6.2 Mobile homepage layout
+Planned adapter shape:
 
 ```txt
-Compact Header
-Hero Title
-Short Text
-CTA Buttons
-Earth Visual Card
-Feature Cards stacked
-Metric Cards stacked or horizontal scroll
-Priority Preview Card
-Circular Economy Preview Card
+src/domain/repositories/orbital-object-repository.ts
+src/services/celestrak/celestrak-client.ts
+src/services/celestrak/tle-parser.ts
+src/services/spacetrack/spacetrack-client.ts
+src/services/discos/discos-client.ts
 ```
 
-## 6.3 Hero copy
-
-Use this copy:
-
-```txt
-Space debris intelligence
-for a circular orbital future.
-
-Smarter decisions in orbit through public data,
-risk analytics and mission simulation.
-```
-
-Primary CTA:
-
-```txt
-Explore Orbit
-```
-
-Secondary CTA:
-
-```txt
-See How It Works
-```
-
-## 6.4 Feature cards
-
-Only use three cards on the homepage.
-
-### Risk Analysis
-
-```txt
-Assess collision probability and reduce operational risk.
-```
-
-### Mission Simulation
-
-```txt
-Plan safer, lower-risk missions with predictive modeling.
-```
-
-### Circular Economy
-
-```txt
-Identify, capture and repurpose materials for a sustainable orbit.
-```
-
-## 6.5 Homepage metrics
-
-Use only three core metrics to keep the UI clean.
-
-```txt
-Tracked Objects
-High-Risk Objects
-Reusable Mass Potential
-```
-
-Optional fourth metric for desktop only:
-
-```txt
-Simulated Missions
-```
-
-## 6.6 Homepage lower previews
-
-Use two preview panels:
-
-1. **Priority Queue**
-   - show only 2–3 rows;
-   - no dense controls;
-   - one CTA: `View all priorities`.
-
-2. **Circular Economy Snapshot**
-   - one donut chart;
-   - 2–3 material categories;
-   - one CTA: `View details`.
+For now, the repository should return local mock objects.
 
 ---
 
-# 7. UX writing rules
+# Implementation Roadmap
 
-## 7.1 Tone
+The roadmap below is adapted to the current Expo app. The app must remain runnable after every step.
 
-Use clear, confident, human wording.
+## Current Completed Work
 
-Good:
-
-```txt
-This object deserves attention because it combines high orbital risk with recoverable mass.
-```
-
-Bad:
+These steps already exist in the app:
 
 ```txt
-Leveraging advanced disruptive AI, this object is optimized for multi-dimensional circularity.
-```
-
-## 7.2 Limitations text
-
-Always be honest when a calculation is simplified.
-
-Use:
-
-```txt
-This result is based on public data and a simplified academic scoring model.
-```
-
-Do not use:
-
-```txt
-This is the real collision probability.
-```
-
-## 7.3 Labels
-
-Use short labels in UI:
-
-```txt
-Risk
-Reuse
-Priority
-Orbit
-Object Type
-Mission Cost
-Recovery Value
-Data Confidence
-```
-
-Avoid long technical labels inside cards.
-
----
-
-# 8. Recommended technology
-
-## 8.1 Main app
-
-Use:
-
-```txt
-Expo + React Native + Expo Router + TypeScript
-```
-
-This supports:
-
-- iOS;
-- Android;
-- web;
-- file-based routing;
-- shared components;
-- shared business logic.
-
-## 8.2 Styling
-
-Recommended:
-
-```txt
-NativeWind or StyleSheet + design tokens
-```
-
-For this project, the safest path is:
-
-```txt
-StyleSheet + shared theme tokens
-```
-
-This avoids style inconsistencies across native and web.
-
-## 8.3 Data and backend
-
-MVP:
-
-```txt
-Local mock data + pure scoring functions
-```
-
-Next phase:
-
-```txt
-Supabase or PostgreSQL + backend API
-```
-
-## 8.4 Orbital visualization
-
-Mobile and web need different strategies.
-
-MVP:
-
-```txt
-2D/illustrated orbital visualization for all platforms
-```
-
-Web enhancement:
-
-```txt
-Three.js or CesiumJS only on web
-```
-
-Native enhancement:
-
-```txt
-Simplified canvas/SVG visual or static animated map
-```
-
-Do not block the app on a full 3D map. The app must work on phones first.
-
----
-
-# 9. Project structure
-
-Use this structure:
-
-```txt
-kessler/
-├── app/                         # Expo Router routes
-│   ├── _layout.tsx
-│   ├── index.tsx                 # Home
-│   ├── orbit/
-│   │   ├── index.tsx             # Orbital map/list
-│   │   └── [id].tsx              # Object passport
-│   ├── priority/
-│   │   └── index.tsx             # Priority queue
-│   ├── missions/
-│   │   ├── index.tsx             # Mission simulator
-│   │   └── [id].tsx              # Mission result
-│   ├── circular/
-│   │   └── index.tsx             # Circular economy lab
-│   ├── prevention/
-│   │   └── index.tsx             # Prevention hub
-│   └── reports/
-│       └── [id].tsx              # AI-style report
-│
-├── src/
-│   ├── assets/
-│   │   ├── images/
-│   │   └── icons/
-│   │
-│   ├── components/
-│   │   ├── app-shell/
-│   │   ├── cards/
-│   │   ├── charts/
-│   │   ├── data-display/
-│   │   ├── navigation/
-│   │   └── ui/
-│   │
-│   ├── features/
-│   │   ├── circular/
-│   │   ├── home/
-│   │   ├── missions/
-│   │   ├── objects/
-│   │   ├── prevention/
-│   │   └── priority/
-│   │
-│   ├── data/
-│   │   ├── mock-orbital-objects.ts
-│   │   ├── mock-missions.ts
-│   │   └── mock-reuse-materials.ts
-│   │
-│   ├── domain/
-│   │   ├── models/
-│   │   ├── scoring/
-│   │   └── simulation/
-│   │
-│   ├── hooks/
-│   │   ├── use-breakpoint.ts
-│   │   └── use-platform-layout.ts
-│   │
-│   ├── theme/
-│   │   ├── colors.ts
-│   │   ├── gradients.ts
-│   │   ├── spacing.ts
-│   │   ├── typography.ts
-│   │   ├── radius.ts
-│   │   └── index.ts
-│   │
-│   ├── utils/
-│   └── services/
-│       ├── orbital-data-service.ts
-│       └── report-service.ts
-│
-├── docs/
-│   ├── design-identity.md
-│   ├── scoring-model.md
-│   └── limitations.md
-│
-├── package.json
-├── app.json
-├── tsconfig.json
-└── README.md
-```
-
----
-
-# 10. Naming conventions
-
-## 10.1 Files
-
-Use kebab-case.
-
-```txt
-risk-score-card.tsx
-object-passport-screen.tsx
-priority-queue-list.tsx
-```
-
-## 10.2 Components
-
-Use PascalCase.
-
-```tsx
-RiskScoreCard
-ObjectPassportScreen
-PriorityQueueList
-```
-
-## 10.3 Hooks
-
-Use `use-` in the file name and `useSomething` in code.
-
-```txt
-use-breakpoint.ts
-use-platform-layout.ts
-```
-
-```ts
-useBreakpoint()
-usePlatformLayout()
-```
-
-## 10.4 Domain functions
-
-Use descriptive names.
-
-```ts
-calculateRiskScore()
-calculateReuseScore()
-calculatePriorityScore()
-simulateRemovalMission()
-generateDecisionExplanation()
-```
-
----
-
-# 11. Development phases
-
-The app must stay runnable after each phase.
-
-Use this order:
-
-```txt
-1. Project foundation
-2. Theme and design system
+1. Expo app foundation
+2. Kessler design system foundation
 3. Universal navigation shell
-4. Mock data and domain models
+4. Domain models and mock data
 5. Home screen
-6. Orbital object list/map
-7. Object passport
-8. Scoring engine
-9. Priority queue
-10. Mission simulator
-11. Circular economy lab
-12. Prevention hub
-13. AI-style reports
-14. Responsiveness pass
-15. Testing and deployment readiness
+6. Orbital object explorer
 ```
+
+The next recommended step is:
+
+```txt
+7. Repository layer and scoring engines
+```
+
+This order keeps the app aligned with the updated guide's emphasis on real logic, without changing the Expo structure.
 
 ---
 
-# 12. Phase 1 — Project foundation
+## Step 1 - Expo App Foundation
 
-## Goal
+### Goal
 
-Create the universal Expo app and make sure it runs on iOS, Android and Web.
+Create the universal Expo app and prove it runs on iOS, Android, and Web.
 
-## Commands
+### Status
 
-```bash
-npx create-expo-app@latest kessler --template blank-typescript
-cd kessler
-npx expo install expo-router react-native-safe-area-context react-native-screens expo-linking expo-constants expo-status-bar
-npm install lucide-react-native
-```
+Done.
 
-Add scripts:
-
-```json
-{
-  "scripts": {
-    "start": "expo start",
-    "ios": "expo start --ios",
-    "android": "expo start --android",
-    "web": "expo start --web",
-    "lint": "eslint ."
-  }
-}
-```
-
-## Files to create or modify
+### Existing Files
 
 ```txt
-app/_layout.tsx
-app/index.tsx
-src/theme/index.ts
-src/components/ui/Text.tsx
-src/components/ui/Screen.tsx
+src/app/_layout.tsx
+src/app/index.tsx
+package.json
+app.json
+tsconfig.json
 ```
 
-## Responsibilities
+### Expected Result
 
-### `app/_layout.tsx`
-
-- configures Expo Router;
-- wraps the app in safe area providers;
-- sets global background;
-- prepares shared navigation.
-
-### `app/index.tsx`
-
-- temporary home screen;
-- proves the app boots.
-
-### `Screen.tsx`
-
-- shared screen wrapper;
-- handles safe area, background and width.
-
-## Expected result
-
-The app opens on:
-
-```txt
-iOS simulator
-Android emulator
-Web browser
-```
-
-and shows a dark Kessler placeholder screen.
+The app boots locally with Expo Router.
 
 ---
 
-# 13. Phase 2 — Theme and design system
+## Step 2 - Design System Foundation
 
-## Goal
+### Goal
 
-Implement the visual identity as reusable code.
+Implement the Kessler visual identity as reusable tokens and primitives.
 
-## Files to create
+### Status
+
+Done.
+
+### Existing Files
 
 ```txt
 src/theme/colors.ts
-src/theme/spacing.ts
-src/theme/typography.ts
+src/theme/gradients.ts
+src/theme/layout.ts
 src/theme/radius.ts
 src/theme/shadows.ts
+src/theme/spacing.ts
+src/theme/typography.ts
 src/theme/index.ts
+
+src/components/ui/Badge.tsx
 src/components/ui/Button.tsx
 src/components/ui/Card.tsx
-src/components/ui/Badge.tsx
 src/components/ui/Metric.tsx
 src/components/ui/SectionHeader.tsx
+src/components/ui/index.ts
 ```
 
-## Responsibilities
+### Expected Result
 
-### `colors.ts`
-
-Defines all colors from the Kessler identity.
-
-### `Button.tsx`
-
-Reusable primary, secondary and ghost button.
-
-### `Card.tsx`
-
-Reusable surface component for all panels.
-
-### `Metric.tsx`
-
-Displays one number + label + optional delta.
-
-## Implementation notes
-
-- Do not style screens directly with random values.
-- Use tokens everywhere.
-- Build components to work with mouse and touch.
-- Keep hit areas at least `44px` high.
-
-## Expected result
-
-A local design system screen or temporary home preview shows:
-
-- buttons;
-- cards;
-- badges;
-- metrics;
-- dark background;
-- correct spacing.
+All future screens use shared components and tokens instead of random local styling.
 
 ---
 
-# 14. Phase 3 — Universal navigation shell
+## Step 3 - Universal Navigation Shell
 
-## Goal
+### Goal
 
-Create navigation that works well on native and web.
+Create navigation that works across phone, tablet, desktop web, iOS, and Android.
 
-## Files to create
+### Status
+
+Done.
+
+### Existing Files
 
 ```txt
 src/components/app-shell/AppShell.tsx
 src/components/navigation/TopNavigation.tsx
 src/components/navigation/BottomTabs.tsx
+src/components/navigation/navigation-items.ts
 src/hooks/use-breakpoint.ts
 src/hooks/use-platform-layout.ts
 ```
 
-## Navigation behavior
-
-```txt
-Phone: bottom tabs
-Tablet: bottom tabs or compact top nav
-Desktop web: top nav
-```
-
-## Routes
+### Existing Routes
 
 ```txt
 /
@@ -1110,68 +452,56 @@ Desktop web: top nav
 /prevention
 ```
 
-## Expected result
+### Expected Result
 
-Users can move between the main app sections on iOS, Android and Web.
+Users can move between all main sections. Desktop web uses top navigation; phone/native uses bottom tabs.
 
 ---
 
-# 15. Phase 4 — Mock data and domain models
+## Step 4 - Domain Models and Mock Data
 
-## Goal
+### Goal
 
-Create realistic local data so the app can be built before API integration.
+Create typed local data so features can be built before API integration.
 
-## Files to create
+### Status
+
+Done.
+
+### Existing Files
 
 ```txt
 src/domain/models/orbital-object.ts
 src/domain/models/mission.ts
 src/domain/models/reuse-material.ts
+src/domain/models/index.ts
+
 src/data/mock-orbital-objects.ts
 src/data/mock-missions.ts
 src/data/mock-reuse-materials.ts
+src/data/index.ts
 ```
 
-## `orbital-object.ts`
+### Expected Result
 
-```ts
-export type OrbitalObjectType = 'satellite' | 'rocket_body' | 'debris' | 'unknown';
-export type OrbitRegion = 'LEO' | 'MEO' | 'GEO' | 'HEO';
-export type DataConfidence = 'confirmed' | 'estimated' | 'unknown' | 'simulated';
-
-export interface OrbitalObject {
-  id: string;
-  noradId?: string;
-  name: string;
-  type: OrbitalObjectType;
-  orbitRegion: OrbitRegion;
-  altitudeKm: number;
-  inclinationDeg?: number;
-  estimatedMassKg?: number;
-  estimatedSizeM?: number;
-  launchYear?: number;
-  status: 'active' | 'inactive' | 'fragment' | 'unknown';
-  dataConfidence: DataConfidence;
-}
-```
-
-## Expected result
-
-The app can list and display orbital objects using local mock data.
+The app can display orbital objects, mock missions, and reuse estimates.
 
 ---
 
-# 16. Phase 5 — Home screen
+## Step 5 - Home Screen
 
-## Goal
+### Goal
 
-Build the main Kessler screen using the visual identity.
+Build the main Kessler entry screen using product copy, metrics, feature cards, and preview panels.
 
-## Files to create
+### Status
+
+Done.
+
+### Existing Files
 
 ```txt
-app/index.tsx
+src/app/index.tsx
 src/features/home/HomeScreen.tsx
 src/features/home/components/HeroSection.tsx
 src/features/home/components/EarthHeroVisual.tsx
@@ -1180,531 +510,761 @@ src/features/home/components/HomeMetrics.tsx
 src/features/home/components/HomePreviewPanels.tsx
 ```
 
-## Responsibilities
+### Expected Result
 
-### `HeroSection.tsx`
-
-- title;
-- short product description;
-- CTA buttons;
-- responsive layout.
-
-### `EarthHeroVisual.tsx`
-
-- uses a static/simplified Earth visual on native;
-- can use enhanced animation on web later;
-- must never block rendering.
-
-### `FeatureCards.tsx`
-
-Shows only:
-
-- Risk Analysis;
-- Mission Simulation;
-- Circular Economy.
-
-### `HomeMetrics.tsx`
-
-Shows only the clean metrics:
-
-- Tracked Objects;
-- High-Risk Objects;
-- Reusable Mass Potential.
-
-### `HomePreviewPanels.tsx`
-
-Shows:
-
-- simple Priority Queue preview;
-- Circular Economy Snapshot.
-
-## Responsive behavior
-
-### Phone
-
-```txt
-Hero text
-CTA buttons
-Earth visual
-Feature cards stacked
-Metrics stacked or horizontal scroll
-Preview panels stacked
-```
-
-### Tablet
-
-```txt
-Hero split if space allows
-Feature cards in 2-column wrap
-Metrics in row
-Preview panels stacked or 2-column
-```
-
-### Desktop web
-
-```txt
-Hero split left/right
-3 feature cards in row
-metric strip
-2 preview panels side by side
-```
-
-## Expected result
-
-The app looks like the generated Kessler homepage concept but adapts cleanly to mobile.
+The home screen feels like a polished Kessler product entry point and links into the main modules.
 
 ---
 
-# 17. Phase 6 — Orbital object exploration
+## Step 6 - Orbital Object Explorer
 
-## Goal
+### Goal
 
-Let users explore tracked/simulated orbital objects.
+Let users explore local orbital object data with filters, object cards, a focused detail summary, and a simplified orbit visual.
 
-## Files to create
+### Status
+
+Done.
+
+### Existing Files
 
 ```txt
-app/orbit/index.tsx
+src/app/orbit/index.tsx
 src/features/objects/ObjectExplorerScreen.tsx
+src/features/objects/components/ObjectFilters.tsx
 src/features/objects/components/ObjectList.tsx
 src/features/objects/components/ObjectCard.tsx
 src/features/objects/components/OrbitalVisual.tsx
-src/features/objects/components/ObjectFilters.tsx
+src/features/objects/object-formatters.ts
 ```
 
-## Implementation notes
+### Expected Result
 
-The first version should not depend on a complex 3D engine.
-
-Use:
-
-```txt
-Phone: list + simplified orbit visual
-Tablet: list + larger visual
-Web: optional enhanced orbital canvas
-```
-
-## Expected result
-
-Users can view orbital objects, filter by type/orbit and open details.
+Users can filter by object type and orbit region, select an object, and view focused local details.
 
 ---
 
-# 18. Phase 7 — Object Passport
+## Step 7 - Repository Layer and Scoring Engines
 
-## Goal
+### Goal
 
-Show a clear detail page for each object.
+Create the app's deterministic analytical core before building deeper feature pages.
 
-## Files to create
-
-```txt
-app/orbit/[id].tsx
-src/features/objects/ObjectPassportScreen.tsx
-src/features/objects/components/ObjectSummaryCard.tsx
-src/features/objects/components/ObjectTechnicalDetails.tsx
-src/features/objects/components/DataConfidenceNote.tsx
-```
-
-## Screen content
-
-- object name;
-- type;
-- orbit region;
-- altitude;
-- estimated mass;
-- status;
-- data confidence;
-- risk summary;
-- reuse summary;
-- CTA to simulate mission.
-
-## Expected result
-
-Users can open an object and understand what it is, what is known, what is estimated and why it matters.
-
----
-
-# 19. Phase 8 — Scoring engine
-
-## Goal
-
-Create transparent score calculations.
-
-## Files to create
+### Create or Modify
 
 ```txt
+src/domain/repositories/orbital-object-repository.ts
+
 src/domain/scoring/risk-score.ts
-src/domain/scoring/reuse-score.ts
+src/domain/scoring/forge-value-score.ts
 src/domain/scoring/priority-score.ts
-src/domain/scoring/score-level.ts
-src/features/objects/components/RiskScoreCard.tsx
-src/features/circular/components/ReuseScoreCard.tsx
+src/domain/scoring/responsible-orbit-score.ts
+src/domain/scoring/index.ts
+
+src/features/objects/ObjectExplorerScreen.tsx
+src/features/objects/components/ObjectCard.tsx
 ```
 
-## Risk Score inputs
+### Responsibilities
 
-- orbit region;
-- altitude;
-- object type;
-- estimated mass;
-- status;
-- data confidence.
+| File | Responsibility |
+|---|---|
+| `orbital-object-repository.ts` | Returns objects from mock data now; later can switch to API/database |
+| `risk-score.ts` | Calculates orbital risk from orbit, status, type, mass, and uncertainty |
+| `forge-value-score.ts` | Estimates reuse value from type, mass, likely material utility, and confidence |
+| `priority-score.ts` | Combines risk, reuse value, feasibility, and uncertainty |
+| `responsible-orbit-score.ts` | Scores fictional mission behavior/prevention quality |
 
-## Reuse Score inputs
+### Implementation Notes
 
-- estimated mass;
-- object type;
-- probable material category;
-- capture difficulty;
-- safety limitations.
+Use simple, explainable scoring. Do not pretend the model is scientifically exact.
 
-## Priority Score inputs
+Example risk factors:
+
+```txt
+orbit congestion
+object status
+object type
+estimated mass
+altitude persistence
+data uncertainty
+```
+
+Example forge value factors:
+
+```txt
+estimated mass
+object type
+reuse potential
+handling difficulty
+confidence level
+```
+
+### Expected Result
+
+Every orbital object can display:
 
 ```txt
 Risk Score
-Reuse Score
-Mission feasibility
-Operational cost
-Data confidence
+Forge Value Score
+Priority Score
+Short explanation
 ```
 
-## Expected result
+### Commands
 
-Every object has:
+```bash
+npm run lint
+npx tsc --noEmit
+npm run web -- --port 8081
+```
 
-- Risk Score;
-- Reuse Score;
-- Priority Score;
-- human-readable reason.
+### Suggested Commit Message
+
+```txt
+Add orbital scoring engines
+```
 
 ---
 
-# 20. Phase 9 — Priority Queue
+## Step 8 - Object Passport
 
-## Goal
+### Goal
 
-Rank objects by attention priority.
+Create a detail route for each orbital object.
 
-## Files to create
+### Create or Modify
 
 ```txt
-app/priority/index.tsx
+src/app/orbit/[id].tsx
+
+src/features/objects/ObjectPassportScreen.tsx
+src/features/objects/components/ObjectSummaryCard.tsx
+src/features/objects/components/ObjectTechnicalDetails.tsx
+src/features/objects/components/ObjectScorePanel.tsx
+src/features/objects/components/DataConfidenceNote.tsx
+
+src/components/charts/ScoreRing.tsx
+src/components/charts/RiskBar.tsx
+```
+
+### Screen Content
+
+```txt
+object name
+type
+orbit region
+altitude
+estimated mass
+status
+data confidence
+risk score
+forge value score
+priority score
+risk summary
+reuse summary
+CTA to simulate mission
+```
+
+### Implementation Notes
+
+- The object passport should explain what is known, what is estimated, and what is unknown.
+- Use the repository instead of importing mock data directly.
+- Add links from object cards to `/orbit/[id]`.
+- Keep the selected-card behavior in `/orbit` useful even after adding detail pages.
+
+### Expected Result
+
+Users can open an object and understand why it matters.
+
+### Suggested Commit Message
+
+```txt
+Build object passport screen
+```
+
+---
+
+## Step 9 - Priority Queue
+
+### Goal
+
+Build the decision interface that ranks which objects deserve attention first.
+
+### Create or Modify
+
+```txt
+src/app/priority.tsx
+
 src/features/priority/PriorityQueueScreen.tsx
+src/features/priority/components/PriorityFilters.tsx
 src/features/priority/components/PriorityList.tsx
 src/features/priority/components/PriorityItem.tsx
-src/features/priority/components/PriorityFilters.tsx
 ```
 
-## Desktop behavior
+### Implementation Notes
 
-Use a clean table.
-
-## Mobile behavior
-
-Use stacked priority cards.
-
-## Expected result
-
-Users can see which objects matter most and why.
-
----
-
-# 21. Phase 10 — Mission Simulator
-
-## Goal
-
-Simulate decisions for inspection, monitoring, deorbiting or recovery.
-
-## Files to create
+Phone:
 
 ```txt
-app/missions/index.tsx
-app/missions/[id].tsx
-src/features/missions/MissionSimulatorScreen.tsx
-src/features/missions/MissionResultScreen.tsx
-src/domain/simulation/mission-simulator.ts
-src/features/missions/components/MissionTypeSelector.tsx
-src/features/missions/components/MissionEstimateCard.tsx
+stacked priority cards
+score badge
+short reason
+primary action
 ```
 
-## Mission types
+Desktop web:
+
+```txt
+sortable comparison list
+rank
+risk score
+forge value score
+priority score
+recommended decision
+```
+
+Suggested decisions:
 
 ```txt
 Monitor
 Inspect
-Deorbit
-Move
-Capture
-Recover
+Prioritize removal
+Evaluate reuse
+Low priority
+Insufficient data
 ```
 
-## Expected result
+### Expected Result
 
-Users can select an object, choose a mission type and receive a simulated mission estimate.
+Users can compare objects and see which ones matter most.
+
+### Suggested Commit Message
+
+```txt
+Build priority queue
+```
 
 ---
 
-# 22. Phase 11 — Circular Economy Lab
+## Step 10 - Prevention Hub
 
-## Goal
+### Goal
 
-Show how orbital debris could become future resource inventory.
+Explain responsible orbital behavior and debris prevention.
 
-## Files to create
+### Create or Modify
 
 ```txt
-app/circular/index.tsx
-src/features/circular/CircularEconomyScreen.tsx
-src/features/circular/components/MaterialPotentialChart.tsx
-src/features/circular/components/ReusePathCard.tsx
-src/features/circular/components/RecoveryValueSummary.tsx
+src/app/prevention.tsx
+
+src/features/prevention/PreventionHubScreen.tsx
+src/features/prevention/components/PreventionPrinciples.tsx
+src/features/prevention/components/ResponsibleMissionChecklist.tsx
+src/features/prevention/components/PreventionScorePreview.tsx
 ```
 
-## Content
-
-- reusable mass potential;
-- likely material categories;
-- possible reuse paths;
-- limitations;
-- environmental/economic value.
-
-## Reuse paths
+### Content
 
 ```txt
-Structures
-Shielding
-Metals
-Electronics
+passivation
+end-of-life planning
+controlled reentry
+graveyard orbit
+tracking and cataloging
+collision avoidance
+responsible mission design
+```
+
+### Expected Result
+
+Users understand that Kessler is about preventing debris, not only reacting to it.
+
+### Suggested Commit Message
+
+```txt
+Build prevention hub
+```
+
+---
+
+## Step 11 - Orbital Map MVP
+
+### Goal
+
+Add a stronger orbital visual without depending on a complex 3D engine yet.
+
+### Create or Modify
+
+```txt
+src/features/objects/components/OrbitalVisual.tsx
+src/features/map/OrbitalMapScreen.tsx
+src/app/map.tsx                 # optional route if the team wants a separate map
+```
+
+### Implementation Notes
+
+Start with a 2D/simplified visual:
+
+```txt
+Earth
+orbit rings
+object markers
+selected object
+risk colors
+legend
+```
+
+Only later consider:
+
+```txt
+Three.js
+Cesium
+satellite.js propagation
+```
+
+### Expected Result
+
+The app has visual impact while staying stable on native and web.
+
+### Suggested Commit Message
+
+```txt
+Improve orbital map visual
+```
+
+---
+
+## Step 12 - Live Orbital Data Integration
+
+### Goal
+
+Connect public orbital data through adapters without changing screen code.
+
+### Create or Modify
+
+```txt
+src/services/celestrak/celestrak-client.ts
+src/services/celestrak/tle-parser.ts
+src/domain/repositories/orbital-object-repository.ts
+```
+
+### Implementation Notes
+
+- Keep mock data as fallback.
+- Add loading and error states.
+- Do not block the app if the external API fails.
+- Cache or limit requests where appropriate.
+
+### Expected Result
+
+The app can use public data while remaining demo-safe.
+
+### Suggested Commit Message
+
+```txt
+Add CelesTrak data adapter
+```
+
+---
+
+## Step 13 - Mission Simulator
+
+### Goal
+
+Let users simulate practical responses to selected orbital objects.
+
+### Create or Modify
+
+```txt
+src/app/missions.tsx
+
+src/features/missions/MissionSimulatorScreen.tsx
+src/features/missions/components/MissionSimulatorForm.tsx
+src/features/missions/components/MissionResultPanel.tsx
+
+src/domain/scoring/mission-estimator.ts
+```
+
+### Mission Types
+
+```txt
+Monitor
+Inspect
+Avoid
+Deorbit
+Move to safer orbit
+Capture
+Recycle
+```
+
+### Expected Result
+
+Users can choose an object and mission type, then receive a deterministic estimate and explanation.
+
+### Suggested Commit Message
+
+```txt
+Build mission simulator
+```
+
+---
+
+## Step 14 - Circular Economy Lab
+
+### Goal
+
+Show how selected debris could become a future resource.
+
+### Create or Modify
+
+```txt
+src/app/circular.tsx
+
+src/features/circular/CircularEconomyScreen.tsx
+src/features/circular/components/ReusePotentialPanel.tsx
+src/features/circular/components/MaterialUseCases.tsx
+```
+
+### Reuse Categories
+
+```txt
+Structural material
+Radiation shielding
+Manufacturing feedstock
 Testing platform
+Component recovery
 Controlled disposal
 ```
 
-## Expected result
+### Expected Result
 
-Users understand the core innovation: space debris as future resource, not only risk.
+Kessler shows both risk reduction and future orbital reuse value.
 
----
-
-# 23. Phase 12 — Prevention Hub
-
-## Goal
-
-Educate users about preventing future debris.
-
-## Files to create
+### Suggested Commit Message
 
 ```txt
-app/prevention/index.tsx
-src/features/prevention/PreventionHubScreen.tsx
-src/features/prevention/components/PreventionPrincipleCard.tsx
-src/features/prevention/components/ResponsibleOrbitChecker.tsx
-src/domain/scoring/responsible-orbit-score.ts
+Build circular economy lab
 ```
-
-## Content
-
-- end-of-life planning;
-- deorbiting;
-- passivation;
-- graveyard orbit;
-- responsible mission design;
-- simplified checker.
-
-## Expected result
-
-Users can learn prevention concepts and test a fictional mission for responsibility.
 
 ---
 
-# 24. Phase 13 — AI-style reports
+## Step 15 - AI-Style Decision Report
 
-## Goal
+### Goal
 
-Generate readable decision reports.
+Generate clear natural-language explanations for scores, priorities, and mission recommendations.
 
-## Files to create
+### Create or Modify
 
 ```txt
-app/reports/[id].tsx
-src/features/reports/DecisionReportScreen.tsx
-src/services/report-service.ts
-src/features/reports/components/ReportSection.tsx
+src/services/ai/report-generator.ts
+src/services/ai/prompt-templates.ts
+src/features/reports/DecisionReportPanel.tsx
 ```
 
-## MVP implementation
+### MVP Implementation
 
-Start with generated template text from local score data.
+Do not require a real LLM at first.
 
-Do not require a real LLM in the MVP.
-
-## Later implementation
-
-Add optional API integration for richer explanations.
-
-## Expected result
-
-Users can open a report explaining why an object was prioritized or why a mission was recommended.
-
----
-
-# 25. Responsiveness checklist
-
-Before considering the MVP done, test every screen on:
+Start with deterministic template reports:
 
 ```txt
-iPhone-sized viewport
-Android-sized viewport
-iPad/tablet viewport
-Desktop web viewport
+This object receives a high priority because its LEO orbit, inactive status, and estimated mass increase attention.
+The reuse estimate is simulated and should be treated as a planning signal, not confirmed material composition.
 ```
 
-## Required behavior
+### Later Implementation
 
-- text is readable;
-- no horizontal overflow;
-- tables become cards on mobile;
-- touch targets are usable;
-- navigation is accessible;
-- hero visual does not dominate phone screens;
-- dense charts are simplified on mobile;
-- all CTAs remain visible.
+Add an adapter for:
 
----
+```txt
+OpenAI
+OpenRouter
+local LLM
+```
 
-# 26. Testing checklist
+### Expected Result
 
-## Unit tests
+Users can understand recommendations without reading raw score formulas.
 
-Test:
+### Suggested Commit Message
 
-- risk score;
-- reuse score;
-- priority score;
-- mission simulation;
-- responsible orbit score.
-
-## UI tests/manual QA
-
-Test:
-
-- navigation across routes;
-- object detail opening;
-- scoring display;
-- mission simulation flow;
-- mobile layout;
-- web layout.
-
-## Data credibility tests
-
-Check that estimated data always shows a confidence label.
+```txt
+Add decision report generator
+```
 
 ---
 
-# 27. Deployment readiness
+## Step 16 - Optional Persistence Layer
 
-## Web
+### Goal
 
-Use Expo web export or EAS hosting/Vercel-compatible output if configured.
+Persist saved simulations, reports, or object notes if the project needs it.
+
+### Expo-Friendly Options
+
+```txt
+Supabase client
+Firebase
+SQLite for local-only demos
+AsyncStorage for lightweight saved state
+```
+
+Avoid adding Prisma unless the team is building a separate backend. Prisma is not a natural fit for the Expo client app itself.
+
+### Expected Result
+
+Users can save selected results or scenarios.
+
+---
+
+## Step 17 - Impact Dashboard
+
+### Goal
+
+Summarize the project's value for presentation.
+
+### Create or Modify
+
+```txt
+src/features/impact/ImpactDashboardScreen.tsx
+src/app/impact.tsx
+```
+
+### Suggested Metrics
+
+```txt
+objects analyzed
+high-priority objects
+estimated reusable mass
+simulated missions
+prevention recommendations
+```
+
+### Expected Result
+
+The project can be presented clearly to evaluators.
+
+---
+
+## Step 18 - Testing and QA
+
+### Goal
+
+Protect the core domain logic and verify the main flows.
+
+### Recommended Tests
+
+```txt
+scoring function unit tests
+repository tests
+manual route smoke tests
+mobile layout checks
+web layout checks
+```
+
+Current useful checks:
 
 ```bash
-npx expo export --platform web
+npm run lint
+npx tsc --noEmit
 ```
 
-## Native
-
-Use Expo development builds or Expo Go during MVP.
-
-Later:
-
-```bash
-eas build --platform ios
-eas build --platform android
-```
-
-## Environment variables
-
-Only needed after adding real APIs.
+Optional future test setup:
 
 ```txt
-EXPO_PUBLIC_API_BASE_URL=
-EXPO_PUBLIC_AI_API_KEY=
+Jest or Vitest for domain functions
+React Native Testing Library for components
+Playwright only for web smoke tests if browser tooling is installed
 ```
-
-Do not commit secret keys.
 
 ---
 
-# 28. MVP feature order summary
+## Step 19 - UI Polish and Deployment Readiness
 
-Build in this exact order:
+### Goal
+
+Make the demo feel coherent, trustworthy, and easy to test.
+
+### Polish Checklist
+
+- no Expo starter copy;
+- no dense mobile tables;
+- no clipped text;
+- no web-only interactions;
+- route transitions feel predictable;
+- all estimates have confidence labels;
+- all CTAs go somewhere useful;
+- app runs on web and Expo Go/development build.
+
+### Expo Deployment Options
 
 ```txt
-1. Universal app foundation
-2. Design tokens and shared UI
-3. Navigation shell
-4. Mock orbital data
-5. Home screen
-6. Object exploration
-7. Object passport
-8. Score engine
-9. Priority queue
-10. Mission simulator
-11. Circular economy lab
-12. Prevention hub
-13. AI-style reports
-14. Responsive polish
-15. Testing and deployment
+Expo web export
+EAS Update
+EAS Build
+Expo Go for MVP demo
 ```
 
-This order keeps the project running after every major milestone.
+### Expected Result
+
+The app is ready for a project presentation/demo.
 
 ---
 
-# 29. Definition of Done
+# API and Backend Notes
 
-A feature is complete only when:
+This app should not depend on server routes yet.
 
-- it works on iOS;
-- it works on Android;
-- it works on web;
-- it has mobile and desktop layouts;
-- it uses shared theme tokens;
-- it has loading/empty/error states if data is involved;
-- it does not rely on hover only;
-- it explains estimated data clearly;
-- it can be demonstrated independently.
+If a backend is added later, keep the client API shape simple:
+
+## `GET /orbital-objects`
+
+Returns orbital objects.
+
+```json
+{
+  "items": [
+    {
+      "id": "obj-envisat",
+      "name": "ENVISAT",
+      "type": "satellite",
+      "orbitRegion": "LEO",
+      "dataConfidence": "estimated"
+    }
+  ]
+}
+```
+
+## `GET /orbital-objects/:id`
+
+Returns one object with scores.
+
+```json
+{
+  "id": "obj-envisat",
+  "name": "ENVISAT",
+  "scores": {
+    "risk": 86,
+    "forgeValue": 72,
+    "priority": 84
+  }
+}
+```
+
+## `POST /missions`
+
+Creates a mission simulation.
+
+```json
+{
+  "orbitalObjectId": "obj-envisat",
+  "missionType": "inspect"
+}
+```
+
+## `POST /reports`
+
+Generates or returns a decision report.
+
+```json
+{
+  "orbitalObjectId": "obj-envisat",
+  "context": "priority"
+}
+```
 
 ---
 
-# 30. Final product shape
+# Minimum Viable Demo
 
-The MVP should include:
+If time is short, ship this:
 
-- polished universal home screen;
-- object exploration;
-- object passport details;
-- risk score;
-- reuse score;
-- priority queue;
-- mission simulation;
-- circular economy lab;
-- prevention hub;
-- AI-style explanation reports;
-- responsive behavior across iOS, Android and web.
-
----
-
-# 31. Final pitch
-
-> **Kessler** is a universal space-debris intelligence app for iOS, Android and web. It uses public orbital data, transparent scoring models, mission simulation and explainable recommendations to help users understand orbital risk, prioritize debris attention and explore how space debris could become part of a future circular orbital economy.
+```txt
+1. Home
+2. Object explorer with mock data
+3. Scoring engines
+4. Object Passport
+5. Priority Queue
+6. Mission Simulator
+7. Circular Economy Lab
+8. AI-style decision report
+```
 
 ---
 
-# 32. References for implementation
+# Team Workflow
 
-- Expo Router — https://docs.expo.dev/router/introduction/
-- Expo — https://docs.expo.dev/
-- React Native — https://reactnative.dev/
-- React Native for Web — https://necolas.github.io/react-native-web/
-- CelesTrak — https://celestrak.org/
+Recommended branch style:
+
+```txt
+feature/scoring-engines
+feature/object-passport
+feature/priority-queue
+feature/mission-simulator
+```
+
+Commit style:
+
+```txt
+Build Kessler home screen
+Add orbital scoring engines
+Build object passport screen
+Build priority queue
+```
+
+Each implementation step should end with:
+
+```txt
+npm run lint
+npx tsc --noEmit
+manual app test
+suggested commit message
+```
+
+---
+
+# Scope Boundaries
+
+Do not claim:
+
+```txt
+Kessler predicts real collisions with professional precision.
+Kessler is better than operational space traffic tools.
+Kessler knows exact material composition.
+Kessler verifies real compliance with NASA/ESA rules.
+Kessler can remove or recycle debris in practice today.
+```
+
+Use:
+
+```txt
+Kessler uses public data and simplified models.
+Kessler simulates risk and recovery decisions.
+Kessler estimates priority using transparent scoring.
+Kessler explores a future circular orbital economy.
+```
+
+---
+
+# Definition of Done
+
+The MVP is done when:
+
+- the app runs on Expo web;
+- the app remains usable on phone-sized screens;
+- users can explore orbital objects;
+- users can open an object passport;
+- scores are deterministic and explainable;
+- priority ranking works;
+- mission simulation returns practical recommendations;
+- circular economy value is shown with confidence labels;
+- estimates are never presented as confirmed facts;
+- lint and TypeScript checks pass.
+
+---
+
+# Final Product Statement
+
+Kessler is a universal Expo app that turns orbital debris into an understandable decision experience: explore what is in orbit, understand why it matters, rank what deserves attention, simulate possible responses, and imagine how orbital waste could become part of a circular space economy.

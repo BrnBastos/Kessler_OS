@@ -1,5 +1,6 @@
 import { BadgeTone } from '@/components/ui';
 import { DataConfidence, OrbitalObjectStatus, OrbitalObjectType, OrbitRegion } from '@/domain/models';
+import { ScoreLevel } from '@/domain/scoring';
 
 export function formatObjectType(type: OrbitalObjectType) {
   return type.replace('_', ' ');
@@ -44,5 +45,16 @@ export function getConfidenceLabel(confidence: DataConfidence) {
       return 'Simulated';
     case 'unknown':
       return 'Unknown';
+  }
+}
+
+export function getScoreTone(level: ScoreLevel): BadgeTone {
+  switch (level) {
+    case 'high':
+      return 'danger';
+    case 'medium':
+      return 'warning';
+    case 'low':
+      return 'info';
   }
 }

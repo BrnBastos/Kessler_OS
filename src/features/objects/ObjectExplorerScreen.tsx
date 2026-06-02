@@ -3,8 +3,8 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Badge, Button, Card, Metric, SectionHeader } from '@/components/ui';
-import { mockOrbitalObjects } from '@/data';
-import { OrbitalObject } from '@/domain/models';
+import { listScoredOrbitalObjects } from '@/domain/repositories';
+import { ScoredOrbitalObject } from '@/domain/scoring';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { colors, layout, spacing, typography } from '@/theme';
 
@@ -17,15 +17,22 @@ import {
   formatObjectType,
   getConfidenceLabel,
   getConfidenceTone,
+  getScoreTone,
 } from './object-formatters';
 
-const inactiveObjects = mockOrbitalObjects.filter((object) => object.status !== 'active');
-const leoObjects = mockOrbitalObjects.filter((object) => object.orbitRegion === 'LEO');
-const uncertainObjects = mockOrbitalObjects.filter(
+const allObjects = listScoredOrbitalObjects();
+const inactiveObjects = allObjects.filter((object) => object.status !== 'active');
+const leoObjects = allObjects.filter((object) => object.orbitRegion === 'LEO');
+const uncertainObjects = allObjects.filter(
   (object) => object.dataConfidence === 'unknown' || object.dataConfidence === 'simulated'
 );
+const averagePriority =
+  Math.round(
+    allObjects.reduce((total, object) => total + object.scores.priority.score, 0) /
+      allObjects.length
+  ) || 0;
 
-function SelectedObjectDetails({ object }: { object?: OrbitalObject }) {
+function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
   if (!object) {
     return (
       <Card style={styles.detailCard}>
@@ -56,6 +63,30 @@ function SelectedObjectDetails({ object }: { object?: OrbitalObject }) {
 
       <Text style={styles.detailBody}>{object.summary}</Text>
 
+      <View style={styles.scoreGrid}>
+        <Badge
+          label="Risk Score"
+          reason={object.scores.risk.summary}
+          score={object.scores.risk.score}
+          tone={getScoreTone(object.scores.risk.level)}
+          style={styles.scoreBadge}
+        />
+        <Badge
+          label="Forge Value"
+          reason={object.scores.forgeValue.summary}
+          score={object.scores.forgeValue.score}
+          tone={getScoreTone(object.scores.forgeValue.level)}
+          style={styles.scoreBadge}
+        />
+        <Badge
+          label="Priority"
+          reason={object.scores.priority.summary}
+          score={object.scores.priority.score}
+          tone={getScoreTone(object.scores.priority.level)}
+          style={styles.scoreBadge}
+        />
+      </View>
+
       <View style={styles.detailFacts}>
         <View style={styles.detailFact}>
           <Text style={styles.factLabel}>Altitude</Text>
@@ -75,6 +106,11 @@ function SelectedObjectDetails({ object }: { object?: OrbitalObject }) {
         </View>
       </View>
 
+      <View style={styles.decisionPanel}>
+        <Text style={styles.decisionLabel}>Recommended decision</Text>
+        <Text style={styles.decisionText}>{object.scores.priority.decision}</Text>
+      </View>
+
       <Button variant="secondary">Object Passport Next</Button>
     </Card>
   );
@@ -84,22 +120,20 @@ export function ObjectExplorerScreen() {
   const { isDesktop } = useBreakpoint();
   const [objectType, setObjectType] = useState<ObjectTypeFilter>('all');
   const [orbitRegion, setOrbitRegion] = useState<OrbitRegionFilter>('all');
-  const [selectedObjectId, setSelectedObjectId] = useState(mockOrbitalObjects[0]?.id);
+  const [selectedObjectId, setSelectedObjectId] = useState(allObjects[0]?.id);
 
   const filteredObjects = useMemo(
     () =>
-      mockOrbitalObjects.filter((object) => {
-        const typeMatches = objectType === 'all' || object.type === objectType;
-        const orbitMatches = orbitRegion === 'all' || object.orbitRegion === orbitRegion;
-
-        return typeMatches && orbitMatches;
+      listScoredOrbitalObjects({
+        orbitRegion,
+        type: objectType,
       }),
     [objectType, orbitRegion]
   );
   const selectedObject =
     filteredObjects.find((object) => object.id === selectedObjectId) ?? filteredObjects[0];
 
-  function handleSelectObject(object: OrbitalObject) {
+  function handleSelectObject(object: ScoredOrbitalObject) {
     setSelectedObjectId(object.id);
   }
 
@@ -116,20 +150,20 @@ export function ObjectExplorerScreen() {
         <SafeAreaView>
           <View style={styles.stack}>
             <View style={styles.hero}>
-              <Badge label="Local mock dataset" tone="simulated" />
+              <Badge label="Repository + scoring model" tone="simulated" />
               <SectionHeader
                 eyebrow="Orbital object exploration"
-                title="Explore tracked and simulated orbital objects."
-                description="Filter by object type and orbit region, focus an object, and use the simplified orbit visual to keep the experience useful on phones, tablets and web."
+                title="Explore tracked objects with transparent prototype scores."
+                description="Filter by object type and orbit region, focus an object, and review deterministic risk, forge value, and priority scores. These are simplified planning signals, not professional orbital predictions."
               />
             </View>
 
             <View style={styles.metricGrid}>
               <Metric
-                detail="Loaded from src/data"
+                detail="Loaded through repository"
                 label="Catalog objects"
                 tone="cyan"
-                value={mockOrbitalObjects.length.toString()}
+                value={allObjects.length.toString()}
                 style={styles.metricCard}
               />
               <Metric
@@ -144,6 +178,13 @@ export function ObjectExplorerScreen() {
                 label="LEO objects"
                 tone="blue"
                 value={leoObjects.length.toString()}
+                style={styles.metricCard}
+              />
+              <Metric
+                detail="Average deterministic score"
+                label="Priority baseline"
+                tone="warning"
+                value={averagePriority.toString()}
                 style={styles.metricCard}
               />
               <Metric
@@ -173,7 +214,9 @@ export function ObjectExplorerScreen() {
               <View style={styles.listColumn}>
                 <View style={styles.sectionTitleRow}>
                   <Text style={styles.sectionTitle}>Object catalog</Text>
-                  <Text style={styles.sectionNote}>Tap a card to open local details</Text>
+                  <Text style={styles.sectionNote}>
+                    Tap a card to inspect scores and local details
+                  </Text>
                 </View>
                 <ObjectList
                   objects={filteredObjects}
@@ -283,6 +326,15 @@ const styles = StyleSheet.create({
     ...typography.bodySmall,
     color: colors.text.secondary,
   },
+  scoreGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing[3],
+  },
+  scoreBadge: {
+    flexBasis: 180,
+    flexGrow: 1,
+  },
   detailFacts: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -304,6 +356,24 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   factValue: {
+    ...typography.bodySmall,
+    color: colors.text.primary,
+    fontWeight: '700',
+  },
+  decisionPanel: {
+    backgroundColor: colors.background.surface,
+    borderColor: colors.border.subtle,
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: spacing[1],
+    padding: spacing[3],
+  },
+  decisionLabel: {
+    ...typography.caption,
+    color: colors.text.muted,
+    textTransform: 'uppercase',
+  },
+  decisionText: {
     ...typography.bodySmall,
     color: colors.text.primary,
     fontWeight: '700',

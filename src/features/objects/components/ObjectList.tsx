@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Card } from '@/components/ui';
-import { OrbitalObject } from '@/domain/models';
+import { ScoredOrbitalObject } from '@/domain/scoring';
 import { colors, spacing, typography } from '@/theme';
 
 import { ObjectCard } from './ObjectCard';
 
 type ObjectListProps = {
-  objects: OrbitalObject[];
-  onSelectObject: (object: OrbitalObject) => void;
+  objects: ScoredOrbitalObject[];
+  onSelectObject: (object: ScoredOrbitalObject) => void;
   selectedObjectId?: string;
 };
 

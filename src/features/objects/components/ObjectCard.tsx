@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Badge, Card } from '@/components/ui';
-import { OrbitalObject } from '@/domain/models';
+import { ScoredOrbitalObject } from '@/domain/scoring';
 import { colors, radius, spacing, typography } from '@/theme';
 
 import {
@@ -10,11 +10,12 @@ import {
   formatObjectType,
   getConfidenceLabel,
   getConfidenceTone,
+  getScoreTone,
 } from '../object-formatters';
 
 type ObjectCardProps = {
-  object: OrbitalObject;
-  onSelect: (object: OrbitalObject) => void;
+  object: ScoredOrbitalObject;
+  onSelect: (object: ScoredOrbitalObject) => void;
   selected?: boolean;
 };
 
@@ -42,6 +43,24 @@ export function ObjectCard({ object, onSelect, selected }: ObjectCardProps) {
 
         <Text style={styles.summary}>{object.summary}</Text>
 
+        <View style={styles.scoreRow}>
+          <Badge
+            label="Risk"
+            score={object.scores.risk.score}
+            tone={getScoreTone(object.scores.risk.level)}
+          />
+          <Badge
+            label="Forge"
+            score={object.scores.forgeValue.score}
+            tone={getScoreTone(object.scores.forgeValue.level)}
+          />
+          <Badge
+            label="Priority"
+            score={object.scores.priority.score}
+            tone={getScoreTone(object.scores.priority.level)}
+          />
+        </View>
+
         <View style={styles.factGrid}>
           <View style={styles.factItem}>
             <Text style={styles.factLabel}>Altitude</Text>
@@ -57,6 +76,7 @@ export function ObjectCard({ object, onSelect, selected }: ObjectCardProps) {
           </View>
         </View>
 
+        <Text style={styles.decision}>{object.scores.priority.decision}</Text>
         <Text style={styles.detailHint}>{selected ? 'Details open' : 'Tap to open details'}</Text>
       </Card>
     </Pressable>
@@ -98,6 +118,11 @@ const styles = StyleSheet.create({
     ...typography.bodySmall,
     color: colors.text.secondary,
   },
+  scoreRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing[2],
+  },
   factGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -119,6 +144,11 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   factValue: {
+    ...typography.bodySmall,
+    color: colors.text.primary,
+    fontWeight: '700',
+  },
+  decision: {
     ...typography.bodySmall,
     color: colors.text.primary,
     fontWeight: '700',
