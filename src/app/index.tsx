@@ -1,8 +1,8 @@
+import { router } from 'expo-router';
 import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Badge, Button, Card, Metric, SectionHeader } from '@/components/ui';
-import { BottomTabInset } from '@/constants/theme';
 import { breakpoints, colors, layout, radius, shadows, spacing, typography } from '@/theme';
 
 const featureCards = [
@@ -53,7 +53,7 @@ export default function HomeScreen() {
         contentContainerStyle={[
           styles.content,
           isDesktop && styles.contentDesktop,
-          { paddingBottom: BottomTabInset + spacing[10] },
+          { paddingBottom: spacing[10] },
         ]}>
         <SafeAreaView>
           <View style={styles.stack}>
@@ -68,8 +68,10 @@ export default function HomeScreen() {
                   simulation.
                 </Text>
                 <View style={styles.actions}>
-                  <Button>Explore Orbit</Button>
-                  <Button variant="secondary">See How It Works</Button>
+                  <Button onPress={() => router.push('/orbit')}>Explore Orbit</Button>
+                  <Button variant="secondary" onPress={() => router.push('/prevention')}>
+                    See How It Works
+                  </Button>
                 </View>
               </View>
 
@@ -150,12 +152,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     maxWidth: layout.maxContentWidth,
     paddingHorizontal: spacing[4],
-    paddingTop: spacing[16],
+    paddingTop: spacing[8],
     width: '100%',
   },
   contentDesktop: {
     paddingHorizontal: spacing[8],
-    paddingTop: spacing[16] + spacing[8],
+    paddingTop: spacing[10],
   },
   stack: {
     gap: spacing[8],
