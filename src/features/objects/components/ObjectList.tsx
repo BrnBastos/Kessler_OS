@@ -8,11 +8,17 @@ import { ObjectCard } from './ObjectCard';
 
 type ObjectListProps = {
   objects: ScoredOrbitalObject[];
+  onOpenPassport: (object: ScoredOrbitalObject) => void;
   onSelectObject: (object: ScoredOrbitalObject) => void;
   selectedObjectId?: string;
 };
 
-export function ObjectList({ objects, onSelectObject, selectedObjectId }: ObjectListProps) {
+export function ObjectList({
+  objects,
+  onOpenPassport,
+  onSelectObject,
+  selectedObjectId,
+}: ObjectListProps) {
   if (objects.length === 0) {
     return (
       <Card style={styles.emptyCard}>
@@ -30,6 +36,7 @@ export function ObjectList({ objects, onSelectObject, selectedObjectId }: Object
         <ObjectCard
           key={object.id}
           object={object}
+          onOpenPassport={onOpenPassport}
           onSelect={onSelectObject}
           selected={selectedObjectId === object.id}
         />

@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -111,7 +112,16 @@ function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
         <Text style={styles.decisionText}>{object.scores.priority.decision}</Text>
       </View>
 
-      <Button variant="secondary">Object Passport Next</Button>
+      <Button
+        variant="secondary"
+        onPress={() =>
+          router.push({
+            pathname: '/orbit/[id]',
+            params: { id: object.id },
+          })
+        }>
+        Open Object Passport
+      </Button>
     </Card>
   );
 }
@@ -135,6 +145,13 @@ export function ObjectExplorerScreen() {
 
   function handleSelectObject(object: ScoredOrbitalObject) {
     setSelectedObjectId(object.id);
+  }
+
+  function handleOpenPassport(object: ScoredOrbitalObject) {
+    router.push({
+      pathname: '/orbit/[id]',
+      params: { id: object.id },
+    });
   }
 
   function handleResetFilters() {
@@ -220,6 +237,7 @@ export function ObjectExplorerScreen() {
                 </View>
                 <ObjectList
                   objects={filteredObjects}
+                  onOpenPassport={handleOpenPassport}
                   selectedObjectId={selectedObject?.id}
                   onSelectObject={handleSelectObject}
                 />
