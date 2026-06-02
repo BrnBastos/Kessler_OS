@@ -1,6 +1,6 @@
 export type NavigationItem = {
   description: string;
-  href: '/' | '/orbit' | '/priority' | '/missions' | '/circular' | '/prevention';
+  href: '/' | '/orbit' | '/priority' | '/missions' | '/circular' | '/prevention' | '/impact';
   label: string;
 };
 
@@ -34,5 +34,10 @@ export const navigationItems: NavigationItem[] = [
     description: 'Learn prevention rules',
     href: '/prevention',
     label: 'Prevention',
+  },
+  {
+    description: 'Present project impact',
+    href: '/impact',
+    label: 'Impact',
   },
 ];
