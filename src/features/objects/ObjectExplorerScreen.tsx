@@ -1,10 +1,14 @@
 import { router } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Badge, Button, Card, Metric, SectionHeader } from '@/components/ui';
-import { listScoredOrbitalObjects } from '@/domain/repositories';
+import { Badge, Button, Card, DataSourceNotice, Metric, SectionHeader } from '@/components/ui';
+import {
+  getOrbitalObjectRepositoryStatus,
+  listScoredOrbitalObjects,
+  loadScoredOrbitalObjects,
+} from '@/domain/repositories';
 import { ScoredOrbitalObject } from '@/domain/scoring';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { colors, layout, spacing, typography } from '@/theme';
@@ -21,17 +25,7 @@ import {
   getScoreTone,
 } from './object-formatters';
 
-const allObjects = listScoredOrbitalObjects();
-const inactiveObjects = allObjects.filter((object) => object.status !== 'active');
-const leoObjects = allObjects.filter((object) => object.orbitRegion === 'LEO');
-const uncertainObjects = allObjects.filter(
-  (object) => object.dataConfidence === 'unknown' || object.dataConfidence === 'simulated'
-);
-const averagePriority =
-  Math.round(
-    allObjects.reduce((total, object) => total + object.scores.priority.score, 0) /
-      allObjects.length
-  ) || 0;
+const initialCatalogObjects = listScoredOrbitalObjects();
 
 function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
   if (!object) {
@@ -128,17 +122,56 @@ function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
 
 export function ObjectExplorerScreen() {
   const { isDesktop } = useBreakpoint();
+  const [catalogObjects, setCatalogObjects] =
+    useState<ScoredOrbitalObject[]>(initialCatalogObjects);
+  const [repositoryStatus, setRepositoryStatus] = useState(getOrbitalObjectRepositoryStatus);
+  const [isLoadingPublicData, setIsLoadingPublicData] = useState(true);
   const [objectType, setObjectType] = useState<ObjectTypeFilter>('all');
   const [orbitRegion, setOrbitRegion] = useState<OrbitRegionFilter>('all');
-  const [selectedObjectId, setSelectedObjectId] = useState(allObjects[0]?.id);
+  const [selectedObjectId, setSelectedObjectId] = useState(initialCatalogObjects[0]?.id);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    loadScoredOrbitalObjects()
+      .then((result) => {
+        if (!isMounted) {
+          return;
+        }
+
+        setCatalogObjects(result.objects);
+        setRepositoryStatus(result.status);
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsLoadingPublicData(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const inactiveObjects = catalogObjects.filter((object) => object.status !== 'active');
+  const leoObjects = catalogObjects.filter((object) => object.orbitRegion === 'LEO');
+  const uncertainObjects = catalogObjects.filter(
+    (object) => object.dataConfidence === 'unknown' || object.dataConfidence === 'simulated'
+  );
+  const averagePriority =
+    Math.round(
+      catalogObjects.reduce((total, object) => total + object.scores.priority.score, 0) /
+        catalogObjects.length
+    ) || 0;
   const filteredObjects = useMemo(
     () =>
-      listScoredOrbitalObjects({
-        orbitRegion,
-        type: objectType,
+      catalogObjects.filter((object) => {
+        const typeMatches = objectType === 'all' || object.type === objectType;
+        const orbitMatches = orbitRegion === 'all' || object.orbitRegion === orbitRegion;
+
+        return typeMatches && orbitMatches;
       }),
-    [objectType, orbitRegion]
+    [catalogObjects, objectType, orbitRegion]
   );
   const selectedObject =
     filteredObjects.find((object) => object.id === selectedObjectId) ?? filteredObjects[0];
@@ -180,7 +213,7 @@ export function ObjectExplorerScreen() {
                 detail="Loaded through repository"
                 label="Catalog objects"
                 tone="cyan"
-                value={allObjects.length.toString()}
+                value={catalogObjects.length.toString()}
                 style={styles.metricCard}
               />
               <Metric
@@ -198,7 +231,7 @@ export function ObjectExplorerScreen() {
                 style={styles.metricCard}
               />
               <Metric
-                detail="Average deterministic score"
+                detail="Across active catalog"
                 label="Priority baseline"
                 tone="warning"
                 value={averagePriority.toString()}
@@ -212,6 +245,8 @@ export function ObjectExplorerScreen() {
                 style={styles.metricCard}
               />
             </View>
+
+            <DataSourceNotice isLoading={isLoadingPublicData} status={repositoryStatus} />
 
             <ObjectFilters
               objectType={objectType}

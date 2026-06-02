@@ -1,9 +1,13 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Badge, Metric, SectionHeader } from '@/components/ui';
-import { listScoredOrbitalObjects } from '@/domain/repositories';
+import { Badge, DataSourceNotice, Metric, SectionHeader } from '@/components/ui';
+import {
+  getOrbitalObjectRepositoryStatus,
+  listScoredOrbitalObjects,
+  loadScoredOrbitalObjects,
+} from '@/domain/repositories';
 import { ScoredOrbitalObject } from '@/domain/scoring';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { colors, layout, spacing, typography } from '@/theme';
@@ -17,12 +21,11 @@ import {
 } from './components/PriorityFilters';
 import { PriorityList } from './components/PriorityList';
 
-const allPriorityObjects = listScoredOrbitalObjects().sort(
-  (left, right) => right.scores.priority.score - left.scores.priority.score
-);
-const decisionOptions = Array.from(
-  new Set(allPriorityObjects.map((object) => object.scores.priority.decision))
-).sort();
+function sortByPriority(objects: ScoredOrbitalObject[]) {
+  return [...objects].sort((left, right) => right.scores.priority.score - left.scores.priority.score);
+}
+
+const initialPriorityObjects = sortByPriority(listScoredOrbitalObjects());
 
 function getSortedObjects(objects: ScoredOrbitalObject[], sortMode: PrioritySortMode) {
   const scoreKey =
@@ -33,10 +36,42 @@ function getSortedObjects(objects: ScoredOrbitalObject[], sortMode: PrioritySort
 
 export function PriorityQueueScreen() {
   const { isDesktop } = useBreakpoint();
+  const [allPriorityObjects, setAllPriorityObjects] =
+    useState<ScoredOrbitalObject[]>(initialPriorityObjects);
+  const [repositoryStatus, setRepositoryStatus] = useState(getOrbitalObjectRepositoryStatus);
+  const [isLoadingPublicData, setIsLoadingPublicData] = useState(true);
   const [objectType, setObjectType] = useState<PriorityObjectTypeFilter>('all');
   const [orbitRegion, setOrbitRegion] = useState<PriorityOrbitFilter>('all');
   const [decision, setDecision] = useState<PriorityDecisionFilter>('all');
   const [sortMode, setSortMode] = useState<PrioritySortMode>('priority');
+
+  useEffect(() => {
+    let isMounted = true;
+
+    loadScoredOrbitalObjects()
+      .then((result) => {
+        if (!isMounted) {
+          return;
+        }
+
+        setAllPriorityObjects(sortByPriority(result.objects));
+        setRepositoryStatus(result.status);
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsLoadingPublicData(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const decisionOptions = useMemo(
+    () => Array.from(new Set(allPriorityObjects.map((object) => object.scores.priority.decision))).sort(),
+    [allPriorityObjects]
+  );
 
   const filteredObjects = useMemo(() => {
     const filtered = allPriorityObjects.filter((object) => {
@@ -48,7 +83,7 @@ export function PriorityQueueScreen() {
     });
 
     return getSortedObjects(filtered, sortMode);
-  }, [decision, objectType, orbitRegion, sortMode]);
+  }, [allPriorityObjects, decision, objectType, orbitRegion, sortMode]);
   const topObject = filteredObjects[0] ?? allPriorityObjects[0];
   const highPriorityCount = allPriorityObjects.filter(
     (object) => object.scores.priority.level === 'high'
@@ -115,6 +150,8 @@ export function PriorityQueueScreen() {
                 style={styles.metricCard}
               />
             </View>
+
+            <DataSourceNotice isLoading={isLoadingPublicData} status={repositoryStatus} />
 
             <PriorityFilters
               decision={decision}
