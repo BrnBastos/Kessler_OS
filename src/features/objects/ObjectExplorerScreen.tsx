@@ -1,14 +1,23 @@
-import { router } from 'expo-router';
+import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Badge, Button, Card, Metric, SectionHeader } from '@/components/ui';
 import { mockOrbitalObjects } from '@/data';
-import { DataConfidence, OrbitalObject, OrbitalObjectType } from '@/domain/models';
+import { OrbitalObject } from '@/domain/models';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { colors, layout, spacing, typography } from '@/theme';
 
-type BadgeTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'simulated';
+import { ObjectFilters, ObjectTypeFilter, OrbitRegionFilter } from './components/ObjectFilters';
+import { ObjectList } from './components/ObjectList';
+import { OrbitalVisual } from './components/OrbitalVisual';
+import {
+  formatEstimate,
+  formatObjectStatus,
+  formatObjectType,
+  getConfidenceLabel,
+  getConfidenceTone,
+} from './object-formatters';
 
 const inactiveObjects = mockOrbitalObjects.filter((object) => object.status !== 'active');
 const leoObjects = mockOrbitalObjects.filter((object) => object.orbitRegion === 'LEO');
@@ -16,52 +25,27 @@ const uncertainObjects = mockOrbitalObjects.filter(
   (object) => object.dataConfidence === 'unknown' || object.dataConfidence === 'simulated'
 );
 
-function formatObjectType(type: OrbitalObjectType) {
-  return type.replace('_', ' ');
-}
-
-function formatEstimate(value?: number, suffix = '') {
-  if (typeof value !== 'number') {
-    return 'Unknown';
+function SelectedObjectDetails({ object }: { object?: OrbitalObject }) {
+  if (!object) {
+    return (
+      <Card style={styles.detailCard}>
+        <Text style={styles.detailTitle}>Select an object to open details.</Text>
+        <Text style={styles.detailBody}>
+          The next phase will turn this focused summary into a full object passport route.
+        </Text>
+      </Card>
+    );
   }
 
-  return `${value.toLocaleString()}${suffix}`;
-}
-
-function getConfidenceTone(confidence: DataConfidence): BadgeTone {
-  switch (confidence) {
-    case 'confirmed':
-      return 'success';
-    case 'estimated':
-      return 'info';
-    case 'simulated':
-      return 'simulated';
-    case 'unknown':
-      return 'warning';
-  }
-}
-
-function getConfidenceLabel(confidence: DataConfidence) {
-  switch (confidence) {
-    case 'confirmed':
-      return 'Confirmed public data';
-    case 'estimated':
-      return 'System estimate';
-    case 'simulated':
-      return 'Simulated';
-    case 'unknown':
-      return 'Unknown';
-  }
-}
-
-function OrbitalObjectCard({ object }: { object: OrbitalObject }) {
   return (
-    <Card style={styles.objectCard}>
-      <View style={styles.objectHeader}>
-        <View style={styles.objectTitleGroup}>
-          <Text style={styles.objectName}>{object.name}</Text>
-          <Text style={styles.objectMeta}>
-            {formatObjectType(object.type)} · {object.orbitRegion} · {object.status}
+    <Card style={styles.detailCard}>
+      <View style={styles.detailHeader}>
+        <View style={styles.detailCopy}>
+          <Text style={styles.detailEyebrow}>Focused object</Text>
+          <Text style={styles.detailTitle}>{object.name}</Text>
+          <Text style={styles.detailMeta}>
+            {formatObjectType(object.type)} · {object.orbitRegion} ·{' '}
+            {formatObjectStatus(object.status)}
           </Text>
         </View>
         <Badge
@@ -70,32 +54,59 @@ function OrbitalObjectCard({ object }: { object: OrbitalObject }) {
         />
       </View>
 
-      <Text style={styles.objectSummary}>{object.summary}</Text>
+      <Text style={styles.detailBody}>{object.summary}</Text>
 
-      <View style={styles.factGrid}>
-        <View style={styles.factItem}>
+      <View style={styles.detailFacts}>
+        <View style={styles.detailFact}>
           <Text style={styles.factLabel}>Altitude</Text>
           <Text style={styles.factValue}>{formatEstimate(object.altitudeKm, ' km')}</Text>
         </View>
-        <View style={styles.factItem}>
+        <View style={styles.detailFact}>
           <Text style={styles.factLabel}>Mass</Text>
           <Text style={styles.factValue}>{formatEstimate(object.estimatedMassKg, ' kg')}</Text>
         </View>
-        <View style={styles.factItem}>
-          <Text style={styles.factLabel}>Size</Text>
-          <Text style={styles.factValue}>{formatEstimate(object.estimatedSizeM, ' m')}</Text>
-        </View>
-        <View style={styles.factItem}>
+        <View style={styles.detailFact}>
           <Text style={styles.factLabel}>Inclination</Text>
           <Text style={styles.factValue}>{formatEstimate(object.inclinationDeg, ' deg')}</Text>
         </View>
+        <View style={styles.detailFact}>
+          <Text style={styles.factLabel}>Launch</Text>
+          <Text style={styles.factValue}>{object.launchYear ?? 'Unknown'}</Text>
+        </View>
       </View>
+
+      <Button variant="secondary">Object Passport Next</Button>
     </Card>
   );
 }
 
-export default function OrbitScreen() {
+export function ObjectExplorerScreen() {
   const { isDesktop } = useBreakpoint();
+  const [objectType, setObjectType] = useState<ObjectTypeFilter>('all');
+  const [orbitRegion, setOrbitRegion] = useState<OrbitRegionFilter>('all');
+  const [selectedObjectId, setSelectedObjectId] = useState(mockOrbitalObjects[0]?.id);
+
+  const filteredObjects = useMemo(
+    () =>
+      mockOrbitalObjects.filter((object) => {
+        const typeMatches = objectType === 'all' || object.type === objectType;
+        const orbitMatches = orbitRegion === 'all' || object.orbitRegion === orbitRegion;
+
+        return typeMatches && orbitMatches;
+      }),
+    [objectType, orbitRegion]
+  );
+  const selectedObject =
+    filteredObjects.find((object) => object.id === selectedObjectId) ?? filteredObjects[0];
+
+  function handleSelectObject(object: OrbitalObject) {
+    setSelectedObjectId(object.id);
+  }
+
+  function handleResetFilters() {
+    setObjectType('all');
+    setOrbitRegion('all');
+  }
 
   return (
     <View style={styles.root}>
@@ -108,15 +119,9 @@ export default function OrbitScreen() {
               <Badge label="Local mock dataset" tone="simulated" />
               <SectionHeader
                 eyebrow="Orbital object exploration"
-                title="Explore public-inspired orbital objects from local prototype data."
-                description="This catalog proves the app can render typed orbital objects before API integration. Values are simplified for MVP planning and every object carries a confidence label."
-                action={
-                  isDesktop ? (
-                    <Button onPress={() => router.push('/priority')}>View Priority</Button>
-                  ) : undefined
-                }
+                title="Explore tracked and simulated orbital objects."
+                description="Filter by object type and orbit region, focus an object, and use the simplified orbit visual to keep the experience useful on phones, tablets and web."
               />
-              {!isDesktop && <Button onPress={() => router.push('/priority')}>View Priority</Button>}
             </View>
 
             <View style={styles.metricGrid}>
@@ -150,15 +155,32 @@ export default function OrbitScreen() {
               />
             </View>
 
-            <View style={styles.sectionTitleRow}>
-              <Text style={styles.sectionTitle}>Object catalog</Text>
-              <Text style={styles.sectionNote}>Prototype data · not operational guidance</Text>
-            </View>
+            <ObjectFilters
+              objectType={objectType}
+              orbitRegion={orbitRegion}
+              onObjectTypeChange={setObjectType}
+              onOrbitRegionChange={setOrbitRegion}
+              onReset={handleResetFilters}
+              resultCount={filteredObjects.length}
+            />
 
-            <View style={[styles.objectGrid, isDesktop && styles.objectGridDesktop]}>
-              {mockOrbitalObjects.map((object) => (
-                <OrbitalObjectCard key={object.id} object={object} />
-              ))}
+            <View style={[styles.explorerGrid, isDesktop && styles.explorerGridDesktop]}>
+              <View style={styles.visualColumn}>
+                <OrbitalVisual objects={filteredObjects} selectedObject={selectedObject} />
+                <SelectedObjectDetails object={selectedObject} />
+              </View>
+
+              <View style={styles.listColumn}>
+                <View style={styles.sectionTitleRow}>
+                  <Text style={styles.sectionTitle}>Object catalog</Text>
+                  <Text style={styles.sectionNote}>Tap a card to open local details</Text>
+                </View>
+                <ObjectList
+                  objects={filteredObjects}
+                  selectedObjectId={selectedObject?.id}
+                  onSelectObject={handleSelectObject}
+                />
+              </View>
             </View>
           </View>
         </SafeAreaView>
@@ -202,6 +224,21 @@ const styles = StyleSheet.create({
     flexBasis: 220,
     flexGrow: 1,
   },
+  explorerGrid: {
+    gap: spacing[5],
+  },
+  explorerGridDesktop: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+  },
+  visualColumn: {
+    flex: 0.92,
+    gap: spacing[4],
+  },
+  listColumn: {
+    flex: 1.08,
+    gap: spacing[4],
+  },
   sectionTitleRow: {
     gap: spacing[2],
   },
@@ -213,54 +250,50 @@ const styles = StyleSheet.create({
     ...typography.bodySmall,
     color: colors.text.muted,
   },
-  objectGrid: {
+  detailCard: {
     gap: spacing[4],
   },
-  objectGridDesktop: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  objectCard: {
-    flexBasis: 360,
-    flexGrow: 1,
-    gap: spacing[4],
-  },
-  objectHeader: {
+  detailHeader: {
     alignItems: 'flex-start',
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing[3],
     justifyContent: 'space-between',
   },
-  objectTitleGroup: {
-    flexShrink: 1,
+  detailCopy: {
+    flex: 1,
     gap: spacing[1],
     minWidth: 190,
   },
-  objectName: {
+  detailEyebrow: {
+    ...typography.caption,
+    color: colors.accent.cyan,
+    textTransform: 'uppercase',
+  },
+  detailTitle: {
     ...typography.h3,
     color: colors.text.primary,
   },
-  objectMeta: {
+  detailMeta: {
     ...typography.caption,
     color: colors.text.muted,
     textTransform: 'uppercase',
   },
-  objectSummary: {
+  detailBody: {
     ...typography.bodySmall,
     color: colors.text.secondary,
   },
-  factGrid: {
+  detailFacts: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing[3],
   },
-  factItem: {
+  detailFact: {
     backgroundColor: colors.background.surface,
     borderColor: colors.border.subtle,
     borderRadius: 12,
     borderWidth: 1,
-    flexBasis: 130,
+    flexBasis: 128,
     flexGrow: 1,
     gap: spacing[1],
     padding: spacing[3],
