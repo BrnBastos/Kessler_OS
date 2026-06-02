@@ -11,6 +11,7 @@ import {
   loadScoredOrbitalObjects,
 } from '@/domain/repositories';
 import { ScoredOrbitalObject } from '@/domain/scoring';
+import { DecisionReportPanel } from '@/features/reports/DecisionReportPanel';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { colors, layout, radius, spacing, typography } from '@/theme';
 
@@ -199,6 +200,11 @@ export function CircularEconomyScreen() {
 
                 <View style={styles.detailColumn}>
                   <ReusePotentialPanel object={selectedObject} estimates={estimates} />
+                  <DecisionReportPanel
+                    context="circular"
+                    object={selectedObject}
+                    materialEstimates={estimates}
+                  />
                   <MaterialUseCases estimates={estimates} />
                   <Card style={styles.actionCard} variant="action">
                     <View style={styles.actionCopy}>

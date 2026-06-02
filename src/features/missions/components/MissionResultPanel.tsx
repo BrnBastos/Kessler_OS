@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { Badge, BadgeTone, Card, Metric } from '@/components/ui';
 import { MissionEstimate, ScoredOrbitalObject } from '@/domain/scoring';
+import { DecisionReportPanel } from '@/features/reports/DecisionReportPanel';
 import { colors, radius, spacing, typography } from '@/theme';
 
 type MissionResultPanelProps = {
@@ -35,7 +36,7 @@ function formatDeltaV(deltaV: number) {
   return deltaV === 0 ? '0' : deltaV.toLocaleString();
 }
 
-export function MissionResultPanel({ object, result }: MissionResultPanelProps) {
+function MissionResultContent({ object, result }: MissionResultPanelProps) {
   return (
     <Card style={styles.card} variant="score">
       <View style={styles.header}>
@@ -121,7 +122,19 @@ export function MissionResultPanel({ object, result }: MissionResultPanelProps) 
   );
 }
 
+export function MissionResultPanel({ object, result }: MissionResultPanelProps) {
+  return (
+    <View style={styles.panelStack}>
+      <MissionResultContent object={object} result={result} />
+      <DecisionReportPanel context="mission" object={object} missionEstimate={result} />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
+  panelStack: {
+    gap: spacing[5],
+  },
   card: {
     gap: spacing[5],
   },

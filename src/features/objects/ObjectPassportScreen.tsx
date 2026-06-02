@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Badge, Button, Card, SectionHeader } from '@/components/ui';
 import { getScoredOrbitalObjectById } from '@/domain/repositories';
+import { DecisionReportPanel } from '@/features/reports/DecisionReportPanel';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { colors, layout, spacing, typography } from '@/theme';
 
@@ -95,6 +96,7 @@ export function ObjectPassportScreen({ objectId }: ObjectPassportScreenProps) {
               <View style={styles.mainColumn}>
                 <ObjectSummaryCard object={object} />
                 <ObjectScorePanel object={object} />
+                <DecisionReportPanel context="object-passport" object={object} />
               </View>
 
               <View style={styles.sideColumn}>
