@@ -224,7 +224,11 @@ export function ObjectExplorerScreen() {
 
             <View style={[styles.explorerGrid, isDesktop && styles.explorerGridDesktop]}>
               <View style={styles.visualColumn}>
-                <OrbitalVisual objects={filteredObjects} selectedObject={selectedObject} />
+                <OrbitalVisual
+                  objects={filteredObjects}
+                  selectedObject={selectedObject}
+                  onSelectObject={handleSelectObject}
+                />
                 <SelectedObjectDetails object={selectedObject} />
               </View>
 
