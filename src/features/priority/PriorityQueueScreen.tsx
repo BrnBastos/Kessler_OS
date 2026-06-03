@@ -1,8 +1,10 @@
+import { router } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Badge, DataSourceNotice, Metric, SectionHeader } from '@/components/ui';
+import { Badge, Button, DataSourceNotice, Metric, VisualPageHero } from '@/components/ui';
+import { visualAssets } from '@/config/visualAssets';
 import {
   getOrbitalObjectRepositoryStatus,
   listScoredOrbitalObjects,
@@ -20,6 +22,7 @@ import {
   PrioritySortMode,
 } from './components/PriorityFilters';
 import { PriorityList } from './components/PriorityList';
+import { getObjectVisualAsset } from '../objects/object-visuals';
 
 function sortByPriority(objects: ScoredOrbitalObject[]) {
   return [...objects].sort((left, right) => right.scores.priority.score - left.scores.priority.score);
@@ -35,7 +38,7 @@ function getSortedObjects(objects: ScoredOrbitalObject[], sortMode: PrioritySort
 }
 
 export function PriorityQueueScreen() {
-  const { isDesktop } = useBreakpoint();
+  const { isDesktop, isPhone } = useBreakpoint();
   const [allPriorityObjects, setAllPriorityObjects] =
     useState<ScoredOrbitalObject[]>(initialPriorityObjects);
   const [repositoryStatus, setRepositoryStatus] = useState(getOrbitalObjectRepositoryStatus);
@@ -111,14 +114,45 @@ export function PriorityQueueScreen() {
         contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}>
         <SafeAreaView>
           <View style={styles.stack}>
-            <View style={styles.hero}>
-              <Badge label="Fila determinística" tone="simulated" />
-              <SectionHeader
-                eyebrow="Fila de Prioridade"
-                title="Veja quais objetos orbitais merecem atenção primeiro."
-                description="A fila combina risco, valor de reuso, viabilidade e confiança em um sinal transparente de prioridade. Ela serve para comparação, não para operações profissionais de colisão."
-              />
-            </View>
+            <VisualPageHero
+              backgroundImage={visualAssets.backgrounds.satelliteOverEarth}
+              badge={<Badge label="Fila determinística" tone="simulated" />}
+              description="A fila combina risco, valor de reuso, viabilidade e confiança em um sinal transparente. Ela serve para comparação, não para operações profissionais de colisão."
+              eyebrow="Fila de Prioridade"
+              foregroundDetail={
+                topObject ? `${topObject.scores.priority.score} pontos de prioridade` : 'Sem alvo ativo'
+              }
+              foregroundImage={topObject ? getObjectVisualAsset(topObject) : visualAssets.objects.damagedSatellite}
+              foregroundLabel={topObject ? topObject.name : 'objeto em foco'}
+              title="Veja quais objetos orbitais merecem atenção primeiro."
+              actions={
+                topObject ? (
+                  <>
+                    <Button
+                      fullWidth={isPhone}
+                      onPress={() =>
+                        router.push({
+                          pathname: '/missions',
+                          params: { objectId: topObject.id },
+                        })
+                      }>
+                      Simular ação
+                    </Button>
+                    <Button
+                      fullWidth={isPhone}
+                      variant="secondary"
+                      onPress={() =>
+                        router.push({
+                          pathname: '/orbit/[id]',
+                          params: { id: topObject.id },
+                        })
+                      }>
+                      Abrir ficha
+                    </Button>
+                  </>
+                ) : undefined
+              }
+            />
 
             <View style={styles.metricGrid}>
               <Metric
@@ -204,9 +238,6 @@ const styles = StyleSheet.create({
   },
   stack: {
     gap: spacing[6],
-  },
-  hero: {
-    gap: spacing[5],
   },
   metricGrid: {
     flexDirection: 'row',

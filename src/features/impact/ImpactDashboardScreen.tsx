@@ -4,7 +4,16 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { mockReuseMaterials } from '@/data';
-import { Badge, Button, Card, DataSourceNotice, Metric, SectionHeader } from '@/components/ui';
+import {
+  Badge,
+  Button,
+  Card,
+  DataSourceNotice,
+  Metric,
+  SectionHeader,
+  VisualPageHero,
+} from '@/components/ui';
+import { visualAssets } from '@/config/visualAssets';
 import {
   getOrbitalObjectRepositoryStatus,
   listScoredOrbitalObjects,
@@ -92,7 +101,7 @@ function formatSavedAt(value?: string) {
 }
 
 export function ImpactDashboardScreen() {
-  const { isDesktop } = useBreakpoint();
+  const { isDesktop, isPhone } = useBreakpoint();
   const [catalogObjects, setCatalogObjects] = useState<ScoredOrbitalObject[]>(initialObjects);
   const [savedScenarios, setSavedScenarios] = useState<SavedMissionScenario[]>([]);
   const [repositoryStatus, setRepositoryStatus] = useState(getOrbitalObjectRepositoryStatus);
@@ -141,20 +150,26 @@ export function ImpactDashboardScreen() {
         contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}>
         <SafeAreaView>
           <View style={styles.stack}>
-            <View style={styles.hero}>
-              <Badge label="Visão de avaliação" tone="simulated" />
-              <SectionHeader
-                eyebrow="Painel de Impacto"
-                title="Mostre o valor do Kessler OS em uma visão pronta para apresentação."
-                description="Este painel resume análise de catálogo, prioridades, simulação de missão, reaproveitamento circular e prevenção com limites honestos de protótipo."
-                action={
-                  isDesktop ? (
-                    <Button onPress={() => router.push('/missions')}>Rodar simulação</Button>
-                  ) : undefined
-                }
-              />
-              {!isDesktop && <Button onPress={() => router.push('/missions')}>Rodar simulação</Button>}
-            </View>
+            <VisualPageHero
+              backgroundImage={visualAssets.backgrounds.cityImpact}
+              badge={<Badge label="Visão de avaliação" tone="simulated" />}
+              description="Este painel resume análise de catálogo, prioridades, simulação de missão, reaproveitamento circular e prevenção com limites honestos de protótipo."
+              eyebrow="Painel de Impacto"
+              foregroundDetail={`${catalogObjects.length} objetos analisados`}
+              foregroundImage={visualAssets.objects.recyclingModule}
+              foregroundLabel="história do projeto"
+              title="Mostre o valor do Kessler OS em uma visão pronta para apresentação."
+              actions={
+                <>
+                  <Button fullWidth={isPhone} onPress={() => router.push('/missions')}>
+                    Rodar simulação
+                  </Button>
+                  <Button fullWidth={isPhone} variant="secondary" onPress={() => router.push('/orbit')}>
+                    Abrir mapa orbital
+                  </Button>
+                </>
+              }
+            />
 
             <View style={styles.metricGrid}>
               <Metric
@@ -312,9 +327,6 @@ const styles = StyleSheet.create({
   },
   stack: {
     gap: spacing[6],
-  },
-  hero: {
-    gap: spacing[5],
   },
   metricGrid: {
     flexDirection: 'row',

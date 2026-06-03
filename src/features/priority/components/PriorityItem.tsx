@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { Badge, Button, Card } from '@/components/ui';
 import { ScoredOrbitalObject } from '@/domain/scoring';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { colors, radius, spacing, typography } from '@/theme';
 
 import {
@@ -19,6 +20,8 @@ type PriorityItemProps = {
 };
 
 export function PriorityItem({ object, rank }: PriorityItemProps) {
+  const { isPhone } = useBreakpoint();
+
   return (
     <Card style={styles.card}>
       <View style={styles.header}>
@@ -65,8 +68,9 @@ export function PriorityItem({ object, rank }: PriorityItemProps) {
         <Text style={styles.reason}>{object.scores.priority.summary}</Text>
       </View>
 
-      <View style={styles.actions}>
+      <View style={[styles.actions, isPhone && styles.actionsPhone]}>
         <Button
+          fullWidth={isPhone}
           size="small"
           variant="secondary"
           onPress={() =>
@@ -78,6 +82,7 @@ export function PriorityItem({ object, rank }: PriorityItemProps) {
           Abrir ficha
         </Button>
         <Button
+          fullWidth={isPhone}
           size="small"
           onPress={() =>
             router.push({
@@ -167,5 +172,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing[3],
+  },
+  actionsPhone: {
+    alignItems: 'stretch',
+    flexDirection: 'column',
   },
 });

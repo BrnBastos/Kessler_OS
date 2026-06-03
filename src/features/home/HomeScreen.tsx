@@ -151,7 +151,7 @@ function OrbitPreview() {
 export function HomeScreen() {
   const { height } = useWindowDimensions();
   const { isDesktop, isPhone } = useBreakpoint();
-  const heroMinHeight = Math.min(Math.max(600, height * (isPhone ? 0.82 : 0.76)), isPhone ? 700 : 760);
+  const heroMinHeight = Math.min(Math.max(650, height * (isPhone ? 0.82 : 0.76)), isPhone ? 700 : 760);
 
   return (
     <View style={styles.root}>

@@ -1,8 +1,10 @@
+import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Badge, Metric, SectionHeader } from '@/components/ui';
+import { Badge, Button, Metric, VisualPageHero } from '@/components/ui';
+import { visualAssets } from '@/config/visualAssets';
 import {
   calculateResponsibleOrbitScore,
   ResponsibleOrbitInput,
@@ -32,7 +34,7 @@ const preventionTopics = [
 ];
 
 export function PreventionHubScreen() {
-  const { isDesktop } = useBreakpoint();
+  const { isDesktop, isPhone } = useBreakpoint();
   const [missionPlan, setMissionPlan] = useState<ResponsibleOrbitInput>(defaultMissionPlan);
   const result = useMemo(() => calculateResponsibleOrbitScore(missionPlan), [missionPlan]);
   const enabledCount = Object.values(missionPlan).filter(Boolean).length;
@@ -51,14 +53,26 @@ export function PreventionHubScreen() {
         contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}>
         <SafeAreaView>
           <View style={styles.stack}>
-            <View style={styles.hero}>
-              <Badge label="Prevenção primeiro" tone="success" />
-              <SectionHeader
-                eyebrow="Central de Prevenção"
-                title="Desenhe missões que geram menos detritos desde o início."
-                description="O Kessler conecta resposta a detritos com comportamento orbital responsável: passivação, descarte, rastreamento, desvio e desenho circular de missões."
-              />
-            </View>
+            <VisualPageHero
+              backgroundImage={visualAssets.backgrounds.observatory}
+              badge={<Badge label="Prevenção primeiro" tone="success" />}
+              description="O Kessler conecta resposta a detritos com comportamento orbital responsável: passivação, descarte, rastreamento, desvio e desenho circular de missões."
+              eyebrow="Central de Prevenção"
+              foregroundDetail={`${result.score} pontos no plano atual`}
+              foregroundImage={visualAssets.objects.servicingSatellite}
+              foregroundLabel="missão responsável"
+              title="Cuidar da órbita começa antes do lançamento."
+              actions={
+                <>
+                  <Button fullWidth={isPhone} onPress={() => router.push('/missions')}>
+                    Testar missão
+                  </Button>
+                  <Button fullWidth={isPhone} variant="secondary" onPress={() => router.push('/orbit')}>
+                    Ver objetos atuais
+                  </Button>
+                </>
+              }
+            />
 
             <View style={styles.metricGrid}>
               <Metric
@@ -140,9 +154,6 @@ const styles = StyleSheet.create({
   },
   stack: {
     gap: spacing[6],
-  },
-  hero: {
-    gap: spacing[5],
   },
   metricGrid: {
     flexDirection: 'row',

@@ -1,9 +1,10 @@
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Badge, Button, Card, DataSourceNotice, Metric, SectionHeader } from '@/components/ui';
+import { Badge, Button, Card, DataSourceNotice, Metric, VisualPageHero } from '@/components/ui';
+import { visualAssets } from '@/config/visualAssets';
 import { MissionType } from '@/domain/models';
 import {
   getOrbitalObjectRepositoryStatus,
@@ -20,6 +21,7 @@ import {
 } from '@/services/persistence';
 import { colors, layout, spacing, typography } from '@/theme';
 
+import { getObjectVisualAsset } from '../objects/object-visuals';
 import { MissionResultPanel } from './components/MissionResultPanel';
 import { SavedMissionScenarios } from './components/SavedMissionScenarios';
 import { MissionSimulatorForm } from './components/MissionSimulatorForm';
@@ -34,7 +36,7 @@ function isMissionType(value: unknown): value is MissionType {
 }
 
 export function MissionSimulatorScreen() {
-  const { isDesktop } = useBreakpoint();
+  const { isDesktop, isPhone } = useBreakpoint();
   const params = useLocalSearchParams<{ missionType?: string; objectId?: string }>();
   const requestedObjectId = typeof params.objectId === 'string' ? params.objectId : undefined;
   const requestedMissionType = isMissionType(params.missionType) ? params.missionType : 'inspect';
@@ -118,14 +120,43 @@ export function MissionSimulatorScreen() {
         contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}>
         <SafeAreaView>
           <View style={styles.stack}>
-            <View style={styles.hero}>
-              <Badge label="Simulador determinístico" tone="simulated" />
-              <SectionHeader
-                eyebrow="Simulador de Missão"
-                title="Estime respostas práticas antes de escolher uma estratégia."
-                description="Escolha um objeto orbital e simule monitoramento, inspeção, desvio, retirada de órbita, realocação, captura ou reciclagem. O resultado apoia decisões no protótipo, mas não é planejamento operacional de voo."
-              />
-            </View>
+            <VisualPageHero
+              backgroundImage={visualAssets.backgrounds.observatory}
+              badge={<Badge label="Simulador determinístico" tone="simulated" />}
+              description="Escolha um objeto orbital e simule monitoramento, inspeção, desvio, retirada de órbita, realocação, captura ou reciclagem. O resultado apoia decisões no protótipo, mas não é planejamento operacional de voo."
+              eyebrow="Simulador de Missão"
+              foregroundDetail={
+                result ? `${result.feasibilityScore} pontos de viabilidade` : 'Simulação pronta'
+              }
+              foregroundImage={
+                selectedObject ? getObjectVisualAsset(selectedObject) : visualAssets.objects.servicingSatellite
+              }
+              foregroundLabel={selectedObject ? selectedObject.name : 'alvo em foco'}
+              title="Estime respostas práticas antes de escolher uma estratégia."
+              actions={
+                selectedObject ? (
+                  <>
+                    <Button
+                      fullWidth={isPhone}
+                      onPress={() =>
+                        router.push({
+                          pathname: '/orbit/[id]',
+                          params: { id: selectedObject.id },
+                        })
+                      }>
+                      Abrir ficha
+                    </Button>
+                    <Button fullWidth={isPhone} variant="secondary" onPress={() => router.push('/priority')}>
+                      Ver prioridades
+                    </Button>
+                  </>
+                ) : (
+                  <Button fullWidth={isPhone} onPress={() => router.push('/priority')}>
+                    Ver prioridades
+                  </Button>
+                )
+              }
+            />
 
             <View style={styles.metricGrid}>
               <Metric
@@ -180,12 +211,12 @@ export function MissionSimulatorScreen() {
                 </View>
 
                 <View style={styles.resultColumn}>
-                  <Card style={styles.saveCard} variant="action">
+                  <Card style={[styles.saveCard, isPhone && styles.saveCardPhone]} variant="action">
                     <View style={styles.saveCopy}>
                       <Text style={styles.saveTitle}>Cenário atual</Text>
                       <Text style={styles.saveBody}>{persistenceMessage}</Text>
                     </View>
-                    <Button onPress={handleSaveScenario}>Salvar cenário</Button>
+                    <Button fullWidth={isPhone} onPress={handleSaveScenario}>Salvar cenário</Button>
                   </Card>
                   <MissionResultPanel object={selectedObject} result={result} />
                 </View>
@@ -235,9 +266,6 @@ const styles = StyleSheet.create({
   stack: {
     gap: spacing[6],
   },
-  hero: {
-    gap: spacing[5],
-  },
   metricGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -269,6 +297,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: spacing[4],
     justifyContent: 'space-between',
+  },
+  saveCardPhone: {
+    flexDirection: 'column',
   },
   saveCopy: {
     flex: 1,
