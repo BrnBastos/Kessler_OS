@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Card } from '@/components/ui';
 import { formatObjectTypePluralLabel, ptBR } from '@/content/pt-br';
@@ -13,8 +13,10 @@ type ObjectFiltersProps = {
   onObjectTypeChange: (type: ObjectTypeFilter) => void;
   onOrbitRegionChange: (region: OrbitRegionFilter) => void;
   onReset: () => void;
+  onSearchQueryChange: (query: string) => void;
   orbitRegion: OrbitRegionFilter;
   resultCount: number;
+  searchQuery: string;
 };
 
 const objectTypeOptions: { label: string; value: ObjectTypeFilter }[] = [
@@ -38,19 +40,38 @@ export function ObjectFilters({
   onObjectTypeChange,
   onOrbitRegionChange,
   onReset,
+  onSearchQueryChange,
   orbitRegion,
   resultCount,
+  searchQuery,
 }: ObjectFiltersProps) {
   return (
     <Card style={styles.card}>
       <View style={styles.header}>
-        <View>
+        <View style={styles.headerCopy}>
           <Text style={styles.title}>Filtros de objetos</Text>
           <Text style={styles.resultCount}>{resultCount} objetos encontrados</Text>
         </View>
         <Pressable accessibilityRole="button" onPress={onReset} style={styles.resetButton}>
           <Text style={styles.resetLabel}>{ptBR.common.reset}</Text>
         </Pressable>
+      </View>
+
+      <View style={styles.filterGroup}>
+        <Text style={styles.filterLabel}>Busca</Text>
+        <TextInput
+          accessibilityLabel="Buscar objetos orbitais"
+          autoCapitalize="none"
+          autoCorrect={false}
+          clearButtonMode="while-editing"
+          onChangeText={onSearchQueryChange}
+          placeholder="Buscar por nome, NORAD, tipo ou região"
+          placeholderTextColor={colors.text.disabled}
+          returnKeyType="search"
+          selectionColor={colors.accent.cyan}
+          style={styles.searchInput}
+          value={searchQuery}
+        />
       </View>
 
       <View style={styles.filterGroup}>
@@ -113,8 +134,13 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: spacing[3],
     justifyContent: 'space-between',
+  },
+  headerCopy: {
+    flex: 1,
+    minWidth: 190,
   },
   title: {
     ...typography.h3,
@@ -144,6 +170,17 @@ const styles = StyleSheet.create({
     ...typography.caption,
     color: colors.text.muted,
     textTransform: 'uppercase',
+  },
+  searchInput: {
+    ...typography.bodySmall,
+    backgroundColor: colors.background.surface,
+    borderColor: colors.border.subtle,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    color: colors.text.primary,
+    minHeight: 48,
+    paddingHorizontal: spacing[4],
+    paddingVertical: spacing[3],
   },
   chips: {
     flexDirection: 'row',

@@ -27,6 +27,7 @@ import {
   getConfidenceTone,
   getScoreTone,
 } from './object-formatters';
+import { objectMatchesSearch } from './object-search';
 import { getObjectVisualAsset } from './object-visuals';
 
 const initialCatalogObjects = listScoredOrbitalObjects();
@@ -144,6 +145,7 @@ export function ObjectExplorerScreen() {
   const [isLoadingPublicData, setIsLoadingPublicData] = useState(true);
   const [objectType, setObjectType] = useState<ObjectTypeFilter>('all');
   const [orbitRegion, setOrbitRegion] = useState<OrbitRegionFilter>('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedObjectId, setSelectedObjectId] = useState(initialCatalogObjects[0]?.id);
 
   useEffect(() => {
@@ -184,10 +186,11 @@ export function ObjectExplorerScreen() {
       catalogObjects.filter((object) => {
         const typeMatches = objectType === 'all' || object.type === objectType;
         const orbitMatches = orbitRegion === 'all' || object.orbitRegion === orbitRegion;
+        const searchMatches = objectMatchesSearch(object, searchQuery);
 
-        return typeMatches && orbitMatches;
+        return typeMatches && orbitMatches && searchMatches;
       }),
-    [catalogObjects, objectType, orbitRegion]
+    [catalogObjects, objectType, orbitRegion, searchQuery]
   );
   const selectedObject =
     filteredObjects.find((object) => object.id === selectedObjectId) ?? filteredObjects[0];
@@ -206,6 +209,7 @@ export function ObjectExplorerScreen() {
   function handleResetFilters() {
     setObjectType('all');
     setOrbitRegion('all');
+    setSearchQuery('');
   }
 
   const filtersControl = (
@@ -215,7 +219,9 @@ export function ObjectExplorerScreen() {
       onObjectTypeChange={setObjectType}
       onOrbitRegionChange={setOrbitRegion}
       onReset={handleResetFilters}
+      onSearchQueryChange={setSearchQuery}
       resultCount={filteredObjects.length}
+      searchQuery={searchQuery}
     />
   );
 

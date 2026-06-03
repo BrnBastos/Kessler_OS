@@ -51,9 +51,9 @@ O projeto conversa diretamente com temas da economia espacial:
 ## O que o app faz
 
 - Mostra uma Home visual para apresentar o problema.
-- Exibe um Mapa Orbital com objetos, filtros e seleção interativa.
+- Exibe um Mapa Orbital com busca, filtros e seleção interativa.
 - Mostra uma Ficha do Objeto com dados, pontuações e relatório.
-- Organiza uma Fila de Prioridade para comparar objetos que merecem atenção.
+- Organiza uma Fila de Prioridade com busca, filtros e ordenação para comparar objetos que merecem atenção.
 - Simula missões de monitoramento, inspeção, desvio, retirada de órbita, captura e reciclagem.
 - Estima possibilidades de Reaproveitamento Orbital.
 - Explica práticas de Prevenção para missões mais responsáveis.

@@ -22,6 +22,7 @@ import {
   PrioritySortMode,
 } from './components/PriorityFilters';
 import { PriorityList } from './components/PriorityList';
+import { objectMatchesSearch } from '../objects/object-search';
 import { getObjectVisualAsset } from '../objects/object-visuals';
 
 function sortByPriority(objects: ScoredOrbitalObject[]) {
@@ -46,6 +47,7 @@ export function PriorityQueueScreen() {
   const [objectType, setObjectType] = useState<PriorityObjectTypeFilter>('all');
   const [orbitRegion, setOrbitRegion] = useState<PriorityOrbitFilter>('all');
   const [decision, setDecision] = useState<PriorityDecisionFilter>('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [sortMode, setSortMode] = useState<PrioritySortMode>('priority');
 
   useEffect(() => {
@@ -81,12 +83,13 @@ export function PriorityQueueScreen() {
       const typeMatches = objectType === 'all' || object.type === objectType;
       const orbitMatches = orbitRegion === 'all' || object.orbitRegion === orbitRegion;
       const decisionMatches = decision === 'all' || object.scores.priority.decision === decision;
+      const searchMatches = objectMatchesSearch(object, searchQuery);
 
-      return typeMatches && orbitMatches && decisionMatches;
+      return typeMatches && orbitMatches && decisionMatches && searchMatches;
     });
 
     return getSortedObjects(filtered, sortMode);
-  }, [allPriorityObjects, decision, objectType, orbitRegion, sortMode]);
+  }, [allPriorityObjects, decision, objectType, orbitRegion, searchQuery, sortMode]);
   const topObject = filteredObjects[0] ?? allPriorityObjects[0];
   const highPriorityCount = allPriorityObjects.filter(
     (object) => object.scores.priority.level === 'high'
@@ -104,6 +107,7 @@ export function PriorityQueueScreen() {
     setObjectType('all');
     setOrbitRegion('all');
     setDecision('all');
+    setSearchQuery('');
     setSortMode('priority');
   }
 
@@ -197,8 +201,10 @@ export function PriorityQueueScreen() {
               onObjectTypeChange={setObjectType}
               onOrbitRegionChange={setOrbitRegion}
               onReset={handleReset}
+              onSearchQueryChange={setSearchQuery}
               onSortModeChange={setSortMode}
               resultCount={filteredObjects.length}
+              searchQuery={searchQuery}
             />
 
             <View style={styles.sectionTitleRow}>
