@@ -1,4 +1,4 @@
-import { DarkTheme, ThemeProvider } from 'expo-router';
+import { DarkTheme, ThemeProvider } from '@react-navigation/native';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import { AppShell } from '@/components/app-shell/AppShell';

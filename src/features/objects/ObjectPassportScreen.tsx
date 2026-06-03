@@ -1,24 +1,35 @@
+import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Badge, Button, Card, SectionHeader } from '@/components/ui';
+import { Badge, Button, Card } from '@/components/ui';
+import { visualAssets } from '@/config/visualAssets';
 import { getScoredOrbitalObjectById } from '@/domain/repositories';
 import { DecisionReportPanel } from '@/features/reports/DecisionReportPanel';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { colors, layout, spacing, typography } from '@/theme';
+import { colors, layout, radius, spacing, typography } from '@/theme';
 
 import { DataConfidenceNote } from './components/DataConfidenceNote';
 import { ObjectScorePanel } from './components/ObjectScorePanel';
 import { ObjectSummaryCard } from './components/ObjectSummaryCard';
 import { ObjectTechnicalDetails } from './components/ObjectTechnicalDetails';
+import {
+  formatObjectStatus,
+  formatObjectType,
+  getConfidenceLabel,
+  getConfidenceTone,
+  getScoreTone,
+} from './object-formatters';
+import { getObjectVisualAsset } from './object-visuals';
 
 type ObjectPassportScreenProps = {
   objectId: string;
 };
 
 export function ObjectPassportScreen({ objectId }: ObjectPassportScreenProps) {
-  const { isDesktop } = useBreakpoint();
+  const { isDesktop, isPhone } = useBreakpoint();
   const object = getScoredOrbitalObjectById(objectId);
 
   if (!object) {
@@ -49,47 +60,82 @@ export function ObjectPassportScreen({ objectId }: ObjectPassportScreenProps) {
         contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}>
         <SafeAreaView>
           <View style={styles.stack}>
-            <View style={styles.hero}>
-              <Badge label="Ficha do objeto" tone="simulated" />
-              <SectionHeader
-                eyebrow="Sinais conhecidos, estimados e simulados"
-                title="Entenda um objeto antes de decidir o próximo passo."
-                description="A ficha reúne metadados técnicos, confiança dos dados, pontuações determinísticas e a próxima ação recomendada para um objeto orbital."
-                action={
-                  isDesktop ? (
-                    <View style={styles.heroActions}>
-                      <Button variant="secondary" onPress={() => router.push('/orbit')}>
-                        Voltar ao mapa
-                      </Button>
-                      <Button
-                        onPress={() =>
-                          router.push({
-                            pathname: '/missions',
-                            params: { objectId: object.id },
-                          })
-                        }>
-                        Simular missão
-                      </Button>
-                    </View>
-                  ) : undefined
-                }
+            <View style={styles.heroPanel}>
+              <Image
+                source={visualAssets.backgrounds.satelliteOverEarth}
+                contentFit="cover"
+                style={styles.heroImage}
               />
-              {!isDesktop && (
-                <View style={styles.heroActions}>
-                  <Button variant="secondary" onPress={() => router.push('/orbit')}>
-                    Voltar ao mapa
-                  </Button>
-                  <Button
-                    onPress={() =>
-                      router.push({
-                        pathname: '/missions',
-                        params: { objectId: object.id },
-                      })
-                    }>
-                    Simular missão
-                  </Button>
+              <LinearGradient
+                colors={['rgba(2, 6, 23, 0.97)', 'rgba(2, 6, 23, 0.56)', 'rgba(2, 6, 23, 0.95)']}
+                start={{ x: 0, y: 0.1 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.heroOverlay}
+              />
+
+              <View style={[styles.heroContent, isDesktop && styles.heroContentDesktop]}>
+                <View style={styles.heroCopy}>
+                  <View style={styles.heroBadges}>
+                    <Badge label="Ficha do objeto" tone="simulated" />
+                    <Badge
+                      label={getConfidenceLabel(object.dataConfidence)}
+                      tone={getConfidenceTone(object.dataConfidence)}
+                    />
+                  </View>
+                  <Text style={[styles.heroTitle, isPhone && styles.heroTitlePhone]}>
+                    {object.name}
+                  </Text>
+                  <Text style={styles.heroMeta}>
+                    {formatObjectType(object.type)} · {object.orbitRegion} ·{' '}
+                    {formatObjectStatus(object.status)}
+                  </Text>
+                  <Text style={styles.heroDescription}>
+                    Antes de decidir uma missão, veja a história, o risco, a prioridade e o potencial
+                    de reaproveitamento deste objeto orbital.
+                  </Text>
+                  <View style={[styles.heroActions, isPhone && styles.heroActionsPhone]}>
+                    <Button fullWidth={isPhone} variant="secondary" onPress={() => router.push('/orbit')}>
+                      Voltar ao mapa
+                    </Button>
+                    <Button
+                      fullWidth={isPhone}
+                      onPress={() =>
+                        router.push({
+                          pathname: '/missions',
+                          params: { objectId: object.id },
+                        })
+                      }>
+                      Simular missão
+                    </Button>
+                  </View>
                 </View>
-              )}
+
+                <View style={styles.heroObjectCard}>
+                  <View style={styles.heroObjectStage}>
+                    <View style={[styles.heroOrbitRing, styles.heroOrbitOuter]} />
+                    <View style={[styles.heroOrbitRing, styles.heroOrbitInner]} />
+                    <Image
+                      source={getObjectVisualAsset(object)}
+                      contentFit="contain"
+                      style={styles.heroObjectImage}
+                    />
+                  </View>
+                  <View style={styles.heroScoreRow}>
+                    <Badge
+                      label="Risco"
+                      score={object.scores.risk.score}
+                      tone={getScoreTone(object.scores.risk.level)}
+                      style={styles.heroScoreBadge}
+                    />
+                    <Badge
+                      label="Prioridade"
+                      score={object.scores.priority.score}
+                      tone={getScoreTone(object.scores.priority.level)}
+                      style={styles.heroScoreBadge}
+                    />
+                  </View>
+                </View>
+              </View>
             </View>
 
             <View style={[styles.grid, isDesktop && styles.gridDesktop]}>
@@ -134,14 +180,135 @@ const styles = StyleSheet.create({
   stack: {
     gap: spacing[6],
   },
-  hero: {
-    gap: spacing[5],
+  heroPanel: {
+    backgroundColor: colors.background.surface,
+    borderColor: colors.border.subtle,
+    borderRadius: radius.xl,
+    borderWidth: 1,
+    minHeight: 520,
+    overflow: 'hidden',
+  },
+  heroImage: {
+    bottom: 0,
+    height: '100%',
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    width: '100%',
+  },
+  heroOverlay: {
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+  },
+  heroContent: {
+    gap: spacing[8],
+    justifyContent: 'space-between',
+    minHeight: 520,
+    padding: spacing[5],
+  },
+  heroContentDesktop: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    padding: spacing[8],
+  },
+  heroCopy: {
+    flex: 1,
+    gap: spacing[4],
+    maxWidth: 700,
+  },
+  heroBadges: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing[2],
+  },
+  heroTitle: {
+    ...typography.display,
+    color: colors.text.primary,
+    letterSpacing: 0,
+  },
+  heroTitlePhone: {
+    fontSize: 40,
+    lineHeight: 46,
+  },
+  heroMeta: {
+    ...typography.caption,
+    color: colors.text.muted,
+    textTransform: 'uppercase',
+  },
+  heroDescription: {
+    ...typography.body,
+    color: colors.text.secondary,
+    maxWidth: 660,
   },
   heroActions: {
     alignItems: 'flex-start',
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing[3],
+  },
+  heroActionsPhone: {
+    alignItems: 'stretch',
+    flexDirection: 'column',
+  },
+  heroObjectCard: {
+    backgroundColor: 'rgba(2, 6, 23, 0.62)',
+    borderColor: colors.border.subtle,
+    borderRadius: radius.xl,
+    borderWidth: 1,
+    flex: 0.72,
+    gap: spacing[4],
+    minHeight: 320,
+    overflow: 'hidden',
+    padding: spacing[4],
+  },
+  heroObjectStage: {
+    backgroundColor: 'rgba(7, 17, 30, 0.48)',
+    borderColor: colors.border.subtle,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    flex: 1,
+    minHeight: 210,
+    overflow: 'hidden',
+  },
+  heroOrbitRing: {
+    borderColor: 'rgba(56, 232, 255, 0.22)',
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    position: 'absolute',
+  },
+  heroOrbitOuter: {
+    bottom: -104,
+    height: 320,
+    right: -62,
+    transform: [{ rotate: '-18deg' }, { scaleX: 1.26 }],
+    width: 232,
+  },
+  heroOrbitInner: {
+    bottom: -48,
+    height: 210,
+    right: 30,
+    transform: [{ rotate: '28deg' }, { scaleX: 1.2 }],
+    width: 146,
+  },
+  heroObjectImage: {
+    bottom: -22,
+    height: '88%',
+    position: 'absolute',
+    right: -18,
+    width: '78%',
+  },
+  heroScoreRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing[3],
+  },
+  heroScoreBadge: {
+    flexGrow: 1,
   },
   grid: {
     gap: spacing[5],

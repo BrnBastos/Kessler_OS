@@ -1,10 +1,12 @@
 import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Badge, Button, Card, DataSourceNotice, Metric, SectionHeader } from '@/components/ui';
+import { Badge, Button, Card, DataSourceNotice, Metric } from '@/components/ui';
+import { visualAssets } from '@/config/visualAssets';
 import {
   getOrbitalObjectRepositoryStatus,
   listScoredOrbitalObjects,
@@ -12,7 +14,7 @@ import {
 } from '@/domain/repositories';
 import { ScoredOrbitalObject } from '@/domain/scoring';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { colors, layout, spacing, typography } from '@/theme';
+import { colors, layout, radius, spacing, typography } from '@/theme';
 
 import { ObjectFilters, ObjectTypeFilter, OrbitRegionFilter } from './components/ObjectFilters';
 import { ObjectList } from './components/ObjectList';
@@ -135,7 +137,7 @@ function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
 }
 
 export function ObjectExplorerScreen() {
-  const { isDesktop } = useBreakpoint();
+  const { isDesktop, isPhone } = useBreakpoint();
   const [catalogObjects, setCatalogObjects] =
     useState<ScoredOrbitalObject[]>(initialCatalogObjects);
   const [repositoryStatus, setRepositoryStatus] = useState(getOrbitalObjectRepositoryStatus);
@@ -206,6 +208,17 @@ export function ObjectExplorerScreen() {
     setOrbitRegion('all');
   }
 
+  const filtersControl = (
+    <ObjectFilters
+      objectType={objectType}
+      orbitRegion={orbitRegion}
+      onObjectTypeChange={setObjectType}
+      onOrbitRegionChange={setOrbitRegion}
+      onReset={handleResetFilters}
+      resultCount={filteredObjects.length}
+    />
+  );
+
   return (
     <View style={styles.root}>
       <ScrollView
@@ -213,13 +226,60 @@ export function ObjectExplorerScreen() {
         contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}>
         <SafeAreaView>
           <View style={styles.stack}>
-            <View style={styles.hero}>
-              <Badge label="Repositório + modelo de pontuação" tone="simulated" />
-              <SectionHeader
-                eyebrow="Exploração de objetos orbitais"
-                title="Explore objetos monitorados com pontuações transparentes."
-                description="Filtre por tipo e região orbital, foque um objeto e revise risco, valor de reuso e prioridade. Estes são sinais simplificados de planejamento, não previsões orbitais profissionais."
+            <View style={styles.heroPanel}>
+              <Image
+                source={visualAssets.backgrounds.satelliteOverEarth}
+                contentFit="cover"
+                style={styles.heroImage}
               />
+              <LinearGradient
+                colors={['rgba(2, 6, 23, 0.96)', 'rgba(2, 6, 23, 0.58)', 'rgba(2, 6, 23, 0.94)']}
+                start={{ x: 0, y: 0.1 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.heroOverlay}
+              />
+              <View style={[styles.heroContent, isDesktop && styles.heroContentDesktop]}>
+                <View style={styles.heroCopy}>
+                  <Badge label="Mapa Orbital" tone="simulated" />
+                  <Text style={[styles.heroTitle, isPhone && styles.heroTitlePhone]}>
+                    Aqui você explora objetos que ainda circulam a Terra.
+                  </Text>
+                  <Text style={styles.heroDescription}>
+                    Toque em um ponto ou em um card para entender o que ele é, de onde veio e por que
+                    importa. Os números são sinais de planejamento do protótipo, não previsões
+                    profissionais de colisão.
+                  </Text>
+                </View>
+
+                {selectedObject && (
+                  <View style={styles.heroFocusCard}>
+                    <View style={styles.heroObjectStage}>
+                      <View style={[styles.heroOrbitRing, styles.heroOrbitOuter]} />
+                      <View style={[styles.heroOrbitRing, styles.heroOrbitInner]} />
+                      <Image
+                        source={getObjectVisualAsset(selectedObject)}
+                        contentFit="contain"
+                        style={styles.heroObjectImage}
+                      />
+                    </View>
+                    <View style={styles.heroFocusCopy}>
+                      <Text style={styles.heroFocusLabel}>Objeto em foco</Text>
+                      <Text numberOfLines={2} style={styles.heroFocusTitle}>
+                        {selectedObject.name}
+                      </Text>
+                      <Text style={styles.heroFocusMeta}>
+                        {formatObjectType(selectedObject.type)} · {selectedObject.orbitRegion} ·{' '}
+                        {formatObjectStatus(selectedObject.status)}
+                      </Text>
+                      <Badge
+                        label="Risco"
+                        score={selectedObject.scores.risk.score}
+                        tone={getScoreTone(selectedObject.scores.risk.level)}
+                      />
+                    </View>
+                  </View>
+                )}
+              </View>
             </View>
 
             <View style={styles.metricGrid}>
@@ -262,14 +322,7 @@ export function ObjectExplorerScreen() {
 
             <DataSourceNotice isLoading={isLoadingPublicData} status={repositoryStatus} />
 
-            <ObjectFilters
-              objectType={objectType}
-              orbitRegion={orbitRegion}
-              onObjectTypeChange={setObjectType}
-              onOrbitRegionChange={setOrbitRegion}
-              onReset={handleResetFilters}
-              resultCount={filteredObjects.length}
-            />
+            {isDesktop && filtersControl}
 
             <View style={[styles.explorerGrid, isDesktop && styles.explorerGridDesktop]}>
               <View style={styles.visualColumn}>
@@ -278,6 +331,7 @@ export function ObjectExplorerScreen() {
                   selectedObject={selectedObject}
                   onSelectObject={handleSelectObject}
                 />
+                {!isDesktop && filtersControl}
                 <SelectedObjectDetails object={selectedObject} />
               </View>
 
@@ -326,8 +380,125 @@ const styles = StyleSheet.create({
   stack: {
     gap: spacing[6],
   },
-  hero: {
+  heroPanel: {
+    backgroundColor: colors.background.surface,
+    borderColor: colors.border.subtle,
+    borderRadius: radius.xl,
+    borderWidth: 1,
+    minHeight: 520,
+    overflow: 'hidden',
+  },
+  heroImage: {
+    bottom: 0,
+    height: '100%',
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    width: '100%',
+  },
+  heroOverlay: {
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+  },
+  heroContent: {
+    gap: spacing[8],
+    justifyContent: 'space-between',
+    minHeight: 520,
+    padding: spacing[5],
+  },
+  heroContentDesktop: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    padding: spacing[8],
+  },
+  heroCopy: {
+    flex: 1,
     gap: spacing[5],
+    maxWidth: 720,
+  },
+  heroTitle: {
+    ...typography.display,
+    color: colors.text.primary,
+    letterSpacing: 0,
+  },
+  heroTitlePhone: {
+    fontSize: 39,
+    lineHeight: 46,
+  },
+  heroDescription: {
+    ...typography.body,
+    color: colors.text.secondary,
+    maxWidth: 680,
+  },
+  heroFocusCard: {
+    backgroundColor: 'rgba(2, 6, 23, 0.62)',
+    borderColor: colors.border.subtle,
+    borderRadius: radius.xl,
+    borderWidth: 1,
+    flex: 0.74,
+    gap: spacing[4],
+    minHeight: 320,
+    minWidth: 0,
+    overflow: 'hidden',
+    padding: spacing[4],
+  },
+  heroObjectStage: {
+    backgroundColor: 'rgba(7, 17, 30, 0.48)',
+    borderColor: colors.border.subtle,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    flex: 1,
+    minHeight: 190,
+    overflow: 'hidden',
+  },
+  heroOrbitRing: {
+    borderColor: 'rgba(56, 232, 255, 0.22)',
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    position: 'absolute',
+  },
+  heroOrbitOuter: {
+    bottom: -96,
+    height: 300,
+    right: -58,
+    transform: [{ rotate: '-18deg' }, { scaleX: 1.26 }],
+    width: 218,
+  },
+  heroOrbitInner: {
+    bottom: -44,
+    height: 198,
+    right: 28,
+    transform: [{ rotate: '28deg' }, { scaleX: 1.2 }],
+    width: 138,
+  },
+  heroObjectImage: {
+    bottom: -20,
+    height: '88%',
+    position: 'absolute',
+    right: -16,
+    width: '76%',
+  },
+  heroFocusCopy: {
+    gap: spacing[2],
+  },
+  heroFocusLabel: {
+    ...typography.caption,
+    color: colors.accent.cyan,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+  },
+  heroFocusTitle: {
+    ...typography.h3,
+    color: colors.text.primary,
+  },
+  heroFocusMeta: {
+    ...typography.caption,
+    color: colors.text.muted,
+    textTransform: 'uppercase',
   },
   metricGrid: {
     flexDirection: 'row',

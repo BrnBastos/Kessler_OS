@@ -21,8 +21,8 @@ This is an academic MVP. It is not an operational collision prediction system, l
 
 ## Tech Stack
 
-- Expo SDK 56
-- React Native 0.85
+- Expo SDK 55
+- React Native 0.83
 - Expo Router
 - TypeScript
 - Vitest

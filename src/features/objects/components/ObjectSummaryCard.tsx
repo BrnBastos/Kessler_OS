@@ -1,7 +1,6 @@
-import { router } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Badge, Button, Card } from '@/components/ui';
+import { Badge, Card } from '@/components/ui';
 import { ScoredOrbitalObject } from '@/domain/scoring';
 import { colors, spacing, typography } from '@/theme';
 
@@ -39,13 +38,6 @@ export function ObjectSummaryCard({ object }: ObjectSummaryCardProps) {
       <View style={styles.decisionPanel}>
         <Text style={styles.decisionLabel}>Decisão recomendada</Text>
         <Text style={styles.decisionText}>{object.scores.priority.decision}</Text>
-      </View>
-
-      <View style={styles.actions}>
-        <Button onPress={() => router.push('/missions')}>Simular missão</Button>
-        <Button variant="secondary" onPress={() => router.push('/orbit')}>
-          Voltar ao mapa
-        </Button>
       </View>
     </Card>
   );
@@ -101,11 +93,5 @@ const styles = StyleSheet.create({
   decisionText: {
     ...typography.h3,
     color: colors.text.primary,
-  },
-  actions: {
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing[3],
   },
 });
