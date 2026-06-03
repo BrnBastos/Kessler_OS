@@ -13,17 +13,18 @@ export function HeroSection() {
   return (
     <View style={[styles.hero, isDesktop && styles.heroDesktop]}>
       <View style={styles.copy}>
-        <Badge label="System estimate" tone="simulated" />
+        <Badge label="Estimativa do sistema" tone="simulated" />
         <Text style={[styles.title, isPhone && styles.titlePhone]}>
-          Space debris intelligence for a circular orbital future.
+          A órbita da Terra está ficando cheia.
         </Text>
         <Text style={styles.subtitle}>
-          Smarter decisions in orbit through public data, risk analytics and mission simulation.
+          O Kessler OS ajuda a visualizar objetos abandonados no espaço, entender riscos e imaginar
+          como parte desse material pode ser reaproveitada no futuro.
         </Text>
         <View style={styles.actions}>
-          <Button onPress={() => router.push('/orbit')}>Explore Orbit</Button>
+          <Button onPress={() => router.push('/orbit')}>Explorar mapa orbital</Button>
           <Button variant="secondary" onPress={() => router.push('/prevention')}>
-            See How It Works
+            Entender o problema
           </Button>
         </View>
       </View>

@@ -21,14 +21,25 @@ function getLevelTone(level: ScoreResult['level']) {
 
 function getDecisionCopy(score: number) {
   if (score >= 70) {
-    return 'Ready for responsible mission review';
+    return 'Pronto para revisão de missão responsável';
   }
 
   if (score >= 40) {
-    return 'Needs prevention upgrades before approval';
+    return 'Precisa de melhorias de prevenção antes da aprovação';
   }
 
-  return 'Not responsible enough for launch planning';
+  return 'Ainda não é responsável o suficiente para planejar lançamento';
+}
+
+function getLevelLabel(level: ScoreResult['level']) {
+  switch (level) {
+    case 'high':
+      return 'Alto';
+    case 'medium':
+      return 'Médio';
+    case 'low':
+      return 'Baixo';
+  }
 }
 
 export function PreventionScorePreview({ result }: PreventionScorePreviewProps) {
@@ -39,9 +50,9 @@ export function PreventionScorePreview({ result }: PreventionScorePreviewProps) 
       <View style={styles.header}>
         <View style={styles.scoreBlock}>
           <Text style={styles.score}>{result.score}</Text>
-          <Text style={styles.scoreLabel}>Responsible orbit score</Text>
+          <Text style={styles.scoreLabel}>Pontuação de órbita responsável</Text>
         </View>
-        <Badge label={result.level} tone={getLevelTone(result.level)} />
+        <Badge label={getLevelLabel(result.level)} tone={getLevelTone(result.level)} />
       </View>
 
       <View style={styles.progressTrack}>
@@ -49,7 +60,7 @@ export function PreventionScorePreview({ result }: PreventionScorePreviewProps) 
       </View>
 
       <View style={styles.decisionPanel}>
-        <Text style={styles.decisionLabel}>Model decision</Text>
+        <Text style={styles.decisionLabel}>Decisão do modelo</Text>
         <Text style={styles.decision}>{getDecisionCopy(result.score)}</Text>
         <Text style={styles.summary}>{result.summary}</Text>
       </View>

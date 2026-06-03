@@ -1,3 +1,8 @@
+import {
+  formatDataConfidenceLabel,
+  formatObjectStatusLabel,
+  formatObjectTypeLabel,
+} from '@/content/pt-br';
 import { DataConfidence, OrbitalObject, OrbitalObjectStatus, OrbitalObjectType, OrbitRegion } from '@/domain/models';
 
 import { ScoreLevel, ScoreResult } from './score-types';
@@ -100,47 +105,47 @@ function getHandlingPenalty(object: OrbitalObject) {
 
 function getForgeSummary(score: number, object: OrbitalObject) {
   if (score >= 70) {
-    return `${object.name} has strong simulated reuse potential, but material assumptions still need validation.`;
+    return `${object.name} tem forte potencial simulado de reaproveitamento, mas as hipóteses de material ainda precisam de validação.`;
   }
 
   if (score >= 40) {
-    return `${object.name} may have reuse value if inspection confirms mass, structure, and handling feasibility.`;
+    return `${object.name} pode ter valor de reuso se a inspeção confirmar massa, estrutura e viabilidade de manuseio.`;
   }
 
-  return `${object.name} has limited reuse signal in this simplified model and may be better suited for monitoring or disposal.`;
+  return `${object.name} tem sinal limitado de reuso neste modelo simplificado e pode ser mais adequado para monitoramento ou descarte seguro.`;
 }
 
 export function calculateForgeValueScore(object: OrbitalObject): ScoreResult {
   const handlingPenalty = getHandlingPenalty(object);
   const factors = [
     {
-      description: 'Higher estimated mass can increase recoverable material potential.',
-      label: 'Estimated mass',
+      description: 'Massa estimada maior pode aumentar o potencial de material recuperável.',
+      label: 'Massa estimada',
       value: getMassValue(object.estimatedMassKg),
     },
     {
-      description: `${object.type} objects have different likely material and component utility.`,
-      label: 'Object utility',
+      description: `Objetos do tipo ${formatObjectTypeLabel(object.type)} têm utilidade provável diferente para material e componentes.`,
+      label: 'Utilidade do objeto',
       value: getTypeUtilityValue(object.type),
     },
     {
-      description: `${object.orbitRegion} access affects practical recovery assumptions.`,
-      label: 'Orbit accessibility',
+      description: `Acesso à região ${object.orbitRegion} afeta as hipóteses práticas de recuperação.`,
+      label: 'Acessibilidade orbital',
       value: getOrbitAccessibilityValue(object.orbitRegion),
     },
     {
-      description: `${object.status} status affects whether reuse can be considered.`,
-      label: 'Recovery status',
+      description: `Status ${formatObjectStatusLabel(object.status)} afeta se o reuso pode ser considerado.`,
+      label: 'Status de recuperação',
       value: getRecoveryStatusValue(object.status),
     },
     {
-      description: `${object.dataConfidence} confidence changes how much trust to place in reuse estimates.`,
-      label: 'Data confidence',
+      description: `${formatDataConfidenceLabel(object.dataConfidence)} muda o grau de confiança das estimativas de reuso.`,
+      label: 'Confiança dos dados',
       value: getConfidenceValue(object.dataConfidence),
     },
     {
-      description: 'Handling risk reduces value when capture or inspection is uncertain.',
-      label: 'Handling penalty',
+      description: 'Risco de manuseio reduz valor quando captura ou inspeção são incertas.',
+      label: 'Penalidade de manuseio',
       value: -handlingPenalty,
     },
   ];

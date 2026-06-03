@@ -14,9 +14,9 @@ export function PriorityList({ objects }: PriorityListProps) {
   if (objects.length === 0) {
     return (
       <Card style={styles.emptyCard}>
-        <Text style={styles.emptyTitle}>No priority items match these filters.</Text>
+        <Text style={styles.emptyTitle}>Nenhum item de prioridade combina com estes filtros.</Text>
         <Text style={styles.emptyBody}>
-          Reset the filters or choose a broader decision category to rebuild the queue.
+          Limpe os filtros ou escolha uma categoria de decisão mais ampla para reconstruir a fila.
         </Text>
       </Card>
     );

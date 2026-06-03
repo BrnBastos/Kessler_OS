@@ -22,23 +22,23 @@ function getScoreLevel(score: number): ScoreLevel {
 export function calculateResponsibleOrbitScore(input: ResponsibleOrbitInput): ScoreResult {
   const factors = [
     {
-      description: 'End-of-life disposal planning reduces long-term debris creation.',
-      label: 'Disposal plan',
+      description: 'Planejar descarte no fim da vida útil reduz a criação de detritos de longo prazo.',
+      label: 'Plano de descarte',
       value: input.disposalPlan ? 30 : 0,
     },
     {
-      description: 'Passivation reduces explosion and fragmentation risk after mission end.',
-      label: 'Passivation',
+      description: 'Passivação reduz risco de explosão e fragmentação após o fim da missão.',
+      label: 'Passivação',
       value: input.passivationPlan ? 25 : 0,
     },
     {
-      description: 'Tracking and cataloging improves shared orbital awareness.',
-      label: 'Tracking',
+      description: 'Rastreamento e catalogação melhoram a consciência orbital compartilhada.',
+      label: 'Rastreamento',
       value: input.trackingPlan ? 20 : 0,
     },
     {
-      description: 'Collision-avoidance planning reduces operational risk during the mission.',
-      label: 'Avoidance plan',
+      description: 'Planejamento de desvio reduz risco operacional durante a missão.',
+      label: 'Plano de desvio',
       value: input.collisionAvoidancePlan ? 25 : 0,
     },
   ];
@@ -50,7 +50,7 @@ export function calculateResponsibleOrbitScore(input: ResponsibleOrbitInput): Sc
     score,
     summary:
       score >= 70
-        ? 'This fictional mission shows strong prevention behavior in the simplified model.'
-        : 'This fictional mission needs stronger prevention planning before it should be considered responsible.',
+        ? 'Esta missão fictícia mostra bom comportamento de prevenção no modelo simplificado.'
+        : 'Esta missão fictícia precisa de planejamento preventivo mais forte antes de ser considerada responsável.',
   };
 }

@@ -18,27 +18,27 @@ type ChecklistItem = {
 
 const checklistItems: ChecklistItem[] = [
   {
-    body: 'A defined disposal target and timeline exists before the mission begins.',
+    body: 'Existe um alvo e um prazo de descarte definidos antes de a missão começar.',
     key: 'disposalPlan',
-    label: 'End-of-life disposal plan',
+    label: 'Plano de descarte no fim da vida útil',
     points: 30,
   },
   {
-    body: 'Stored energy sources are made safe after the operational mission ends.',
+    body: 'Fontes de energia armazenada são tornadas seguras após o fim da missão operacional.',
     key: 'passivationPlan',
-    label: 'Passivation plan',
+    label: 'Plano de passivação',
     points: 25,
   },
   {
-    body: 'The object can be tracked, identified and shared with catalog users.',
+    body: 'O objeto pode ser rastreado, identificado e compartilhado com usuários do catálogo.',
     key: 'trackingPlan',
-    label: 'Tracking and cataloging plan',
+    label: 'Plano de rastreamento e catalogação',
     points: 20,
   },
   {
-    body: 'The mission has a maneuver policy for conjunction warnings.',
+    body: 'A missão tem política de manobra para alertas de aproximação.',
     key: 'collisionAvoidancePlan',
-    label: 'Collision avoidance plan',
+    label: 'Plano de desvio de colisão',
     points: 25,
   },
 ];
@@ -47,9 +47,10 @@ export function ResponsibleMissionChecklist({ onToggle, value }: ResponsibleMiss
   return (
     <Card style={styles.card}>
       <View style={styles.header}>
-        <Text style={styles.title}>Responsible mission checklist</Text>
+        <Text style={styles.title}>Checklist de missão responsável</Text>
         <Text style={styles.description}>
-          Toggle the fictional mission controls to see how prevention choices affect the score.
+          Ative ou desative controles fictícios para ver como escolhas de prevenção afetam a
+          pontuação.
         </Text>
       </View>
 
@@ -70,7 +71,7 @@ export function ResponsibleMissionChecklist({ onToggle, value }: ResponsibleMiss
               ]}>
               <View style={[styles.toggle, enabled && styles.toggleEnabled]}>
                 <Text style={[styles.toggleText, enabled && styles.toggleTextEnabled]}>
-                  {enabled ? 'ON' : 'OFF'}
+                  {enabled ? 'SIM' : 'NÃO'}
                 </Text>
               </View>
 

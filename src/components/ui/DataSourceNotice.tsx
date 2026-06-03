@@ -11,12 +11,12 @@ type DataSourceNoticeProps = {
 
 export function DataSourceNotice({ isLoading, status, style }: DataSourceNoticeProps) {
   const title = isLoading
-    ? 'Checking public orbital data'
+    ? 'Verificando dados orbitais públicos'
     : status.source === 'celestrak'
-      ? 'CelesTrak data loaded'
-      : 'Using local fallback catalog';
+      ? 'Dados do CelesTrak carregados'
+      : 'Usando catálogo local de apoio';
   const detail = isLoading
-    ? 'The app is starting with local objects while the public adapter refreshes in the background.'
+    ? 'O app começa com objetos locais enquanto o adaptador público atualiza em segundo plano.'
     : status.message;
 
   return (
@@ -33,10 +33,10 @@ export function DataSourceNotice({ isLoading, status, style }: DataSourceNoticeP
         <Text style={styles.detail}>{detail}</Text>
         {status.updatedAt && (
           <Text style={styles.meta}>
-            Last adapter refresh: {new Date(status.updatedAt).toLocaleString()}
+            Última atualização do adaptador: {new Date(status.updatedAt).toLocaleString('pt-BR')}
           </Text>
         )}
-        {status.error && <Text style={styles.error}>Adapter error: {status.error}</Text>}
+        {status.error && <Text style={styles.error}>Erro do adaptador: {status.error}</Text>}
       </View>
     </View>
   );

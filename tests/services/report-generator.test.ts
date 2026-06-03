@@ -19,6 +19,6 @@ describe('decision report generator', () => {
     expect(report.title).toContain(scoredObject.name);
     expect(report.summary).toContain(scoredObject.name);
     expect(report.sections.length).toBeGreaterThanOrEqual(3);
-    expect(report.assumptions.join(' ')).toContain('deterministic templates');
+    expect(report.assumptions.join(' ')).toContain('templates determinísticos');
   });
 });

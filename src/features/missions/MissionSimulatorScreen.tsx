@@ -46,7 +46,7 @@ export function MissionSimulatorScreen() {
   );
   const [missionType, setMissionType] = useState<MissionType>(requestedMissionType);
   const [savedScenarios, setSavedScenarios] = useState<SavedMissionScenario[]>([]);
-  const [persistenceMessage, setPersistenceMessage] = useState('Local persistence ready.');
+  const [persistenceMessage, setPersistenceMessage] = useState('Persistência local pronta.');
 
   useEffect(() => {
     let isMounted = true;
@@ -86,7 +86,7 @@ export function MissionSimulatorScreen() {
     (object) => object.scores.priority.level === 'high'
   ).length;
   const removableCount = catalogObjects.filter((object) =>
-    ['Inspect before removal', 'Prioritize removal'].includes(object.scores.priority.decision)
+    ['Inspecionar antes da remoção', 'Priorizar remoção'].includes(object.scores.priority.decision)
   ).length;
 
   async function handleSaveScenario() {
@@ -96,19 +96,19 @@ export function MissionSimulatorScreen() {
 
     const nextScenarios = await saveMissionScenario(selectedObject, result);
     setSavedScenarios(nextScenarios);
-    setPersistenceMessage('Scenario saved locally for comparison.');
+    setPersistenceMessage('Cenário salvo localmente para comparação.');
   }
 
   async function handleRemoveScenario(scenarioId: string) {
     const nextScenarios = await removeSavedMissionScenario(scenarioId);
     setSavedScenarios(nextScenarios);
-    setPersistenceMessage('Saved scenario removed.');
+    setPersistenceMessage('Cenário salvo removido.');
   }
 
   function handleApplyScenario(scenario: SavedMissionScenario) {
     setSelectedObjectId(scenario.objectId);
     setMissionType(scenario.missionType);
-    setPersistenceMessage('Saved scenario loaded into the simulator.');
+    setPersistenceMessage('Cenário salvo carregado no simulador.');
   }
 
   return (
@@ -119,46 +119,46 @@ export function MissionSimulatorScreen() {
         <SafeAreaView>
           <View style={styles.stack}>
             <View style={styles.hero}>
-              <Badge label="Deterministic simulator" tone="simulated" />
+              <Badge label="Simulador determinístico" tone="simulated" />
               <SectionHeader
-                eyebrow="Mission Simulator"
-                title="Estimate practical responses before choosing a debris strategy."
-                description="Choose an orbital object and simulate monitoring, inspection, avoidance, deorbit, relocation, capture or recycling. The result is deterministic decision support, not operational flight planning."
+                eyebrow="Simulador de Missão"
+                title="Estime respostas práticas antes de escolher uma estratégia."
+                description="Escolha um objeto orbital e simule monitoramento, inspeção, desvio, retirada de órbita, realocação, captura ou reciclagem. O resultado apoia decisões no protótipo, mas não é planejamento operacional de voo."
               />
             </View>
 
             <View style={styles.metricGrid}>
               <Metric
-                detail="Targets available for simulation"
-                label="Catalog objects"
+                detail="Alvos disponíveis para simulação"
+                label="Objetos no catálogo"
                 tone="cyan"
                 value={catalogObjects.length.toString()}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Priority level high"
-                label="High priority"
+                detail="Nível de prioridade alto"
+                label="Alta prioridade"
                 tone="warning"
                 value={highPriorityCount.toString()}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Inspection or removal candidates"
-                label="Action candidates"
+                detail="Candidatos a inspeção ou remoção"
+                label="Candidatos a ação"
                 tone="danger"
                 value={removableCount.toString()}
                 style={styles.metricCard}
               />
               <Metric
-                detail={selectedObject ? selectedObject.name : 'No target selected'}
-                label="Selected target"
+                detail={selectedObject ? selectedObject.name : 'Nenhum alvo selecionado'}
+                label="Alvo selecionado"
                 tone="blue"
                 value={result ? result.feasibilityScore.toString() : '0'}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Stored on this device"
-                label="Saved scenarios"
+                detail="Armazenados neste dispositivo"
+                label="Cenários salvos"
                 tone="teal"
                 value={savedScenarios.length.toString()}
                 style={styles.metricCard}
@@ -182,20 +182,20 @@ export function MissionSimulatorScreen() {
                 <View style={styles.resultColumn}>
                   <Card style={styles.saveCard} variant="action">
                     <View style={styles.saveCopy}>
-                      <Text style={styles.saveTitle}>Current scenario</Text>
+                      <Text style={styles.saveTitle}>Cenário atual</Text>
                       <Text style={styles.saveBody}>{persistenceMessage}</Text>
                     </View>
-                    <Button onPress={handleSaveScenario}>Save Scenario</Button>
+                    <Button onPress={handleSaveScenario}>Salvar cenário</Button>
                   </Card>
                   <MissionResultPanel object={selectedObject} result={result} />
                 </View>
               </View>
             ) : (
               <Card style={styles.emptyCard}>
-                <Text style={styles.emptyTitle}>No objects available for simulation.</Text>
+                <Text style={styles.emptyTitle}>Nenhum objeto disponível para simulação.</Text>
                 <Text style={styles.emptyBody}>
-                  The simulator needs at least one catalog object from the local repository or public
-                  data adapter.
+                  O simulador precisa de pelo menos um objeto do catálogo local ou do adaptador de
+                  dados públicos.
                 </Text>
               </Card>
             )}

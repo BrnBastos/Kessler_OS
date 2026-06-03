@@ -45,7 +45,7 @@ async function fetchTextWithTimeout(url: string, timeoutMs: number) {
     const response = await fetch(url, { signal: controller.signal });
 
     if (!response.ok) {
-      throw new Error(`CelesTrak returned HTTP ${response.status}`);
+      throw new Error(`CelesTrak retornou HTTP ${response.status}`);
     }
 
     return await response.text();
@@ -93,7 +93,7 @@ export async function fetchCelesTrakOrbitalObjects(
   const objects = successfulResults.flatMap((result) => result.objects);
 
   if (objects.length === 0) {
-    throw new Error('CelesTrak did not return usable TLE data for the configured catalog numbers.');
+    throw new Error('CelesTrak não retornou dados TLE utilizáveis para os números de catálogo configurados.');
   }
 
   const result: CelesTrakFetchResult = {

@@ -146,7 +146,7 @@ export function tleSetToOrbitalObject(tleSet: ParsedTleSet): OrbitalObject {
     orbitRegion: tleSet.orbitRegion,
     status: getObjectStatus(type),
     summary:
-      'Public CelesTrak GP element set. Altitude is approximated from TLE mean motion for the MVP map and scoring model.',
+      'Conjunto público GP do CelesTrak. A altitude é aproximada a partir do movimento médio do TLE para o mapa e o modelo de pontuação do MVP.',
     type,
   };
 }

@@ -13,13 +13,13 @@ type DataConfidenceNoteProps = {
 function getConfidenceExplanation(confidence: DataConfidence) {
   switch (confidence) {
     case 'confirmed':
-      return 'This field is treated as public reference data in the prototype. Scores still use simplified models.';
+      return 'Este campo é tratado como dado público de referência no protótipo. As pontuações ainda usam modelos simplificados.';
     case 'estimated':
-      return 'Some values are estimated from public-style metadata. Treat results as planning signals, not confirmed operational truth.';
+      return 'Alguns valores são estimados a partir de metadados públicos. Trate os resultados como sinais de planejamento, não como verdade operacional confirmada.';
     case 'simulated':
-      return 'This object or value exists to test product behavior. It should not be presented as a real operational catalog item.';
+      return 'Este objeto ou valor existe para testar o comportamento do produto. Ele não deve ser apresentado como item operacional real.';
     case 'unknown':
-      return 'Important data is missing. Kessler should recommend review or inspection before strong conclusions.';
+      return 'Dados importantes estão ausentes. O Kessler deve recomendar revisão ou inspeção antes de conclusões fortes.';
   }
 }
 
@@ -27,7 +27,7 @@ export function DataConfidenceNote({ confidence }: DataConfidenceNoteProps) {
   return (
     <Card style={styles.card}>
       <View style={styles.header}>
-        <Text style={styles.title}>Data confidence</Text>
+        <Text style={styles.title}>Confiança dos dados</Text>
         <Badge label={getConfidenceLabel(confidence)} tone={getConfidenceTone(confidence)} />
       </View>
       <Text style={styles.body}>{getConfidenceExplanation(confidence)}</Text>

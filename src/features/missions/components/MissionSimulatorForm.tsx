@@ -32,14 +32,15 @@ export function MissionSimulatorForm({
   return (
     <Card style={styles.card}>
       <View style={styles.header}>
-        <Text style={styles.title}>Mission inputs</Text>
+        <Text style={styles.title}>Entradas da missão</Text>
         <Text style={styles.description}>
-          Choose a target object and response type to generate a deterministic prototype estimate.
+          Escolha um objeto-alvo e um tipo de resposta para gerar uma estimativa determinística do
+          protótipo.
         </Text>
       </View>
 
       <View style={styles.group}>
-        <Text style={styles.groupLabel}>Target object</Text>
+        <Text style={styles.groupLabel}>Objeto-alvo</Text>
         <View style={styles.objectGrid}>
           {objects.map((object) => {
             const selected = selectedObjectId === object.id;
@@ -74,7 +75,7 @@ export function MissionSimulatorForm({
       </View>
 
       <View style={styles.group}>
-        <Text style={styles.groupLabel}>Mission type</Text>
+        <Text style={styles.groupLabel}>Tipo de missão</Text>
         <View style={styles.missionGrid}>
           {missionTypeOptions.map((option) => {
             const selected = missionType === option;

@@ -20,7 +20,7 @@ describe('orbital scoring engines', () => {
 
     expect(scores.risk.level).toBe('high');
     expect(scores.priority.level).toBe('high');
-    expect(scores.priority.decision).toBe('Inspect before removal');
+    expect(scores.priority.decision).toBe('Inspecionar antes da remoção');
   });
 
   it('keeps active operational spacecraft out of removal priority', () => {
@@ -28,7 +28,7 @@ describe('orbital scoring engines', () => {
     const scores = calculateObjectScores(object);
 
     expect(scores.risk.level).not.toBe('high');
-    expect(scores.priority.decision).not.toBe('Prioritize removal');
+    expect(scores.priority.decision).not.toBe('Priorizar remoção');
   });
 });
 
@@ -41,7 +41,7 @@ describe('mission estimator', () => {
     const estimate = estimateMission(object, 'inspect');
 
     expect(estimate.targetObjectId).toBe(object.id);
-    expect(estimate.missionTypeLabel).toBe('Inspect');
+    expect(estimate.missionTypeLabel).toBe('Inspecionar');
     expect(estimate.feasibilityScore).toBeGreaterThan(0);
     expect(estimate.estimatedDeltaVMps).toBeGreaterThan(0);
     expect(estimate.explanation).toContain(object.name);

@@ -61,38 +61,38 @@ function getFeasibilityScore(object: OrbitalObject) {
 
 function getDecision(object: OrbitalObject, riskScore: number, forgeValueScore: number) {
   if (object.dataConfidence === 'unknown') {
-    return 'Insufficient data';
+    return 'Dados insuficientes';
   }
 
   if (riskScore >= 76 && forgeValueScore >= 60) {
-    return 'Inspect before removal';
+    return 'Inspecionar antes da remoção';
   }
 
   if (riskScore >= 76) {
-    return 'Prioritize removal';
+    return 'Priorizar remoção';
   }
 
   if (forgeValueScore >= 66) {
-    return 'Evaluate reuse';
+    return 'Avaliar reaproveitamento';
   }
 
   if (riskScore >= 48) {
-    return 'Monitor';
+    return 'Monitorar';
   }
 
-  return 'Low priority';
+  return 'Baixa prioridade';
 }
 
 function getPrioritySummary(score: number, decision: string, object: OrbitalObject) {
   if (score >= 70) {
-    return `${object.name} is high priority in this prototype. Recommended decision: ${decision}.`;
+    return `${object.name} é alta prioridade neste protótipo. Decisão recomendada: ${decision}.`;
   }
 
   if (score >= 40) {
-    return `${object.name} should remain visible in the queue. Recommended decision: ${decision}.`;
+    return `${object.name} deve continuar visível na fila. Decisão recomendada: ${decision}.`;
   }
 
-  return `${object.name} is low priority for now. Recommended decision: ${decision}.`;
+  return `${object.name} tem baixa prioridade por enquanto. Decisão recomendada: ${decision}.`;
 }
 
 export function calculatePriorityScore(
@@ -108,18 +108,18 @@ export function calculatePriorityScore(
     decision,
     factors: [
       {
-        description: 'Risk carries the highest weight because safety and congestion come first.',
-        label: 'Risk score',
+        description: 'Risco tem o maior peso porque segurança e congestionamento vêm primeiro.',
+        label: 'Pontuação de risco',
         value: Math.round(risk.score * 0.58),
       },
       {
-        description: 'Reuse value adds priority when recovery could create future material value.',
-        label: 'Forge value',
+        description: 'Valor de reuso aumenta prioridade quando a recuperação pode gerar material útil.',
+        label: 'Valor de reuso',
         value: Math.round(forgeValue.score * 0.24),
       },
       {
-        description: 'Feasibility reflects orbit accessibility, status, and data confidence.',
-        label: 'Mission feasibility',
+        description: 'Viabilidade considera acessibilidade orbital, status e confiança dos dados.',
+        label: 'Viabilidade da missão',
         value: Math.round(feasibilityScore * 0.18),
       },
     ],

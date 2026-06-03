@@ -87,7 +87,7 @@ export function OrbitalVisual({ objects, onSelectObject, selectedObject }: Orbit
 
           return (
             <Pressable
-              accessibilityLabel={`Select ${object.name}`}
+              accessibilityLabel={`Selecionar ${object.name}`}
               accessibilityRole="button"
               key={object.id}
               onPress={() => onSelectObject?.(object)}
@@ -110,18 +110,18 @@ export function OrbitalVisual({ objects, onSelectObject, selectedObject }: Orbit
         })}
 
         <View style={styles.legend}>
-          <Text style={styles.legendTitle}>Risk color</Text>
+          <Text style={styles.legendTitle}>Cor do risco</Text>
           <View style={styles.legendRow}>
             <View style={[styles.legendDot, { backgroundColor: colors.semantic.danger }]} />
-            <Text style={styles.legendText}>High</Text>
+            <Text style={styles.legendText}>Alto</Text>
           </View>
           <View style={styles.legendRow}>
             <View style={[styles.legendDot, { backgroundColor: colors.semantic.warning }]} />
-            <Text style={styles.legendText}>Medium</Text>
+            <Text style={styles.legendText}>Médio</Text>
           </View>
           <View style={styles.legendRow}>
             <View style={[styles.legendDot, { backgroundColor: colors.accent.cyan }]} />
-            <Text style={styles.legendText}>Low</Text>
+            <Text style={styles.legendText}>Baixo</Text>
           </View>
         </View>
       </View>
@@ -129,20 +129,20 @@ export function OrbitalVisual({ objects, onSelectObject, selectedObject }: Orbit
       <View style={styles.detailPanel}>
         <View style={styles.detailHeader}>
           <View style={styles.detailCopy}>
-            <Text style={styles.kicker}>Selected object</Text>
-            <Text style={styles.title}>{selectedObject?.name ?? 'Choose an object'}</Text>
+            <Text style={styles.kicker}>Objeto selecionado</Text>
+            <Text style={styles.title}>{selectedObject?.name ?? 'Escolha um objeto'}</Text>
             <Text style={styles.description}>
               {selectedObject
                 ? `${formatObjectType(selectedObject.type)} · ${selectedObject.orbitRegion} · ${formatObjectStatus(
                     selectedObject.status
                   )} · ${formatEstimate(selectedObject.altitudeKm, ' km')}`
-                : 'Tap an object card or map marker to focus the orbit visual and open a local detail summary.'}
+                : 'Toque em um card ou marcador do mapa para focar o visual orbital e abrir um resumo local.'}
             </Text>
           </View>
 
           {selectedObject && (
             <Badge
-              label="Risk"
+              label="Risco"
               score={selectedObject.scores.risk.score}
               tone={getScoreTone(selectedObject.scores.risk.level)}
             />

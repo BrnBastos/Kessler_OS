@@ -31,9 +31,9 @@ function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
   if (!object) {
     return (
       <Card style={styles.detailCard}>
-        <Text style={styles.detailTitle}>Select an object to open details.</Text>
+        <Text style={styles.detailTitle}>Selecione um objeto para abrir os detalhes.</Text>
         <Text style={styles.detailBody}>
-          Focus an object from the catalog or map to review scores, then open its full passport.
+          Escolha um objeto no catálogo ou no mapa para revisar os níveis e abrir sua ficha completa.
         </Text>
       </Card>
     );
@@ -43,7 +43,7 @@ function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
     <Card style={styles.detailCard}>
       <View style={styles.detailHeader}>
         <View style={styles.detailCopy}>
-          <Text style={styles.detailEyebrow}>Focused object</Text>
+          <Text style={styles.detailEyebrow}>Objeto em foco</Text>
           <Text style={styles.detailTitle}>{object.name}</Text>
           <Text style={styles.detailMeta}>
             {formatObjectType(object.type)} · {object.orbitRegion} ·{' '}
@@ -60,21 +60,21 @@ function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
 
       <View style={styles.scoreGrid}>
         <Badge
-          label="Risk Score"
+          label="Nível de risco"
           reason={object.scores.risk.summary}
           score={object.scores.risk.score}
           tone={getScoreTone(object.scores.risk.level)}
           style={styles.scoreBadge}
         />
         <Badge
-          label="Forge Value"
+          label="Valor de reuso"
           reason={object.scores.forgeValue.summary}
           score={object.scores.forgeValue.score}
           tone={getScoreTone(object.scores.forgeValue.level)}
           style={styles.scoreBadge}
         />
         <Badge
-          label="Priority"
+          label="Prioridade"
           reason={object.scores.priority.summary}
           score={object.scores.priority.score}
           tone={getScoreTone(object.scores.priority.level)}
@@ -88,21 +88,21 @@ function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
           <Text style={styles.factValue}>{formatEstimate(object.altitudeKm, ' km')}</Text>
         </View>
         <View style={styles.detailFact}>
-          <Text style={styles.factLabel}>Mass</Text>
+          <Text style={styles.factLabel}>Massa</Text>
           <Text style={styles.factValue}>{formatEstimate(object.estimatedMassKg, ' kg')}</Text>
         </View>
         <View style={styles.detailFact}>
-          <Text style={styles.factLabel}>Inclination</Text>
-          <Text style={styles.factValue}>{formatEstimate(object.inclinationDeg, ' deg')}</Text>
+          <Text style={styles.factLabel}>Inclinação</Text>
+          <Text style={styles.factValue}>{formatEstimate(object.inclinationDeg, '°')}</Text>
         </View>
         <View style={styles.detailFact}>
-          <Text style={styles.factLabel}>Launch</Text>
-          <Text style={styles.factValue}>{object.launchYear ?? 'Unknown'}</Text>
+          <Text style={styles.factLabel}>Lançamento</Text>
+          <Text style={styles.factValue}>{object.launchYear ?? 'Desconhecido'}</Text>
         </View>
       </View>
 
       <View style={styles.decisionPanel}>
-        <Text style={styles.decisionLabel}>Recommended decision</Text>
+        <Text style={styles.decisionLabel}>Decisão recomendada</Text>
         <Text style={styles.decisionText}>{object.scores.priority.decision}</Text>
       </View>
 
@@ -114,7 +114,7 @@ function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
             params: { id: object.id },
           })
         }>
-        Open Object Passport
+        Abrir ficha do objeto
       </Button>
     </Card>
   );
@@ -200,46 +200,46 @@ export function ObjectExplorerScreen() {
         <SafeAreaView>
           <View style={styles.stack}>
             <View style={styles.hero}>
-              <Badge label="Repository + scoring model" tone="simulated" />
+              <Badge label="Repositório + modelo de pontuação" tone="simulated" />
               <SectionHeader
-                eyebrow="Orbital object exploration"
-                title="Explore tracked objects with transparent prototype scores."
-                description="Filter by object type and orbit region, focus an object, and review deterministic risk, forge value, and priority scores. These are simplified planning signals, not professional orbital predictions."
+                eyebrow="Exploração de objetos orbitais"
+                title="Explore objetos monitorados com pontuações transparentes."
+                description="Filtre por tipo e região orbital, foque um objeto e revise risco, valor de reuso e prioridade. Estes são sinais simplificados de planejamento, não previsões orbitais profissionais."
               />
             </View>
 
             <View style={styles.metricGrid}>
               <Metric
-                detail="Loaded through repository"
-                label="Catalog objects"
+                detail="Carregados pelo repositório"
+                label="Objetos no catálogo"
                 tone="cyan"
                 value={catalogObjects.length.toString()}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Inactive, fragment or unknown"
-                label="Attention candidates"
+                detail="Inativos, fragmentos ou desconhecidos"
+                label="Candidatos de atenção"
                 tone="danger"
                 value={inactiveObjects.length.toString()}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Useful for early MVP focus"
-                label="LEO objects"
+                detail="Úteis para o foco inicial do MVP"
+                label="Objetos em LEO"
                 tone="blue"
                 value={leoObjects.length.toString()}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Across active catalog"
-                label="Priority baseline"
+                detail="No catálogo ativo"
+                label="Base de prioridade"
                 tone="warning"
                 value={averagePriority.toString()}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Unknown or simulated"
-                label="Needs confidence review"
+                detail="Desconhecidos ou simulados"
+                label="Pedem revisão"
                 tone="warning"
                 value={uncertainObjects.length.toString()}
                 style={styles.metricCard}
@@ -269,9 +269,9 @@ export function ObjectExplorerScreen() {
 
               <View style={styles.listColumn}>
                 <View style={styles.sectionTitleRow}>
-                  <Text style={styles.sectionTitle}>Object catalog</Text>
+                  <Text style={styles.sectionTitle}>Catálogo de objetos</Text>
                   <Text style={styles.sectionNote}>
-                    Tap a card to inspect scores and local details
+                    Toque em um card para inspecionar pontuações e detalhes locais
                   </Text>
                 </View>
                 <ObjectList

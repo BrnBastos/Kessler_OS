@@ -21,7 +21,7 @@ export function ObjectSummaryCard({ object }: ObjectSummaryCardProps) {
     <Card style={styles.card}>
       <View style={styles.header}>
         <View style={styles.copy}>
-          <Text style={styles.eyebrow}>Object passport</Text>
+          <Text style={styles.eyebrow}>Ficha do objeto</Text>
           <Text style={styles.title}>{object.name}</Text>
           <Text style={styles.meta}>
             {formatObjectType(object.type)} · {object.orbitRegion} ·{' '}
@@ -37,14 +37,14 @@ export function ObjectSummaryCard({ object }: ObjectSummaryCardProps) {
       <Text style={styles.summary}>{object.summary}</Text>
 
       <View style={styles.decisionPanel}>
-        <Text style={styles.decisionLabel}>Recommended decision</Text>
+        <Text style={styles.decisionLabel}>Decisão recomendada</Text>
         <Text style={styles.decisionText}>{object.scores.priority.decision}</Text>
       </View>
 
       <View style={styles.actions}>
-        <Button onPress={() => router.push('/missions')}>Simulate Mission</Button>
+        <Button onPress={() => router.push('/missions')}>Simular missão</Button>
         <Button variant="secondary" onPress={() => router.push('/orbit')}>
-          Back to Orbit
+          Voltar ao mapa
         </Button>
       </View>
     </Card>

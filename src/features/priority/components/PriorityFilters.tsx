@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Card } from '@/components/ui';
+import { formatObjectTypePluralLabel, ptBR } from '@/content/pt-br';
 import { OrbitalObjectType, OrbitRegion } from '@/domain/models';
 import { colors, radius, spacing, typography } from '@/theme';
 
@@ -24,15 +25,15 @@ type PriorityFiltersProps = {
 };
 
 const objectTypeOptions: { label: string; value: PriorityObjectTypeFilter }[] = [
-  { label: 'All', value: 'all' },
-  { label: 'Satellites', value: 'satellite' },
-  { label: 'Rocket bodies', value: 'rocket_body' },
-  { label: 'Debris', value: 'debris' },
-  { label: 'Unknown', value: 'unknown' },
+  { label: formatObjectTypePluralLabel('all'), value: 'all' },
+  { label: formatObjectTypePluralLabel('satellite'), value: 'satellite' },
+  { label: formatObjectTypePluralLabel('rocket_body'), value: 'rocket_body' },
+  { label: formatObjectTypePluralLabel('debris'), value: 'debris' },
+  { label: formatObjectTypePluralLabel('unknown'), value: 'unknown' },
 ];
 
 const orbitRegionOptions: { label: string; value: PriorityOrbitFilter }[] = [
-  { label: 'All', value: 'all' },
+  { label: ptBR.common.all, value: 'all' },
   { label: 'LEO', value: 'LEO' },
   { label: 'MEO', value: 'MEO' },
   { label: 'GEO', value: 'GEO' },
@@ -40,9 +41,9 @@ const orbitRegionOptions: { label: string; value: PriorityOrbitFilter }[] = [
 ];
 
 const sortOptions: { label: string; value: PrioritySortMode }[] = [
-  { label: 'Priority', value: 'priority' },
-  { label: 'Risk', value: 'risk' },
-  { label: 'Forge value', value: 'forge' },
+  { label: 'Prioridade', value: 'priority' },
+  { label: 'Risco', value: 'risk' },
+  { label: 'Valor de reuso', value: 'forge' },
 ];
 
 function FilterChips<TValue extends string>({
@@ -98,7 +99,7 @@ export function PriorityFilters({
   sortMode,
 }: PriorityFiltersProps) {
   const decisionFilterOptions = [
-    { label: 'All', value: 'all' },
+    { label: ptBR.common.all, value: 'all' },
     ...decisionOptions.map((value) => ({ label: value, value })),
   ];
 
@@ -106,35 +107,35 @@ export function PriorityFilters({
     <Card style={styles.card}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.title}>Priority filters</Text>
-          <Text style={styles.resultCount}>{resultCount} ranked objects</Text>
+          <Text style={styles.title}>Filtros de prioridade</Text>
+          <Text style={styles.resultCount}>{resultCount} objetos priorizados</Text>
         </View>
         <Pressable accessibilityRole="button" onPress={onReset} style={styles.resetButton}>
-          <Text style={styles.resetLabel}>Reset</Text>
+          <Text style={styles.resetLabel}>{ptBR.common.reset}</Text>
         </Pressable>
       </View>
 
       <FilterChips
         activeValue={sortMode}
-        label="Sort by"
+        label="Ordenar por"
         onChange={onSortModeChange}
         options={sortOptions}
       />
       <FilterChips
         activeValue={objectType}
-        label="Type"
+        label="Tipo"
         onChange={onObjectTypeChange}
         options={objectTypeOptions}
       />
       <FilterChips
         activeValue={orbitRegion}
-        label="Orbit region"
+        label="Região orbital"
         onChange={onOrbitRegionChange}
         options={orbitRegionOptions}
       />
       <FilterChips
         activeValue={decision}
-        label="Decision"
+        label="Decisão"
         onChange={onDecisionChange}
         options={decisionFilterOptions}
       />

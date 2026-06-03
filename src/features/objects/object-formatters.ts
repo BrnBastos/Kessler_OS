@@ -1,13 +1,19 @@
 import { BadgeTone } from '@/components/ui';
+import {
+  formatDataConfidenceLabel,
+  formatObjectStatusLabel,
+  formatObjectTypeLabel,
+  ptBR,
+} from '@/content/pt-br';
 import { DataConfidence, OrbitalObjectStatus, OrbitalObjectType, OrbitRegion } from '@/domain/models';
 import { ScoreLevel } from '@/domain/scoring';
 
 export function formatObjectType(type: OrbitalObjectType) {
-  return type.replace('_', ' ');
+  return formatObjectTypeLabel(type);
 }
 
 export function formatObjectStatus(status: OrbitalObjectStatus) {
-  return status;
+  return formatObjectStatusLabel(status);
 }
 
 export function formatOrbitRegion(region: OrbitRegion) {
@@ -16,10 +22,10 @@ export function formatOrbitRegion(region: OrbitRegion) {
 
 export function formatEstimate(value?: number, suffix = '') {
   if (typeof value !== 'number') {
-    return 'Unknown';
+    return ptBR.common.notAvailable;
   }
 
-  return `${value.toLocaleString()}${suffix}`;
+  return `${value.toLocaleString('pt-BR')}${suffix}`;
 }
 
 export function getConfidenceTone(confidence: DataConfidence): BadgeTone {
@@ -36,16 +42,7 @@ export function getConfidenceTone(confidence: DataConfidence): BadgeTone {
 }
 
 export function getConfidenceLabel(confidence: DataConfidence) {
-  switch (confidence) {
-    case 'confirmed':
-      return 'Confirmed public data';
-    case 'estimated':
-      return 'System estimate';
-    case 'simulated':
-      return 'Simulated';
-    case 'unknown':
-      return 'Unknown';
-  }
+  return formatDataConfidenceLabel(confidence);
 }
 
 export function getScoreTone(level: ScoreLevel): BadgeTone {

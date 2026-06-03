@@ -5,19 +5,19 @@ import { colors, spacing, typography } from '@/theme';
 
 const features = [
   {
-    description: 'Assess collision probability and reduce operational risk.',
-    eyebrow: 'Risk',
-    title: 'Risk Analysis',
+    description: 'Veja quais objetos estão próximos demais, antigos demais ou perigosos demais.',
+    eyebrow: 'Risco',
+    title: 'Análise de risco',
   },
   {
-    description: 'Plan safer, lower-risk missions with predictive modeling.',
-    eyebrow: 'Mission',
-    title: 'Mission Simulation',
+    description: 'Teste inspeção, remoção, desvio ou monitoramento antes de escolher um caminho.',
+    eyebrow: 'Missão',
+    title: 'Simulação de missão',
   },
   {
-    description: 'Identify, capture and repurpose materials for a sustainable orbit.',
-    eyebrow: 'Reuse',
-    title: 'Circular Economy',
+    description: 'Entenda quando um objeto abandonado pode virar recurso para novas missões.',
+    eyebrow: 'Reuso',
+    title: 'Reaproveitamento orbital',
   },
 ];
 

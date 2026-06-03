@@ -1,3 +1,7 @@
+import {
+  formatDataConfidenceLabel,
+  formatObjectStatusLabel,
+} from '@/content/pt-br';
 import { MissionRiskLevel, MissionType, OrbitRegion } from '@/domain/models';
 
 import { ScoredOrbitalObject, ScoreFactor, ScoreLevel } from './score-types';
@@ -35,8 +39,8 @@ export const missionProfiles: Record<MissionType, MissionProfile> = {
     baseDurationDays: 4,
     circularValueWeight: 0,
     complexity: 30,
-    label: 'Avoid',
-    objective: 'Plan an avoidance maneuver or decision window for a conjunction scenario.',
+    label: 'Evitar',
+    objective: 'Planejar uma manobra de desvio ou janela de decisão para um cenário de aproximação.',
     riskReductionBase: 46,
   },
   capture: {
@@ -44,8 +48,8 @@ export const missionProfiles: Record<MissionType, MissionProfile> = {
     baseDurationDays: 95,
     circularValueWeight: 48,
     complexity: 82,
-    label: 'Capture',
-    objective: 'Estimate whether a servicing mission could capture or stabilize the object.',
+    label: 'Capturar',
+    objective: 'Estimar se uma missão de serviço poderia capturar ou estabilizar o objeto.',
     riskReductionBase: 72,
   },
   deorbit: {
@@ -53,8 +57,8 @@ export const missionProfiles: Record<MissionType, MissionProfile> = {
     baseDurationDays: 75,
     circularValueWeight: 12,
     complexity: 70,
-    label: 'Deorbit',
-    objective: 'Estimate a disposal response that removes the object from long-term orbit.',
+    label: 'Retirar de órbita',
+    objective: 'Estimar uma resposta de descarte que remova o objeto da órbita de longo prazo.',
     riskReductionBase: 78,
   },
   inspect: {
@@ -62,8 +66,8 @@ export const missionProfiles: Record<MissionType, MissionProfile> = {
     baseDurationDays: 21,
     circularValueWeight: 30,
     complexity: 36,
-    label: 'Inspect',
-    objective: 'Collect close-range data before committing to capture, reuse or disposal.',
+    label: 'Inspecionar',
+    objective: 'Coletar dados de perto antes de decidir por captura, reuso ou descarte.',
     riskReductionBase: 34,
   },
   monitor: {
@@ -71,8 +75,8 @@ export const missionProfiles: Record<MissionType, MissionProfile> = {
     baseDurationDays: 14,
     circularValueWeight: 8,
     complexity: 14,
-    label: 'Monitor',
-    objective: 'Keep the object visible in the catalog and watch risk signals over time.',
+    label: 'Monitorar',
+    objective: 'Manter o objeto visível no catálogo e acompanhar sinais de risco ao longo do tempo.',
     riskReductionBase: 18,
   },
   move_to_safer_orbit: {
@@ -80,8 +84,8 @@ export const missionProfiles: Record<MissionType, MissionProfile> = {
     baseDurationDays: 60,
     circularValueWeight: 18,
     complexity: 62,
-    label: 'Move to safer orbit',
-    objective: 'Model a relocation action that reduces pressure on crowded operational regions.',
+    label: 'Mover para órbita segura',
+    objective: 'Modelar uma realocação que reduza pressão em regiões operacionais congestionadas.',
     riskReductionBase: 66,
   },
   recycle: {
@@ -89,8 +93,8 @@ export const missionProfiles: Record<MissionType, MissionProfile> = {
     baseDurationDays: 130,
     circularValueWeight: 78,
     complexity: 88,
-    label: 'Recycle',
-    objective: 'Explore whether object recovery could support a circular orbital economy.',
+    label: 'Reciclar',
+    objective: 'Explorar se a recuperação do objeto poderia apoiar uma economia orbital circular.',
     riskReductionBase: 64,
   },
 };
@@ -212,7 +216,7 @@ function getMissionFit(object: ScoredOrbitalObject, missionType: MissionType) {
     case 'inspect':
       return object.scores.priority.score >= 60 ? 12 : 5;
     case 'monitor':
-      return object.scores.priority.decision === 'Insufficient data' ? 12 : 4;
+      return object.scores.priority.decision === 'Dados insuficientes' ? 12 : 4;
     case 'move_to_safer_orbit':
       return object.orbitRegion === 'GEO' ? 10 : object.orbitRegion === 'LEO' ? 6 : 2;
     case 'recycle':
@@ -239,7 +243,7 @@ function getDecision(result: {
   riskReductionScore: number;
 }) {
   if (result.feasibilityScore >= 70 && result.riskReductionScore >= 65) {
-    return 'Recommended prototype response';
+    return 'Resposta recomendada pelo protótipo';
   }
 
   if (
@@ -247,26 +251,26 @@ function getDecision(result: {
     result.circularValueScore >= 70 &&
     result.feasibilityScore >= 50
   ) {
-    return 'Investigate circular recovery';
+    return 'Investigar recuperação circular';
   }
 
   if (result.feasibilityScore >= 48) {
-    return 'Run detailed planning review';
+    return 'Fazer revisão detalhada de planejamento';
   }
 
-  return 'Start with monitoring and better data';
+  return 'Começar com monitoramento e dados melhores';
 }
 
 function getExplanation(object: ScoredOrbitalObject, estimate: MissionEstimate) {
   if (estimate.feasibilityScore >= 70) {
-    return `${estimate.missionTypeLabel} is a strong prototype option for ${object.name} because orbit access, object status and data confidence support the modeled response.`;
+    return `${estimate.missionTypeLabel} é uma opção forte no protótipo para ${object.name}, porque acesso orbital, status do objeto e confiança dos dados sustentam a resposta modelada.`;
   }
 
   if (estimate.feasibilityScore >= 40) {
-    return `${estimate.missionTypeLabel} may be useful for ${object.name}, but the model shows tradeoffs that need more planning before commitment.`;
+    return `${estimate.missionTypeLabel} pode ser útil para ${object.name}, mas o modelo mostra trocas que pedem mais planejamento antes de qualquer compromisso.`;
   }
 
-  return `${estimate.missionTypeLabel} is weak for ${object.name} in this prototype. Monitoring, inspection or better data should come first.`;
+  return `${estimate.missionTypeLabel} é uma opção fraca para ${object.name} neste protótipo. Monitoramento, inspeção ou dados melhores devem vir primeiro.`;
 }
 
 export function estimateMission(
@@ -314,33 +318,33 @@ export function estimateMission(
     explanation: '',
     factors: [
       {
-        description: `${object.orbitRegion} access changes transfer effort and timeline.`,
-        label: 'Orbit access',
+        description: `Acesso à região ${object.orbitRegion} muda esforço de transferência e prazo.`,
+        label: 'Acesso orbital',
         value: orbitAccessibility,
       },
       {
-        description: `${object.status} status changes whether this response is appropriate.`,
-        label: 'Object status fit',
+        description: `Status ${formatObjectStatusLabel(object.status)} muda se esta resposta é adequada.`,
+        label: 'Ajuste ao status',
         value: statusFit,
       },
       {
-        description: `${object.dataConfidence} confidence changes how much the estimate can be trusted.`,
-        label: 'Data confidence',
+        description: `${formatDataConfidenceLabel(object.dataConfidence)} muda o quanto a estimativa pode ser confiável.`,
+        label: 'Confiança dos dados',
         value: confidenceFit,
       },
       {
-        description: `${profile.label} has a modeled complexity cost.`,
-        label: 'Mission complexity',
+        description: `${profile.label} tem um custo de complexidade no modelo.`,
+        label: 'Complexidade da missão',
         value: -Math.round(profile.complexity * 0.55),
       },
       {
-        description: 'Larger or unknown mass increases handling difficulty.',
-        label: 'Mass handling',
+        description: 'Massa maior ou desconhecida aumenta a dificuldade de manuseio.',
+        label: 'Manuseio de massa',
         value: -massPenalty,
       },
       {
         description: profile.objective,
-        label: 'Mission fit',
+        label: 'Ajuste da missão',
         value: missionFit,
       },
     ],

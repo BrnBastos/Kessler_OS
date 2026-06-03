@@ -22,20 +22,20 @@ export function HomeMetrics() {
 
   const baseMetrics = [
     {
-      detail: 'Local prototype catalog',
-      label: 'Tracked Objects',
+      detail: 'Catálogo local do protótipo',
+      label: 'Objetos monitorados',
       tone: 'cyan',
       value: mockOrbitalObjects.length.toString(),
     },
     {
-      detail: 'LEO inactive, fragment or unknown',
-      label: 'High-Risk Objects',
+      detail: 'LEO inativos, fragmentos ou desconhecidos',
+      label: 'Objetos de alto risco',
       tone: 'danger',
       value: highRiskCandidates.length.toString(),
     },
     {
-      detail: 'Average estimate across material profiles',
-      label: 'Reusable Mass Potential',
+      detail: 'Estimativa média nos perfis de material',
+      label: 'Potencial de reaproveitamento',
       tone: 'teal',
       value: `${reusableMassPotential}%`,
     },
@@ -43,8 +43,8 @@ export function HomeMetrics() {
   const desktopMetrics = [
     ...baseMetrics,
     {
-      detail: 'Ready for simulator flow',
-      label: 'Simulated Missions',
+      detail: 'Prontas para o simulador',
+      label: 'Missões simuladas',
       tone: 'blue',
       value: mockMissions.length.toString(),
     },

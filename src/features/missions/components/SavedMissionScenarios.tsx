@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Button, Card } from '@/components/ui';
+import { formatMissionTypeLabel } from '@/content/pt-br';
 import { SavedMissionScenario } from '@/services/persistence';
 import { colors, radius, spacing, typography } from '@/theme';
 
@@ -11,7 +12,7 @@ type SavedMissionScenariosProps = {
 };
 
 function formatSavedAt(savedAt: string) {
-  return new Date(savedAt).toLocaleString();
+  return new Date(savedAt).toLocaleString('pt-BR');
 }
 
 export function SavedMissionScenarios({
@@ -22,15 +23,15 @@ export function SavedMissionScenarios({
   return (
     <Card style={styles.card}>
       <View style={styles.header}>
-        <Text style={styles.title}>Saved scenarios</Text>
-        <Text style={styles.description}>{scenarios.length} local mission records</Text>
+        <Text style={styles.title}>Cenários salvos</Text>
+        <Text style={styles.description}>{scenarios.length} registros locais de missão</Text>
       </View>
 
       {scenarios.length === 0 ? (
         <View style={styles.emptyState}>
-          <Text style={styles.emptyTitle}>No saved scenarios yet.</Text>
+          <Text style={styles.emptyTitle}>Nenhum cenário salvo ainda.</Text>
           <Text style={styles.emptyBody}>
-            Save a simulation result to keep a lightweight local record for comparison.
+            Salve um resultado de simulação para manter um registro local leve para comparação.
           </Text>
         </View>
       ) : (
@@ -39,7 +40,7 @@ export function SavedMissionScenarios({
             <View key={scenario.id} style={styles.item}>
               <View style={styles.itemCopy}>
                 <Text style={styles.itemTitle}>
-                  {scenario.missionTypeLabel} · {scenario.objectName}
+                  {formatMissionTypeLabel(scenario.missionType)} · {scenario.objectName}
                 </Text>
                 <Text style={styles.itemMeta}>{formatSavedAt(scenario.savedAt)}</Text>
                 <Text style={styles.itemDecision}>{scenario.decision}</Text>
@@ -47,15 +48,15 @@ export function SavedMissionScenarios({
 
               <View style={styles.scoreRow}>
                 <View style={styles.scoreBox}>
-                  <Text style={styles.scoreLabel}>Feasibility</Text>
+                  <Text style={styles.scoreLabel}>Viabilidade</Text>
                   <Text style={styles.scoreValue}>{scenario.feasibilityScore}</Text>
                 </View>
                 <View style={styles.scoreBox}>
-                  <Text style={styles.scoreLabel}>Risk reduction</Text>
+                  <Text style={styles.scoreLabel}>Redução de risco</Text>
                   <Text style={styles.scoreValue}>{scenario.riskReductionScore}</Text>
                 </View>
                 <View style={styles.scoreBox}>
-                  <Text style={styles.scoreLabel}>Circular value</Text>
+                  <Text style={styles.scoreLabel}>Valor circular</Text>
                   <Text style={styles.scoreValue}>{scenario.circularValueScore}</Text>
                 </View>
               </View>
@@ -65,13 +66,13 @@ export function SavedMissionScenarios({
                   size="small"
                   variant="secondary"
                   onPress={() => onApplyScenario(scenario)}>
-                  Load
+                  Carregar
                 </Button>
                 <Button
                   size="small"
                   variant="danger"
                   onPress={() => onRemoveScenario(scenario.id)}>
-                  Remove
+                  Remover
                 </Button>
               </View>
             </View>

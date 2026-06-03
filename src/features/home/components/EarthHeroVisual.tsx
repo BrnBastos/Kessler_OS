@@ -8,7 +8,7 @@ type EarthHeroVisualProps = {
 
 export function EarthHeroVisual({ style }: EarthHeroVisualProps) {
   return (
-    <View style={[styles.panel, style]} accessibilityLabel="Kessler orbital risk visual">
+    <View style={[styles.panel, style]} accessibilityLabel="Visual de risco orbital do Kessler">
       <View style={styles.backgroundGrid}>
         {Array.from({ length: 9 }).map((_, index) => (
           <View key={index} style={styles.gridLine} />

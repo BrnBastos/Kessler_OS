@@ -41,17 +41,17 @@ export function ObjectCard({ object, onOpenPassport, onSelect, selected }: Objec
 
       <View style={styles.scoreRow}>
         <Badge
-          label="Risk"
+          label="Risco"
           score={object.scores.risk.score}
           tone={getScoreTone(object.scores.risk.level)}
         />
         <Badge
-          label="Forge"
+          label="Reuso"
           score={object.scores.forgeValue.score}
           tone={getScoreTone(object.scores.forgeValue.level)}
         />
         <Badge
-          label="Priority"
+          label="Prioridade"
           score={object.scores.priority.score}
           tone={getScoreTone(object.scores.priority.level)}
         />
@@ -63,11 +63,11 @@ export function ObjectCard({ object, onOpenPassport, onSelect, selected }: Objec
           <Text style={styles.factValue}>{formatEstimate(object.altitudeKm, ' km')}</Text>
         </View>
         <View style={styles.factItem}>
-          <Text style={styles.factLabel}>Mass</Text>
+          <Text style={styles.factLabel}>Massa</Text>
           <Text style={styles.factValue}>{formatEstimate(object.estimatedMassKg, ' kg')}</Text>
         </View>
         <View style={styles.factItem}>
-          <Text style={styles.factLabel}>Size</Text>
+          <Text style={styles.factLabel}>Tamanho</Text>
           <Text style={styles.factValue}>{formatEstimate(object.estimatedSizeM, ' m')}</Text>
         </View>
       </View>
@@ -79,10 +79,10 @@ export function ObjectCard({ object, onOpenPassport, onSelect, selected }: Objec
           size="small"
           variant={selected ? 'ghost' : 'secondary'}
           onPress={() => onSelect(object)}>
-          {selected ? 'Focused' : 'Focus'}
+          {selected ? 'Em foco' : 'Focar'}
         </Button>
         <Button size="small" onPress={() => onOpenPassport(object)}>
-          Open Passport
+          Abrir ficha
         </Button>
       </View>
     </Card>

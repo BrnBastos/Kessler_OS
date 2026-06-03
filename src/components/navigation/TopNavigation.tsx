@@ -21,7 +21,7 @@ export function TopNavigation() {
           onPress={() => router.push('/')}
           style={({ pressed }) => [styles.brand, pressed && styles.pressed]}>
           <Text style={styles.brandText}>Kessler OS</Text>
-          <Text style={styles.brandSubtext}>Orbital intelligence</Text>
+          <Text style={styles.brandSubtext}>Inteligência orbital</Text>
         </Pressable>
 
         <View style={styles.navItems}>

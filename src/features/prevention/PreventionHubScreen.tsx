@@ -22,13 +22,13 @@ const defaultMissionPlan: ResponsibleOrbitInput = {
 };
 
 const preventionTopics = [
-  'passivation',
-  'end-of-life planning',
-  'controlled reentry',
-  'graveyard orbit',
-  'tracking and cataloging',
-  'collision avoidance',
-  'responsible mission design',
+  'passivação',
+  'planejamento de fim de vida',
+  'reentrada controlada',
+  'órbita cemitério',
+  'rastreamento e catalogação',
+  'desvio de colisão',
+  'desenho responsável de missão',
 ];
 
 export function PreventionHubScreen() {
@@ -52,39 +52,39 @@ export function PreventionHubScreen() {
         <SafeAreaView>
           <View style={styles.stack}>
             <View style={styles.hero}>
-              <Badge label="Prevention first" tone="success" />
+              <Badge label="Prevenção primeiro" tone="success" />
               <SectionHeader
-                eyebrow="Prevention Hub"
-                title="Design missions that create less debris in the first place."
-                description="Kessler connects debris response with responsible orbital behavior: passivation, disposal planning, tracking, avoidance and circular mission design."
+                eyebrow="Central de Prevenção"
+                title="Desenhe missões que geram menos detritos desde o início."
+                description="O Kessler conecta resposta a detritos com comportamento orbital responsável: passivação, descarte, rastreamento, desvio e desenho circular de missões."
               />
             </View>
 
             <View style={styles.metricGrid}>
               <Metric
-                detail="Current fictional mission plan"
-                label="Responsible score"
+                detail="Plano fictício de missão atual"
+                label="Pontuação responsável"
                 tone="teal"
                 value={result.score.toString()}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Checklist controls enabled"
-                label="Practices active"
+                detail="Controles ativos no checklist"
+                label="Práticas ativas"
                 tone="cyan"
                 value={`${enabledCount}/4`}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Educational topics covered"
-                label="Prevention topics"
+                detail="Tópicos educativos cobertos"
+                label="Tópicos de prevenção"
                 tone="blue"
                 value={preventionTopics.length.toString()}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Prototype language only"
-                label="Compliance claims"
+                detail="Apenas linguagem de protótipo"
+                label="Promessas de conformidade"
                 tone="warning"
                 value="0"
                 style={styles.metricCard}
@@ -104,10 +104,11 @@ export function PreventionHubScreen() {
             <PreventionPrinciples />
 
             <View style={styles.note}>
-              <Text style={styles.noteTitle}>Model boundary</Text>
+              <Text style={styles.noteTitle}>Limite do modelo</Text>
               <Text style={styles.noteBody}>
-                This hub explains prevention concepts and produces deterministic prototype scores. It
-                does not verify legal compliance, operational safety or real mission feasibility.
+                Esta central explica conceitos de prevenção e gera pontuações determinísticas do
+                protótipo. Ela não verifica conformidade legal, segurança operacional ou viabilidade
+                real de missão.
               </Text>
             </View>
           </View>

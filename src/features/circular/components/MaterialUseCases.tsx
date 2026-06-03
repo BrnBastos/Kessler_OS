@@ -17,40 +17,40 @@ type UseCase = {
 
 const useCases: UseCase[] = [
   {
-    body: 'Recovered panels, tanks or frames could become future station shielding, truss parts or fabrication stock.',
-    category: 'Structural material',
+    body: 'Painéis, tanques ou estruturas recuperadas podem virar blindagem, treliças ou estoque de fabricação para futuras estações.',
+    category: 'Material estrutural',
     preferredMaterials: ['aluminum', 'titanium', 'composite'],
-    signal: 'High mass and stable structure help',
+    signal: 'Massa alta e estrutura estável ajudam',
   },
   {
-    body: 'Dense or layered material can be evaluated as protective mass for future habitats or service vehicles.',
-    category: 'Radiation shielding',
+    body: 'Materiais densos ou em camadas podem ser avaliados como massa protetora para habitats ou veículos de serviço.',
+    category: 'Blindagem contra radiação',
     preferredMaterials: ['aluminum', 'titanium', 'composite'],
-    signal: 'Useful when direct repair is unlikely',
+    signal: 'Útil quando reparo direto é improvável',
   },
   {
-    body: 'Recovered material can be treated as input for orbital manufacturing experiments and feedstock planning.',
-    category: 'Manufacturing feedstock',
+    body: 'Material recuperado pode servir como entrada para experimentos de fabricação orbital e planejamento de matéria-prima.',
+    category: 'Matéria-prima de fabricação',
     preferredMaterials: ['aluminum', 'titanium'],
-    signal: 'Requires capture and processing feasibility',
+    signal: 'Exige viabilidade de captura e processamento',
   },
   {
-    body: 'Inactive objects can become inspection, docking, robotics or proximity-operation practice targets.',
-    category: 'Testing platform',
+    body: 'Objetos inativos podem virar alvos de prática para inspeção, acoplamento, robótica ou operações de proximidade.',
+    category: 'Plataforma de testes',
     preferredMaterials: ['electronics', 'unknown', 'composite'],
-    signal: 'Good fit before full recovery claims',
+    signal: 'Bom encaixe antes de promessas de recuperação',
   },
   {
-    body: 'Usable subsystems might support diagnostics, learning or supervised recovery experiments.',
-    category: 'Component recovery',
+    body: 'Subsistemas utilizáveis podem apoiar diagnósticos, aprendizado ou experimentos supervisionados de recuperação.',
+    category: 'Recuperação de componentes',
     preferredMaterials: ['electronics'],
-    signal: 'Depends heavily on inspection confidence',
+    signal: 'Depende muito da confiança da inspeção',
   },
   {
-    body: 'When reuse value is weak or uncertainty is high, safe disposal may still be the best circular outcome.',
-    category: 'Controlled disposal',
+    body: 'Quando o valor de reuso é baixo ou a incerteza é alta, o descarte seguro ainda pode ser o melhor resultado circular.',
+    category: 'Descarte controlado',
     preferredMaterials: ['unknown'],
-    signal: 'Prevents future debris creation',
+    signal: 'Previne criação futura de detritos',
   },
 ];
 
@@ -70,9 +70,9 @@ export function MaterialUseCases({ estimates }: MaterialUseCasesProps) {
   return (
     <Card style={styles.card}>
       <View style={styles.header}>
-        <Text style={styles.title}>Material use cases</Text>
+        <Text style={styles.title}>Usos possíveis dos materiais</Text>
         <Text style={styles.description}>
-          These categories keep reuse language practical and confidence-aware for an MVP.
+          Estas categorias mantêm o reuso prático e sinalizado por confiança para o MVP.
         </Text>
       </View>
 
@@ -87,7 +87,7 @@ export function MaterialUseCases({ estimates }: MaterialUseCasesProps) {
               <View style={styles.useCaseHeader}>
                 <Text style={styles.useCaseTitle}>{useCase.category}</Text>
                 <Badge
-                  label={matches > 0 ? `${matches} signal${matches > 1 ? 's' : ''}` : 'watch'}
+                  label={matches > 0 ? `${matches} ${matches > 1 ? 'sinais' : 'sinal'}` : 'observar'}
                   tone={getUseCaseTone(matches)}
                 />
               </View>

@@ -12,46 +12,46 @@ type PreventionPrinciple = {
 
 const principles: PreventionPrinciple[] = [
   {
-    body: 'Remove stored energy from batteries, tanks and pressurized systems after the useful mission ends.',
-    category: 'Design',
-    impact: 'Reduces fragmentation risk',
-    title: 'Passivation',
+    body: 'Remover energia armazenada de baterias, tanques e sistemas pressurizados após o fim da missão útil.',
+    category: 'Projeto',
+    impact: 'Reduz risco de fragmentação',
+    title: 'Passivação',
   },
   {
-    body: 'Define disposal choices before launch, including target orbit, timeline and operational responsibility.',
-    category: 'Planning',
-    impact: 'Prevents abandoned assets',
-    title: 'End-of-life planning',
+    body: 'Definir escolhas de descarte antes do lançamento, incluindo órbita-alvo, prazo e responsabilidade operacional.',
+    category: 'Planejamento',
+    impact: 'Evita ativos abandonados',
+    title: 'Planejamento de fim de vida',
   },
   {
-    body: 'Use predictable atmospheric disposal when an object can be brought down safely and intentionally.',
-    category: 'Disposal',
-    impact: 'Shortens time in orbit',
-    title: 'Controlled reentry',
+    body: 'Usar descarte atmosférico previsível quando um objeto pode ser trazido de volta com segurança e intenção.',
+    category: 'Descarte',
+    impact: 'Reduz tempo em órbita',
+    title: 'Reentrada controlada',
   },
   {
-    body: 'Move higher-orbit spacecraft away from protected operational regions when reentry is not practical.',
-    category: 'Disposal',
-    impact: 'Protects active lanes',
-    title: 'Graveyard orbit',
+    body: 'Mover naves em órbitas altas para longe de regiões operacionais protegidas quando reentrada não é prática.',
+    category: 'Descarte',
+    impact: 'Protege faixas ativas',
+    title: 'Órbita cemitério',
   },
   {
-    body: 'Keep objects observable through catalog updates, identification data and shared situational awareness.',
-    category: 'Operations',
-    impact: 'Improves coordination',
-    title: 'Tracking and cataloging',
+    body: 'Manter objetos observáveis por atualizações de catálogo, dados de identificação e consciência situacional compartilhada.',
+    category: 'Operações',
+    impact: 'Melhora coordenação',
+    title: 'Rastreamento e catalogação',
   },
   {
-    body: 'Plan maneuvers and decision windows before conjunction alerts turn into urgent operational pressure.',
-    category: 'Operations',
-    impact: 'Reduces collision probability',
-    title: 'Collision avoidance',
+    body: 'Planejar manobras e janelas de decisão antes que alertas de aproximação virem pressão operacional urgente.',
+    category: 'Operações',
+    impact: 'Reduz probabilidade de colisão',
+    title: 'Desvio de colisão',
   },
   {
-    body: 'Treat orbital lifetime, material recovery and disposal as mission requirements instead of afterthoughts.',
-    category: 'Mission design',
-    impact: 'Connects prevention to circular value',
-    title: 'Responsible mission design',
+    body: 'Tratar vida orbital, recuperação de material e descarte como requisitos da missão, não como detalhe final.',
+    category: 'Desenho de missão',
+    impact: 'Conecta prevenção ao valor circular',
+    title: 'Desenho responsável de missão',
   },
 ];
 
@@ -59,10 +59,9 @@ export function PreventionPrinciples() {
   return (
     <Card style={styles.card}>
       <View style={styles.header}>
-        <Text style={styles.title}>Prevention principles</Text>
+        <Text style={styles.title}>Princípios de prevenção</Text>
         <Text style={styles.description}>
-          These practices reduce debris creation upstream, before an object becomes a removal
-          candidate.
+          Estas práticas reduzem a criação de detritos antes que um objeto vire candidato à remoção.
         </Text>
       </View>
 

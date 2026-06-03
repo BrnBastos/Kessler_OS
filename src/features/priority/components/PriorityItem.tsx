@@ -23,7 +23,7 @@ export function PriorityItem({ object, rank }: PriorityItemProps) {
     <Card style={styles.card}>
       <View style={styles.header}>
         <View style={styles.rankBadge}>
-          <Text style={styles.rankLabel}>Rank</Text>
+          <Text style={styles.rankLabel}>Posição</Text>
           <Text style={styles.rankValue}>{rank}</Text>
         </View>
 
@@ -43,24 +43,24 @@ export function PriorityItem({ object, rank }: PriorityItemProps) {
 
       <View style={styles.scoreRow}>
         <Badge
-          label="Risk"
+          label="Risco"
           score={object.scores.risk.score}
           tone={getScoreTone(object.scores.risk.level)}
         />
         <Badge
-          label="Forge"
+          label="Reuso"
           score={object.scores.forgeValue.score}
           tone={getScoreTone(object.scores.forgeValue.level)}
         />
         <Badge
-          label="Priority"
+          label="Prioridade"
           score={object.scores.priority.score}
           tone={getScoreTone(object.scores.priority.level)}
         />
       </View>
 
       <View style={styles.decisionPanel}>
-        <Text style={styles.decisionLabel}>Recommended decision</Text>
+        <Text style={styles.decisionLabel}>Decisão recomendada</Text>
         <Text style={styles.decision}>{object.scores.priority.decision}</Text>
         <Text style={styles.reason}>{object.scores.priority.summary}</Text>
       </View>
@@ -75,7 +75,7 @@ export function PriorityItem({ object, rank }: PriorityItemProps) {
               params: { id: object.id },
             })
           }>
-          Open Passport
+          Abrir ficha
         </Button>
         <Button
           size="small"
@@ -85,7 +85,7 @@ export function PriorityItem({ object, rank }: PriorityItemProps) {
               params: { objectId: object.id },
             })
           }>
-          Simulate Mission
+          Simular missão
         </Button>
       </View>
     </Card>

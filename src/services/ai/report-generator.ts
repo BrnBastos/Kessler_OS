@@ -1,3 +1,8 @@
+import {
+  formatDataConfidenceLabel,
+  formatObjectStatusLabel,
+  formatReuseMaterialLabel,
+} from '@/content/pt-br';
 import { DataConfidence, ReuseMaterialEstimate } from '@/domain/models';
 import { MissionEstimate, ScoreFactor, ScoreLevel, ScoredOrbitalObject } from '@/domain/scoring';
 
@@ -27,47 +32,38 @@ export type DecisionReport = {
 };
 
 function formatDataConfidence(confidence: DataConfidence) {
-  switch (confidence) {
-    case 'confirmed':
-      return 'confirmed public data';
-    case 'estimated':
-      return 'system-estimated data';
-    case 'simulated':
-      return 'simulated data';
-    case 'unknown':
-      return 'unknown data';
-  }
+  return formatDataConfidenceLabel(confidence).toLowerCase();
 }
 
 function formatScoreLevel(level: ScoreLevel) {
   switch (level) {
     case 'high':
-      return 'high';
+      return 'alta';
     case 'medium':
-      return 'moderate';
+      return 'moderada';
     case 'low':
-      return 'low';
+      return 'baixa';
   }
 }
 
 function getMassPhrase(object: ScoredOrbitalObject) {
   if (typeof object.estimatedMassKg !== 'number') {
-    return 'unknown mass';
+    return 'massa desconhecida';
   }
 
   if (object.estimatedMassKg >= 5000) {
-    return 'very high estimated mass';
+    return 'massa estimada muito alta';
   }
 
   if (object.estimatedMassKg >= 1000) {
-    return 'large estimated mass';
+    return 'massa estimada grande';
   }
 
   if (object.estimatedMassKg >= 100) {
-    return 'moderate estimated mass';
+    return 'massa estimada moderada';
   }
 
-  return 'low estimated mass';
+  return 'massa estimada baixa';
 }
 
 function getTopFactors(factors: ScoreFactor[], limit = 2) {
@@ -79,23 +75,23 @@ function getTopFactors(factors: ScoreFactor[], limit = 2) {
 function getPrioritySummary(object: ScoredOrbitalObject) {
   const topFactors = getTopFactors(object.scores.priority.factors)
     .map((factor) => factor.label.toLowerCase())
-    .join(' and ');
+    .join(' e ');
 
-  return `${object.name} receives ${formatScoreLevel(
+  return `${object.name} recebe prioridade ${formatScoreLevel(
     object.scores.priority.level
-  )} priority because its ${object.orbitRegion} orbit, ${object.status} status, ${getMassPhrase(
-    object
-  )}, and ${topFactors || 'score mix'} increase attention in the prototype model.`;
+  )} porque sua órbita ${object.orbitRegion}, status ${formatObjectStatusLabel(
+    object.status
+  )}, ${getMassPhrase(object)} e ${topFactors || 'combinação de pontuações'} aumentam a atenção no modelo do protótipo.`;
 }
 
 function getScoreSection(object: ScoredOrbitalObject): DecisionReportSection {
   return {
     body: [
-      `Risk is ${object.scores.risk.score}, forge value is ${object.scores.forgeValue.score}, and priority is ${object.scores.priority.score}.`,
-      `The recommended decision is "${object.scores.priority.decision}".`,
+      `Risco é ${object.scores.risk.score}, valor de reuso é ${object.scores.forgeValue.score} e prioridade é ${object.scores.priority.score}.`,
+      `A decisão recomendada é "${object.scores.priority.decision}".`,
       object.scores.priority.summary,
     ].join(' '),
-    title: 'Score interpretation',
+    title: 'Interpretação das pontuações',
   };
 }
 
@@ -106,11 +102,11 @@ function getMissionSection(missionEstimate?: MissionEstimate): DecisionReportSec
 
   return {
     body: [
-      `${missionEstimate.missionTypeLabel} returns a feasibility score of ${missionEstimate.feasibilityScore}.`,
-      `The modeled delta-v is ${missionEstimate.estimatedDeltaVMps.toLocaleString()} m/s over about ${missionEstimate.estimatedDurationDays} days.`,
+      `${missionEstimate.missionTypeLabel} retorna uma viabilidade de ${missionEstimate.feasibilityScore}.`,
+      `O delta-v modelado é ${missionEstimate.estimatedDeltaVMps.toLocaleString('pt-BR')} m/s em cerca de ${missionEstimate.estimatedDurationDays} dias.`,
       missionEstimate.explanation,
     ].join(' '),
-    title: 'Mission recommendation',
+    title: 'Recomendação de missão',
   };
 }
 
@@ -120,8 +116,8 @@ function getCircularSection(
 ): DecisionReportSection {
   if (!materialEstimates || materialEstimates.length === 0) {
     return {
-      body: `The reuse estimate is based on forge value ${object.scores.forgeValue.score}. No material composition estimate is available, so circular value should be treated as a planning signal only.`,
-      title: 'Reuse interpretation',
+      body: `A estimativa de reuso se baseia no valor de reuso ${object.scores.forgeValue.score}. Não há estimativa de composição material disponível, então o valor circular deve ser tratado apenas como sinal de planejamento.`,
+      title: 'Interpretação de reuso',
     };
   }
 
@@ -130,38 +126,38 @@ function getCircularSection(
   )[0];
 
   return {
-    body: `The strongest material signal is ${strongestEstimate.material} at ${strongestEstimate.estimatedSharePct}% estimated share with ${strongestEstimate.dataConfidence} confidence. This supports circular-economy exploration, not confirmed material composition.`,
-    title: 'Reuse interpretation',
+    body: `O sinal material mais forte é ${formatReuseMaterialLabel(strongestEstimate.material)} com ${strongestEstimate.estimatedSharePct}% de participação estimada e ${formatDataConfidence(strongestEstimate.dataConfidence)}. Isso apoia exploração de economia circular, não composição material confirmada.`,
+    title: 'Interpretação de reuso',
   };
 }
 
 function getConfidenceSection(object: ScoredOrbitalObject): DecisionReportSection {
   return {
-    body: `This report uses ${formatDataConfidence(
+    body: `Este relatório usa ${formatDataConfidence(
       object.dataConfidence
-    )}. Scores are deterministic prototype signals and should not be read as operational collision prediction, legal compliance, or mission assurance.`,
-    title: 'Confidence boundary',
+    )}. As pontuações são sinais determinísticos do protótipo e não devem ser lidas como previsão operacional de colisão, conformidade legal ou garantia de missão.`,
+    title: 'Limite de confiança',
   };
 }
 
 function getNextActions(input: DecisionReportInput) {
-  const actions = ['Review the object passport before choosing an intervention.'];
+  const actions = ['Revisar a ficha do objeto antes de escolher uma intervenção.'];
 
-  if (input.object.scores.priority.decision === 'Insufficient data') {
-    actions.push('Collect better tracking and identification data before recommending removal.');
+  if (input.object.scores.priority.decision === 'Dados insuficientes') {
+    actions.push('Coletar melhores dados de rastreamento e identificação antes de recomendar remoção.');
   } else if (input.object.scores.priority.score >= 70) {
-    actions.push('Run inspection or removal simulation before committing to a response path.');
+    actions.push('Rodar simulação de inspeção ou remoção antes de assumir um caminho de resposta.');
   } else if (input.object.scores.forgeValue.score >= 40) {
-    actions.push('Compare circular recovery against controlled disposal.');
+    actions.push('Comparar recuperação circular com descarte controlado.');
   } else {
-    actions.push('Keep the object in monitoring unless new risk signals appear.');
+    actions.push('Manter o objeto em monitoramento até surgirem novos sinais de risco.');
   }
 
   if (input.missionEstimate) {
     actions.push(
       input.missionEstimate.feasibilityScore >= 60
-        ? 'Move the mission concept into detailed planning review.'
-        : 'Improve assumptions before treating the mission as practical.'
+        ? 'Levar o conceito de missão para uma revisão detalhada de planejamento.'
+        : 'Melhorar hipóteses antes de tratar a missão como prática.'
     );
   }
 
@@ -178,17 +174,17 @@ export function generateDecisionReport(input: DecisionReportInput): DecisionRepo
 
   return {
     assumptions: [
-      'The report is generated from deterministic templates, not a live LLM.',
-      'CelesTrak or mock data may provide orbital signals, but Kessler does not perform propagation.',
-      'Material estimates are simplified category signals, not confirmed composition.',
+      'O relatório é gerado por templates determinísticos, não por um LLM ao vivo.',
+      'CelesTrak ou dados mock podem fornecer sinais orbitais, mas o Kessler não faz propagação orbital.',
+      'Estimativas de material são sinais simplificados por categoria, não composição confirmada.',
     ],
     confidenceLabel: formatDataConfidence(input.object.dataConfidence),
     context: input.context,
-    modelLabel: 'Deterministic report template',
+    modelLabel: 'Template determinístico',
     nextActions: getNextActions(input),
     promptPreview: buildDecisionReportPrompt(input),
     sections,
     summary: getPrioritySummary(input.object),
-    title: `${input.object.name} decision report`,
+    title: `Relatório de decisão: ${input.object.name}`,
   };
 }

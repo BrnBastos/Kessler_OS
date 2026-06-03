@@ -22,9 +22,9 @@ export function ObjectList({
   if (objects.length === 0) {
     return (
       <Card style={styles.emptyCard}>
-        <Text style={styles.emptyTitle}>No objects match these filters.</Text>
+        <Text style={styles.emptyTitle}>Nenhum objeto combina com estes filtros.</Text>
         <Text style={styles.emptyBody}>
-          Reset the filters or choose a broader orbit region to continue exploring.
+          Limpe os filtros ou escolha uma região orbital mais ampla para continuar explorando.
         </Text>
       </Card>
     );

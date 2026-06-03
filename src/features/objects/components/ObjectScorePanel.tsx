@@ -13,22 +13,22 @@ export function ObjectScorePanel({ object }: ObjectScorePanelProps) {
   return (
     <Card style={styles.card}>
       <View style={styles.header}>
-        <Text style={styles.title}>Score explanation</Text>
+        <Text style={styles.title}>Explicação das pontuações</Text>
         <Text style={styles.body}>
-          Scores are deterministic prototype signals. They explain why the object appears important;
-          they are not professional collision or material predictions.
+          As pontuações são sinais determinísticos do protótipo. Elas explicam por que o objeto
+          parece importante, mas não são previsões profissionais de colisão ou material.
         </Text>
       </View>
 
       <View style={styles.rings}>
-        <ScoreRing label="Risk" level={object.scores.risk.level} score={object.scores.risk.score} />
+        <ScoreRing label="Risco" level={object.scores.risk.level} score={object.scores.risk.score} />
         <ScoreRing
-          label="Forge Value"
+          label="Valor de reuso"
           level={object.scores.forgeValue.level}
           score={object.scores.forgeValue.score}
         />
         <ScoreRing
-          label="Priority"
+          label="Prioridade"
           level={object.scores.priority.level}
           score={object.scores.priority.score}
         />
@@ -41,7 +41,7 @@ export function ObjectScorePanel({ object }: ObjectScorePanelProps) {
       </View>
 
       <View style={styles.breakdown}>
-        <Text style={styles.breakdownTitle}>Risk factor breakdown</Text>
+        <Text style={styles.breakdownTitle}>Fatores que compõem o risco</Text>
         <RiskBar factors={object.scores.risk.factors} />
       </View>
     </Card>

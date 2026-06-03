@@ -102,39 +102,39 @@ export function CircularEconomyScreen() {
         <SafeAreaView>
           <View style={styles.stack}>
             <View style={styles.hero}>
-              <Badge label="Circular economy lab" tone="simulated" />
+              <Badge label="Laboratório de economia circular" tone="simulated" />
               <SectionHeader
-                eyebrow="Circular Economy Lab"
-                title="Explore when orbital waste could become future mission value."
-                description="Compare risk reduction with reuse potential, material signals and responsible disposal paths. The lab keeps material claims estimated and confidence-labeled."
+                eyebrow="Reaproveitamento Orbital"
+                title="Explore quando lixo orbital pode virar valor para missões futuras."
+                description="Compare redução de risco, potencial de reuso, sinais de material e caminhos responsáveis de descarte. O laboratório mantém estimativas sinalizadas por confiança."
               />
             </View>
 
             <View style={styles.metricGrid}>
               <Metric
-                detail="From repository and public adapter"
-                label="Catalog objects"
+                detail="Do repositório e do adaptador público"
+                label="Objetos no catálogo"
                 tone="cyan"
                 value={catalogObjects.length.toString()}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Forge value level high"
-                label="Strong reuse"
+                detail="Nível alto de valor de reuso"
+                label="Reuso forte"
                 tone="teal"
                 value={highForgeCount.toString()}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Forge value 40 or higher"
-                label="Reuse candidates"
+                detail="Valor de reuso 40 ou maior"
+                label="Candidatos a reuso"
                 tone="blue"
                 value={reuseCandidateCount.toString()}
                 style={styles.metricCard}
               />
               <Metric
-                detail={selectedObject ? selectedObject.name : 'No object selected'}
-                label="Material coverage"
+                detail={selectedObject ? selectedObject.name : 'Nenhum objeto selecionado'}
+                label="Cobertura material"
                 tone="warning"
                 value={`${Math.min(100, estimatedMaterialCoverage)}%`}
                 style={styles.metricCard}
@@ -148,9 +148,10 @@ export function CircularEconomyScreen() {
                 <View style={styles.selectorColumn}>
                   <Card style={styles.selectorCard}>
                     <View style={styles.selectorHeader}>
-                      <Text style={styles.selectorTitle}>Recovery candidates</Text>
+                      <Text style={styles.selectorTitle}>Candidatos à recuperação</Text>
                       <Text style={styles.selectorDescription}>
-                        Select an object to inspect its reuse materials and circular paths.
+                        Selecione um objeto para inspecionar seus materiais de reuso e caminhos
+                        circulares.
                       </Text>
                     </View>
 
@@ -181,12 +182,12 @@ export function CircularEconomyScreen() {
                             </Text>
                             <View style={styles.objectScores}>
                               <Badge
-                                label="Forge"
+                                label="Reuso"
                                 score={object.scores.forgeValue.score}
                                 tone={object.scores.forgeValue.score >= 40 ? 'success' : 'info'}
                               />
                               <Badge
-                                label="Risk"
+                                label="Risco"
                                 score={object.scores.risk.score}
                                 tone={object.scores.risk.score >= 70 ? 'danger' : 'warning'}
                               />
@@ -208,10 +209,10 @@ export function CircularEconomyScreen() {
                   <MaterialUseCases estimates={estimates} />
                   <Card style={styles.actionCard} variant="action">
                     <View style={styles.actionCopy}>
-                      <Text style={styles.actionTitle}>Try the recovery path as a mission.</Text>
+                      <Text style={styles.actionTitle}>Teste o caminho de recuperação como missão.</Text>
                       <Text style={styles.actionBody}>
-                        Circular value only matters if inspection, capture or disposal can be
-                        modeled responsibly.
+                        Valor circular só importa se inspeção, captura ou descarte puderem ser
+                        modelados com responsabilidade.
                       </Text>
                     </View>
                     <View style={styles.actions}>
@@ -223,7 +224,7 @@ export function CircularEconomyScreen() {
                             params: { id: selectedObject.id },
                           })
                         }>
-                        Open Passport
+                        Abrir ficha
                       </Button>
                       <Button
                         onPress={() =>
@@ -232,7 +233,7 @@ export function CircularEconomyScreen() {
                             params: { missionType: 'recycle', objectId: selectedObject.id },
                           })
                         }>
-                        Simulate Recycling
+                        Simular reciclagem
                       </Button>
                     </View>
                   </Card>
@@ -240,9 +241,9 @@ export function CircularEconomyScreen() {
               </View>
             ) : (
               <Card style={styles.emptyCard}>
-                <Text style={styles.emptyTitle}>No circular economy objects available.</Text>
+                <Text style={styles.emptyTitle}>Nenhum objeto de economia circular disponível.</Text>
                 <Text style={styles.emptyBody}>
-                  The lab needs at least one orbital object from the repository.
+                  O laboratório precisa de pelo menos um objeto orbital do repositório.
                 </Text>
               </Card>
             )}

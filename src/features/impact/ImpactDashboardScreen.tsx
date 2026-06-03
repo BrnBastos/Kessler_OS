@@ -11,6 +11,7 @@ import {
   loadScoredOrbitalObjects,
 } from '@/domain/repositories';
 import { missionProfiles, ScoredOrbitalObject } from '@/domain/scoring';
+import { formatObjectStatus } from '@/features/objects/object-formatters';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { listSavedMissionScenarios, SavedMissionScenario } from '@/services/persistence';
 import { colors, layout, radius, spacing, typography } from '@/theme';
@@ -18,31 +19,31 @@ import { colors, layout, radius, spacing, typography } from '@/theme';
 const initialObjects = listScoredOrbitalObjects();
 
 const preventionRecommendations = [
-  'Passivation',
-  'End-of-life planning',
-  'Controlled reentry',
-  'Graveyard orbit',
-  'Tracking and cataloging',
-  'Collision avoidance',
-  'Responsible mission design',
+  'Passivação',
+  'Planejamento de fim de vida',
+  'Reentrada controlada',
+  'Órbita cemitério',
+  'Rastreamento e catalogação',
+  'Desvio de colisão',
+  'Desenho responsável de missão',
 ];
 
 const valuePillars = [
   {
-    body: 'Objects are ranked using transparent risk, forge value and priority scores.',
-    label: 'Analyze',
+    body: 'Objetos são ranqueados com pontuações transparentes de risco, reuso e prioridade.',
+    label: 'Analisar',
   },
   {
-    body: 'Users can test inspection, avoidance, deorbit, capture and recycling scenarios.',
-    label: 'Simulate',
+    body: 'Usuários testam cenários de inspeção, desvio, retirada de órbita, captura e reciclagem.',
+    label: 'Simular',
   },
   {
-    body: 'The app frames orbital debris as both safety risk and future material opportunity.',
-    label: 'Reuse',
+    body: 'O app mostra detritos orbitais como risco de segurança e oportunidade material futura.',
+    label: 'Reaproveitar',
   },
   {
-    body: 'Reports explain model boundaries so the prototype does not overclaim precision.',
-    label: 'Explain',
+    body: 'Relatórios explicam limites do modelo para o protótipo não prometer precisão demais.',
+    label: 'Explicar',
   },
 ];
 
@@ -84,10 +85,10 @@ function formatMass(value: number) {
 
 function formatSavedAt(value?: string) {
   if (!value) {
-    return 'No saved scenario yet';
+    return 'Nenhum cenário salvo ainda';
   }
 
-  return new Date(value).toLocaleString();
+  return new Date(value).toLocaleString('pt-BR');
 }
 
 export function ImpactDashboardScreen() {
@@ -141,52 +142,52 @@ export function ImpactDashboardScreen() {
         <SafeAreaView>
           <View style={styles.stack}>
             <View style={styles.hero}>
-              <Badge label="Evaluator view" tone="simulated" />
+              <Badge label="Visão de avaliação" tone="simulated" />
               <SectionHeader
-                eyebrow="Impact Dashboard"
-                title="Show the value of Kessler OS in one presentation-ready view."
-                description="This dashboard summarizes catalog analysis, priority ranking, mission simulation, circular reuse value and prevention guidance with honest prototype boundaries."
+                eyebrow="Painel de Impacto"
+                title="Mostre o valor do Kessler OS em uma visão pronta para apresentação."
+                description="Este painel resume análise de catálogo, prioridades, simulação de missão, reaproveitamento circular e prevenção com limites honestos de protótipo."
                 action={
                   isDesktop ? (
-                    <Button onPress={() => router.push('/missions')}>Run Simulation</Button>
+                    <Button onPress={() => router.push('/missions')}>Rodar simulação</Button>
                   ) : undefined
                 }
               />
-              {!isDesktop && <Button onPress={() => router.push('/missions')}>Run Simulation</Button>}
+              {!isDesktop && <Button onPress={() => router.push('/missions')}>Rodar simulação</Button>}
             </View>
 
             <View style={styles.metricGrid}>
               <Metric
-                detail="Analyzed through repository"
-                label="Objects analyzed"
+                detail="Analisados pelo repositório"
+                label="Objetos analisados"
                 tone="cyan"
                 value={catalogObjects.length.toString()}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Priority level high"
-                label="High-priority objects"
+                detail="Nível de prioridade alto"
+                label="Objetos de alta prioridade"
                 tone="danger"
                 value={highPriorityObjects.length.toString()}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Approximate recoverable category mass"
-                label="Reusable mass"
+                detail="Massa aproximada em categorias recuperáveis"
+                label="Massa reaproveitável"
                 tone="teal"
                 value={formatMass(reusableMassEstimate)}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Available deterministic response models"
-                label="Simulated missions"
+                detail="Modelos determinísticos disponíveis"
+                label="Missões simuladas"
                 tone="blue"
                 value={Object.keys(missionProfiles).length.toString()}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Responsible behavior topics"
-                label="Prevention recommendations"
+                detail="Tópicos de comportamento responsável"
+                label="Recomendações de prevenção"
                 tone="warning"
                 value={preventionRecommendations.length.toString()}
                 style={styles.metricCard}
@@ -199,9 +200,9 @@ export function ImpactDashboardScreen() {
               <View style={styles.mainColumn}>
                 <Card style={styles.card}>
                   <SectionHeader
-                    eyebrow="Presentation narrative"
-                    title="Kessler connects risk, action and reuse."
-                    description="The app is not just a catalog. It turns orbital debris into a decision workflow: discover objects, rank attention, simulate responses, evaluate reuse and explain recommendations."
+                    eyebrow="Narrativa de apresentação"
+                    title="Kessler conecta risco, ação e reaproveitamento."
+                    description="O app não é só um catálogo. Ele transforma detritos orbitais em um fluxo de decisão: descobrir objetos, priorizar atenção, simular respostas, avaliar reuso e explicar recomendações."
                   />
 
                   <View style={styles.pillarGrid}>
@@ -216,22 +217,22 @@ export function ImpactDashboardScreen() {
 
                 <Card style={styles.card} variant="score">
                   <View style={styles.cardHeader}>
-                    <Text style={styles.cardTitle}>Impact signals</Text>
-                    <Badge label="Prototype model" tone="simulated" />
+                    <Text style={styles.cardTitle}>Sinais de impacto</Text>
+                    <Badge label="Modelo de protótipo" tone="simulated" />
                   </View>
 
                   <View style={styles.signalGrid}>
                     <View style={styles.signal}>
                       <Text style={styles.signalValue}>{averageRisk}</Text>
-                      <Text style={styles.signalLabel}>Average risk score</Text>
+                      <Text style={styles.signalLabel}>Risco médio</Text>
                     </View>
                     <View style={styles.signal}>
                       <Text style={styles.signalValue}>{averagePriority}</Text>
-                      <Text style={styles.signalLabel}>Average priority score</Text>
+                      <Text style={styles.signalLabel}>Prioridade média</Text>
                     </View>
                     <View style={styles.signal}>
                       <Text style={styles.signalValue}>{reuseCandidates.length}</Text>
-                      <Text style={styles.signalLabel}>Reuse candidates</Text>
+                      <Text style={styles.signalLabel}>Candidatos a reuso</Text>
                     </View>
                   </View>
                 </Card>
@@ -239,7 +240,7 @@ export function ImpactDashboardScreen() {
 
               <View style={styles.sideColumn}>
                 <Card style={styles.card}>
-                  <Text style={styles.cardTitle}>Top attention objects</Text>
+                  <Text style={styles.cardTitle}>Objetos com mais atenção</Text>
                   <View style={styles.rankList}>
                     {highPriorityObjects.slice(0, 4).map((object, index) => (
                       <View key={object.id} style={styles.rankItem}>
@@ -247,7 +248,7 @@ export function ImpactDashboardScreen() {
                         <View style={styles.rankCopy}>
                           <Text style={styles.rankTitle}>{object.name}</Text>
                           <Text style={styles.rankMeta}>
-                            {object.orbitRegion} · {object.status} · priority{' '}
+                            {object.orbitRegion} · {formatObjectStatus(object.status)} · prioridade{' '}
                             {object.scores.priority.score}
                           </Text>
                         </View>
@@ -257,26 +258,27 @@ export function ImpactDashboardScreen() {
                 </Card>
 
                 <Card style={styles.card}>
-                  <Text style={styles.cardTitle}>Saved simulation state</Text>
+                  <Text style={styles.cardTitle}>Estado das simulações salvas</Text>
                   <Text style={styles.bodyText}>
-                    {savedScenarios.length} saved scenario{savedScenarios.length === 1 ? '' : 's'} are
-                    available locally for comparison.
+                    {savedScenarios.length} cenário{savedScenarios.length === 1 ? '' : 's'} salvo
+                    {savedScenarios.length === 1 ? '' : 's'} disponível
+                    {savedScenarios.length === 1 ? '' : 's'} localmente para comparação.
                   </Text>
                   <Text style={styles.mutedText}>
-                    Latest: {formatSavedAt(latestSavedScenario?.savedAt)}
+                    Mais recente: {formatSavedAt(latestSavedScenario?.savedAt)}
                   </Text>
                   <Button variant="secondary" onPress={() => router.push('/missions')}>
-                    Open Saved Scenarios
+                    Abrir cenários salvos
                   </Button>
                 </Card>
 
                 <Card style={styles.card}>
-                  <Text style={styles.cardTitle}>Prototype boundaries</Text>
+                  <Text style={styles.cardTitle}>Limites do protótipo</Text>
                   <View style={styles.boundaryList}>
-                    <Text style={styles.boundary}>No operational collision prediction.</Text>
-                    <Text style={styles.boundary}>No verified legal compliance claim.</Text>
-                    <Text style={styles.boundary}>No confirmed material composition.</Text>
-                    <Text style={styles.boundary}>All reports are deterministic templates.</Text>
+                    <Text style={styles.boundary}>Não há previsão operacional de colisão.</Text>
+                    <Text style={styles.boundary}>Não há comprovação de conformidade legal.</Text>
+                    <Text style={styles.boundary}>Não há composição material confirmada.</Text>
+                    <Text style={styles.boundary}>Todos os relatórios usam templates determinísticos.</Text>
                   </View>
                 </Card>
               </View>

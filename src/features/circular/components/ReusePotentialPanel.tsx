@@ -1,6 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Badge, BadgeTone, Card, Metric } from '@/components/ui';
+import {
+  formatReuseMaterialLabel,
+  formatReusePathLabel,
+  formatReusePotentialLabel,
+} from '@/content/pt-br';
 import { ReuseMaterialEstimate, ReusePotential } from '@/domain/models';
 import { ScoredOrbitalObject } from '@/domain/scoring';
 import { colors, radius, spacing, typography } from '@/theme';
@@ -22,11 +27,11 @@ function getPotentialTone(potential: ReusePotential): BadgeTone {
 }
 
 function formatMaterial(material: ReuseMaterialEstimate['material']) {
-  return material.replace('_', ' ');
+  return formatReuseMaterialLabel(material);
 }
 
 function formatPath(path: ReuseMaterialEstimate['preferredPath']) {
-  return path.replace('_', ' ');
+  return formatReusePathLabel(path);
 }
 
 export function ReusePotentialPanel({ estimates, object }: ReusePotentialPanelProps) {
@@ -42,31 +47,31 @@ export function ReusePotentialPanel({ estimates, object }: ReusePotentialPanelPr
     <Card style={styles.card} variant="score">
       <View style={styles.header}>
         <View style={styles.titleGroup}>
-          <Text style={styles.eyebrow}>Reuse potential</Text>
+          <Text style={styles.eyebrow}>Potencial de reaproveitamento</Text>
           <Text style={styles.title}>{object.name}</Text>
           <Text style={styles.description}>{object.scores.forgeValue.summary}</Text>
         </View>
-        <Badge label="Forge value" score={object.scores.forgeValue.score} tone="success" />
+        <Badge label="Valor de reuso" score={object.scores.forgeValue.score} tone="success" />
       </View>
 
       <View style={styles.metricGrid}>
         <Metric
-          detail="Blends forge, priority and material signals"
-          label="Circular readiness"
+          detail="Combina reuso, prioridade e sinais de material"
+          label="Prontidão circular"
           tone="teal"
           value={circularReadiness.toString()}
           style={styles.metric}
         />
         <Metric
-          detail="Known estimate coverage"
-          label="Material share"
+          detail="Cobertura estimada conhecida"
+          label="Fatia material"
           tone="cyan"
           value={`${Math.min(100, totalKnownShare)}%`}
           style={styles.metric}
         />
         <Metric
-          detail={strongestEstimate ? formatMaterial(strongestEstimate.material) : 'Unknown'}
-          label="Strongest signal"
+          detail={strongestEstimate ? formatMaterial(strongestEstimate.material) : 'Desconhecido'}
+          label="Sinal mais forte"
           tone="blue"
           value={strongestEstimate ? strongestEstimate.estimatedSharePct.toString() : '0'}
           style={styles.metric}
@@ -82,9 +87,12 @@ export function ReusePotentialPanel({ estimates, object }: ReusePotentialPanelPr
               <View style={styles.materialHeader}>
                 <View style={styles.materialCopy}>
                   <Text style={styles.materialName}>{formatMaterial(estimate.material)}</Text>
-                  <Text style={styles.materialPath}>Preferred path: {formatPath(estimate.preferredPath)}</Text>
+                  <Text style={styles.materialPath}>Caminho preferido: {formatPath(estimate.preferredPath)}</Text>
                 </View>
-                <Badge label={estimate.potential} tone={getPotentialTone(estimate.potential)} />
+                <Badge
+                  label={formatReusePotentialLabel(estimate.potential)}
+                  tone={getPotentialTone(estimate.potential)}
+                />
               </View>
 
               <View style={styles.track}>
@@ -92,7 +100,7 @@ export function ReusePotentialPanel({ estimates, object }: ReusePotentialPanelPr
               </View>
 
               <View style={styles.materialFooter}>
-                <Text style={styles.share}>{estimate.estimatedSharePct}% estimated share</Text>
+                <Text style={styles.share}>{estimate.estimatedSharePct}% de participação estimada</Text>
                 <Text style={styles.notes}>{estimate.notes}</Text>
               </View>
             </View>

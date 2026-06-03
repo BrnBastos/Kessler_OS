@@ -27,7 +27,7 @@ export function SectionPlaceholderScreen({
   description,
   eyebrow,
   primaryActionHref = '/',
-  primaryActionLabel = 'Back Home',
+  primaryActionLabel = 'Voltar ao início',
   title,
 }: SectionPlaceholderScreenProps) {
   const { isDesktop } = useBreakpoint();

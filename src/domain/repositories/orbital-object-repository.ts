@@ -22,7 +22,7 @@ export type OrbitalObjectRepositoryLoadResult = {
 
 let repositoryObjects: OrbitalObject[] = mockOrbitalObjects;
 let repositoryStatus: OrbitalObjectRepositoryStatus = {
-  message: 'Local mock orbital catalog is ready.',
+  message: 'Catálogo orbital local do protótipo está pronto.',
   source: 'mock',
 };
 
@@ -48,7 +48,7 @@ function getErrorMessage(error: unknown) {
     return error.message;
   }
 
-  return 'Unknown adapter error';
+  return 'Erro desconhecido no adaptador';
 }
 
 function mergeLiveObjectsWithMocks(liveObjects: OrbitalObject[]) {
@@ -71,7 +71,7 @@ function mergeLiveObjectsWithMocks(liveObjects: OrbitalObject[]) {
       dataConfidence: 'confirmed' as const,
       inclinationDeg: liveObject.inclinationDeg ?? mockObject.inclinationDeg,
       launchYear: liveObject.launchYear ?? mockObject.launchYear,
-      summary: `${mockObject.summary} Public CelesTrak GP data refreshed the orbital altitude and inclination used by this demo.`,
+      summary: `${mockObject.summary} Dados públicos GP do CelesTrak atualizaram a altitude orbital e a inclinação usadas nesta demo.`,
     };
   });
   const liveOnlyObjects = liveObjects
@@ -109,8 +109,8 @@ export async function refreshOrbitalObjectRepository() {
     repositoryObjects = mergeLiveObjectsWithMocks(celesTrakResult.objects);
     repositoryStatus = {
       message: celesTrakResult.fromCache
-        ? 'Using cached public CelesTrak GP data with local domain metadata.'
-        : 'Using public CelesTrak GP data with local domain metadata.',
+        ? 'Usando dados públicos GP do CelesTrak em cache com metadados locais do domínio.'
+        : 'Usando dados públicos GP do CelesTrak com metadados locais do domínio.',
       source: 'celestrak',
       updatedAt: celesTrakResult.fetchedAt,
     };
@@ -118,7 +118,7 @@ export async function refreshOrbitalObjectRepository() {
     repositoryObjects = mockOrbitalObjects;
     repositoryStatus = {
       error: getErrorMessage(error),
-      message: 'External orbital data was unavailable, so the app kept the local mock catalog.',
+      message: 'Dados orbitais externos estavam indisponíveis, então o app manteve o catálogo local do protótipo.',
       source: 'mock',
     };
   }

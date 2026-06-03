@@ -21,6 +21,17 @@ function getLevelColor(level: ScoreLevel) {
   }
 }
 
+function formatLevel(level: ScoreLevel) {
+  switch (level) {
+    case 'high':
+      return 'Alto';
+    case 'medium':
+      return 'Médio';
+    case 'low':
+      return 'Baixo';
+  }
+}
+
 export function ScoreRing({ label, level, score, style }: ScoreRingProps) {
   const levelColor = getLevelColor(level);
 
@@ -28,7 +39,7 @@ export function ScoreRing({ label, level, score, style }: ScoreRingProps) {
     <View style={[styles.container, style]}>
       <View style={[styles.ring, { borderColor: levelColor }]}>
         <Text style={styles.score}>{score}</Text>
-        <Text style={styles.level}>{level}</Text>
+        <Text style={styles.level}>{formatLevel(level)}</Text>
       </View>
       <Text style={styles.label}>{label}</Text>
     </View>

@@ -4,29 +4,29 @@ import { Card } from '@/components/ui';
 import { ScoredOrbitalObject } from '@/domain/scoring';
 import { colors, spacing, typography } from '@/theme';
 
-import { formatEstimate } from '../object-formatters';
+import { formatEstimate, formatObjectStatus } from '../object-formatters';
 
 type ObjectTechnicalDetailsProps = {
   object: ScoredOrbitalObject;
 };
 
-const unknown = 'Unknown';
+const unknown = 'Desconhecido';
 
 export function ObjectTechnicalDetails({ object }: ObjectTechnicalDetailsProps) {
   const facts = [
     { label: 'NORAD ID', value: object.noradId ?? unknown },
-    { label: 'Orbit region', value: object.orbitRegion },
+    { label: 'Região orbital', value: object.orbitRegion },
     { label: 'Altitude', value: formatEstimate(object.altitudeKm, ' km') },
-    { label: 'Inclination', value: formatEstimate(object.inclinationDeg, ' deg') },
-    { label: 'Estimated mass', value: formatEstimate(object.estimatedMassKg, ' kg') },
-    { label: 'Estimated size', value: formatEstimate(object.estimatedSizeM, ' m') },
-    { label: 'Launch year', value: object.launchYear?.toString() ?? unknown },
-    { label: 'Status', value: object.status },
+    { label: 'Inclinação', value: formatEstimate(object.inclinationDeg, '°') },
+    { label: 'Massa estimada', value: formatEstimate(object.estimatedMassKg, ' kg') },
+    { label: 'Tamanho estimado', value: formatEstimate(object.estimatedSizeM, ' m') },
+    { label: 'Ano de lançamento', value: object.launchYear?.toString() ?? unknown },
+    { label: 'Status', value: formatObjectStatus(object.status) },
   ];
 
   return (
     <Card style={styles.card}>
-      <Text style={styles.title}>Technical details</Text>
+      <Text style={styles.title}>Detalhes técnicos</Text>
       <View style={styles.grid}>
         {facts.map((fact) => (
           <View key={fact.label} style={styles.fact}>

@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Card } from '@/components/ui';
+import { formatObjectTypePluralLabel, ptBR } from '@/content/pt-br';
 import { OrbitalObjectType, OrbitRegion } from '@/domain/models';
 import { colors, radius, spacing, typography } from '@/theme';
 
@@ -17,15 +18,15 @@ type ObjectFiltersProps = {
 };
 
 const objectTypeOptions: { label: string; value: ObjectTypeFilter }[] = [
-  { label: 'All', value: 'all' },
-  { label: 'Satellites', value: 'satellite' },
-  { label: 'Rocket bodies', value: 'rocket_body' },
-  { label: 'Debris', value: 'debris' },
-  { label: 'Unknown', value: 'unknown' },
+  { label: formatObjectTypePluralLabel('all'), value: 'all' },
+  { label: formatObjectTypePluralLabel('satellite'), value: 'satellite' },
+  { label: formatObjectTypePluralLabel('rocket_body'), value: 'rocket_body' },
+  { label: formatObjectTypePluralLabel('debris'), value: 'debris' },
+  { label: formatObjectTypePluralLabel('unknown'), value: 'unknown' },
 ];
 
 const orbitRegionOptions: { label: string; value: OrbitRegionFilter }[] = [
-  { label: 'All', value: 'all' },
+  { label: ptBR.common.all, value: 'all' },
   { label: 'LEO', value: 'LEO' },
   { label: 'MEO', value: 'MEO' },
   { label: 'GEO', value: 'GEO' },
@@ -44,16 +45,16 @@ export function ObjectFilters({
     <Card style={styles.card}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.title}>Object filters</Text>
-          <Text style={styles.resultCount}>{resultCount} matching objects</Text>
+          <Text style={styles.title}>Filtros de objetos</Text>
+          <Text style={styles.resultCount}>{resultCount} objetos encontrados</Text>
         </View>
         <Pressable accessibilityRole="button" onPress={onReset} style={styles.resetButton}>
-          <Text style={styles.resetLabel}>Reset</Text>
+          <Text style={styles.resetLabel}>{ptBR.common.reset}</Text>
         </Pressable>
       </View>
 
       <View style={styles.filterGroup}>
-        <Text style={styles.filterLabel}>Type</Text>
+        <Text style={styles.filterLabel}>Tipo</Text>
         <View style={styles.chips}>
           {objectTypeOptions.map((option) => {
             const active = objectType === option.value;
@@ -78,7 +79,7 @@ export function ObjectFilters({
       </View>
 
       <View style={styles.filterGroup}>
-        <Text style={styles.filterLabel}>Orbit region</Text>
+        <Text style={styles.filterLabel}>Região orbital</Text>
         <View style={styles.chips}>
           {orbitRegionOptions.map((option) => {
             const active = orbitRegion === option.value;

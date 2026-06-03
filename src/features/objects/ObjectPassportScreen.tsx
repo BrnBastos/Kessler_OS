@@ -29,12 +29,12 @@ export function ObjectPassportScreen({ objectId }: ObjectPassportScreenProps) {
           contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}>
           <SafeAreaView>
             <Card style={styles.notFoundCard}>
-              <Text style={styles.notFoundTitle}>Object not found.</Text>
+              <Text style={styles.notFoundTitle}>Objeto não encontrado.</Text>
               <Text style={styles.notFoundBody}>
-                This object is not available in the local repository. Return to the explorer and
-                choose another item.
+                Este objeto não está disponível no repositório local. Volte ao explorador e escolha
+                outro item.
               </Text>
-              <Button onPress={() => router.push('/orbit')}>Back to Orbit</Button>
+              <Button onPress={() => router.push('/orbit')}>Voltar ao mapa orbital</Button>
             </Card>
           </SafeAreaView>
         </ScrollView>
@@ -50,16 +50,16 @@ export function ObjectPassportScreen({ objectId }: ObjectPassportScreenProps) {
         <SafeAreaView>
           <View style={styles.stack}>
             <View style={styles.hero}>
-              <Badge label="Object Passport" tone="simulated" />
+              <Badge label="Ficha do objeto" tone="simulated" />
               <SectionHeader
-                eyebrow="Known, estimated and simulated signals"
-                title="Understand one object before deciding what to do next."
-                description="The passport collects technical metadata, confidence labels, deterministic scores and the recommended next action for a single orbital object."
+                eyebrow="Sinais conhecidos, estimados e simulados"
+                title="Entenda um objeto antes de decidir o próximo passo."
+                description="A ficha reúne metadados técnicos, confiança dos dados, pontuações determinísticas e a próxima ação recomendada para um objeto orbital."
                 action={
                   isDesktop ? (
                     <View style={styles.heroActions}>
                       <Button variant="secondary" onPress={() => router.push('/orbit')}>
-                        Back to Orbit
+                        Voltar ao mapa
                       </Button>
                       <Button
                         onPress={() =>
@@ -68,7 +68,7 @@ export function ObjectPassportScreen({ objectId }: ObjectPassportScreenProps) {
                             params: { objectId: object.id },
                           })
                         }>
-                        Simulate Mission
+                        Simular missão
                       </Button>
                     </View>
                   ) : undefined
@@ -77,7 +77,7 @@ export function ObjectPassportScreen({ objectId }: ObjectPassportScreenProps) {
               {!isDesktop && (
                 <View style={styles.heroActions}>
                   <Button variant="secondary" onPress={() => router.push('/orbit')}>
-                    Back to Orbit
+                    Voltar ao mapa
                   </Button>
                   <Button
                     onPress={() =>
@@ -86,7 +86,7 @@ export function ObjectPassportScreen({ objectId }: ObjectPassportScreenProps) {
                         params: { objectId: object.id },
                       })
                     }>
-                    Simulate Mission
+                    Simular missão
                   </Button>
                 </View>
               )}

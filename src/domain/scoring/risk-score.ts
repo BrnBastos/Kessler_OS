@@ -1,3 +1,8 @@
+import {
+  formatDataConfidenceLabel,
+  formatObjectStatusLabel,
+  formatObjectTypeLabel,
+} from '@/content/pt-br';
 import { DataConfidence, OrbitalObject, OrbitalObjectStatus, OrbitalObjectType, OrbitRegion } from '@/domain/models';
 
 import { ScoreLevel, ScoreResult } from './score-types';
@@ -100,46 +105,46 @@ function getConfidenceValue(confidence: DataConfidence) {
 
 function getRiskSummary(score: number, object: OrbitalObject) {
   if (score >= 70) {
-    return `${object.name} needs high attention because orbit, status, mass, or uncertainty increase operational concern.`;
+    return `${object.name} pede alta atenção porque órbita, status, massa ou incerteza aumentam a preocupação operacional.`;
   }
 
   if (score >= 40) {
-    return `${object.name} has moderate attention signals and should remain in the review queue.`;
+    return `${object.name} tem sinais moderados de atenção e deve continuar na fila de revisão.`;
   }
 
-  return `${object.name} has low prototype risk in this simplified model.`;
+  return `${object.name} tem risco baixo neste modelo simplificado do protótipo.`;
 }
 
 export function calculateRiskScore(object: OrbitalObject): ScoreResult {
   const factors = [
     {
-      description: `${object.orbitRegion} traffic and persistence signal.`,
-      label: 'Orbit congestion',
+      description: `${object.orbitRegion} indica tráfego e persistência orbital no modelo.`,
+      label: 'Congestionamento orbital',
       value: getOrbitCongestionValue(object.orbitRegion),
     },
     {
-      description: `${object.status} objects can increase operational uncertainty.`,
-      label: 'Object status',
+      description: `Status ${formatObjectStatusLabel(object.status)} pode aumentar a incerteza operacional.`,
+      label: 'Status do objeto',
       value: getStatusValue(object.status),
     },
     {
-      description: `${object.type} classification affects expected behavior.`,
-      label: 'Object type',
+      description: `Tipo ${formatObjectTypeLabel(object.type)} afeta o comportamento esperado.`,
+      label: 'Tipo do objeto',
       value: getTypeValue(object.type),
     },
     {
-      description: 'Larger objects can create larger consequences if involved in fragmentation.',
-      label: 'Estimated mass',
+      description: 'Objetos maiores podem gerar consequências maiores se houver fragmentação.',
+      label: 'Massa estimada',
       value: getMassValue(object.estimatedMassKg),
     },
     {
-      description: 'Higher or long-lived orbits can keep debris relevant for longer.',
-      label: 'Persistence',
+      description: 'Órbitas mais altas ou duradouras mantêm detritos relevantes por mais tempo.',
+      label: 'Persistência',
       value: getPersistenceValue(object),
     },
     {
-      description: `${object.dataConfidence} confidence adds uncertainty to the estimate.`,
-      label: 'Data uncertainty',
+      description: `${formatDataConfidenceLabel(object.dataConfidence)} adiciona incerteza à estimativa.`,
+      label: 'Incerteza dos dados',
       value: getConfidenceValue(object.dataConfidence),
     },
   ];

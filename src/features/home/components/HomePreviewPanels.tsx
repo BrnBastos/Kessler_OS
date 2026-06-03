@@ -2,7 +2,9 @@ import { router } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Badge, Button, Card, SectionHeader } from '@/components/ui';
+import { formatReusePathLabel } from '@/content/pt-br';
 import { mockOrbitalObjects, mockReuseMaterials } from '@/data';
+import { formatObjectStatus } from '@/features/objects/object-formatters';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { colors, radius, spacing, typography } from '@/theme';
 
@@ -23,9 +25,9 @@ export function HomePreviewPanels() {
     <View style={[styles.grid, isDesktop && styles.gridDesktop]}>
       <Card variant="score" style={styles.panel}>
         <SectionHeader
-          eyebrow="Priority Queue"
-          title="Attention preview"
-          description="Ranked examples from the local object catalog."
+          eyebrow="Fila de Prioridade"
+          title="Prévia de atenção"
+          description="Exemplos priorizados a partir do catálogo local de objetos."
         />
 
         <View style={styles.priorityList}>
@@ -34,24 +36,24 @@ export function HomePreviewPanels() {
               <View style={styles.priorityCopy}>
                 <Text style={styles.rowTitle}>{object.name}</Text>
                 <Text style={styles.rowMeta}>
-                  {object.orbitRegion} · {object.status}
+                  {object.orbitRegion} · {formatObjectStatus(object.status)}
                 </Text>
               </View>
-              <Badge label="Priority" score={score} tone={score >= 70 ? 'danger' : 'warning'} />
+              <Badge label="Prioridade" score={score} tone={score >= 70 ? 'danger' : 'warning'} />
             </View>
           ))}
         </View>
 
         <Button variant="secondary" onPress={() => router.push('/priority')}>
-          View all priorities
+          Ver prioridades
         </Button>
       </Card>
 
       <Card variant="action" style={styles.panel}>
         <SectionHeader
-          eyebrow="Circular Economy Snapshot"
-          title="Material potential"
-          description="Simplified reuse categories with confidence-aware estimates."
+          eyebrow="Reaproveitamento orbital"
+          title="Potencial dos materiais"
+          description="Categorias simples de reuso com estimativas sinalizadas por confiança."
         />
 
         <View style={styles.economyRow}>
@@ -72,7 +74,7 @@ export function HomePreviewPanels() {
                   <Text style={styles.rowTitle}>{material.material}</Text>
                 </View>
                 <Text style={styles.rowMeta}>
-                  {material.estimatedSharePct}% · {material.preferredPath}
+                  {material.estimatedSharePct}% · {formatReusePathLabel(material.preferredPath)}
                 </Text>
               </View>
             ))}
@@ -80,7 +82,7 @@ export function HomePreviewPanels() {
         </View>
 
         <Button variant="secondary" onPress={() => router.push('/circular')}>
-          View details
+          Ver detalhes
         </Button>
       </Card>
     </View>

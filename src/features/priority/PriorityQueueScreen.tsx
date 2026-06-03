@@ -89,7 +89,7 @@ export function PriorityQueueScreen() {
     (object) => object.scores.priority.level === 'high'
   ).length;
   const inspectOrRemovalCount = allPriorityObjects.filter((object) =>
-    ['Inspect before removal', 'Prioritize removal'].includes(object.scores.priority.decision)
+    ['Inspecionar antes da remoção', 'Priorizar remoção'].includes(object.scores.priority.decision)
   ).length;
   const averageRisk =
     Math.round(
@@ -112,39 +112,39 @@ export function PriorityQueueScreen() {
         <SafeAreaView>
           <View style={styles.stack}>
             <View style={styles.hero}>
-              <Badge label="Deterministic queue" tone="simulated" />
+              <Badge label="Fila determinística" tone="simulated" />
               <SectionHeader
-                eyebrow="Priority Queue"
-                title="Rank which orbital objects deserve attention first."
-                description="The queue combines risk, forge value, feasibility and confidence into a transparent priority signal. It is built for comparison, not professional collision operations."
+                eyebrow="Fila de Prioridade"
+                title="Veja quais objetos orbitais merecem atenção primeiro."
+                description="A fila combina risco, valor de reuso, viabilidade e confiança em um sinal transparente de prioridade. Ela serve para comparação, não para operações profissionais de colisão."
               />
             </View>
 
             <View style={styles.metricGrid}>
               <Metric
-                detail={topObject ? topObject.name : 'No object selected'}
-                label="Top priority score"
+                detail={topObject ? topObject.name : 'Nenhum objeto selecionado'}
+                label="Maior prioridade"
                 tone="danger"
                 value={topObject ? topObject.scores.priority.score.toString() : '0'}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Priority level high"
-                label="High priority"
+                detail="Nível de prioridade alto"
+                label="Alta prioridade"
                 tone="warning"
                 value={highPriorityCount.toString()}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Inspection or removal recommended"
-                label="Action candidates"
+                detail="Inspeção ou remoção recomendada"
+                label="Candidatos a ação"
                 tone="cyan"
                 value={inspectOrRemovalCount.toString()}
                 style={styles.metricCard}
               />
               <Metric
-                detail="Across local repository"
-                label="Average risk"
+                detail="No repositório local"
+                label="Risco médio"
                 tone="blue"
                 value={averageRisk.toString()}
                 style={styles.metricCard}
@@ -168,9 +168,9 @@ export function PriorityQueueScreen() {
             />
 
             <View style={styles.sectionTitleRow}>
-              <Text style={styles.sectionTitle}>Ranked attention queue</Text>
+              <Text style={styles.sectionTitle}>Fila de atenção priorizada</Text>
               <Text style={styles.sectionNote}>
-                Sorted by {sortMode === 'forge' ? 'forge value' : sortMode} score
+                Ordenada por {sortMode === 'forge' ? 'valor de reuso' : sortMode === 'risk' ? 'risco' : 'prioridade'}
               </Text>
             </View>
 

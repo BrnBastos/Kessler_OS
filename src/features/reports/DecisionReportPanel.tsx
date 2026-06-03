@@ -30,7 +30,7 @@ export function DecisionReportPanel({
     <Card style={styles.card} variant="action">
       <View style={styles.header}>
         <View style={styles.titleGroup}>
-          <Text style={styles.eyebrow}>AI-style decision report</Text>
+          <Text style={styles.eyebrow}>Relatório de decisão</Text>
           <Text style={styles.title}>{report.title}</Text>
           <Text style={styles.summary}>{report.summary}</Text>
         </View>
@@ -47,7 +47,7 @@ export function DecisionReportPanel({
       </View>
 
       <View style={styles.nextActions}>
-        <Text style={styles.groupTitle}>Next actions</Text>
+        <Text style={styles.groupTitle}>Próximas ações</Text>
         {report.nextActions.map((action) => (
           <View key={action} style={styles.actionRow}>
             <View style={styles.actionDot} />
@@ -57,7 +57,7 @@ export function DecisionReportPanel({
       </View>
 
       <View style={styles.assumptions}>
-        <Text style={styles.groupTitle}>Report boundaries</Text>
+        <Text style={styles.groupTitle}>Limites do relatório</Text>
         {report.assumptions.map((assumption) => (
           <Text key={assumption} style={styles.assumption}>
             {assumption}

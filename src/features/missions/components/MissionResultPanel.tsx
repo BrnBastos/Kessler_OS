@@ -41,9 +41,9 @@ function MissionResultContent({ object, result }: MissionResultPanelProps) {
     <Card style={styles.card} variant="score">
       <View style={styles.header}>
         <View style={styles.titleGroup}>
-          <Text style={styles.eyebrow}>Simulation result</Text>
-          <Text style={styles.title}>{result.missionTypeLabel} mission</Text>
-          <Text style={styles.target}>Target: {object.name}</Text>
+          <Text style={styles.eyebrow}>Resultado da simulação</Text>
+          <Text style={styles.title}>Missão: {result.missionTypeLabel}</Text>
+          <Text style={styles.target}>Alvo: {object.name}</Text>
         </View>
 
         <Badge label={result.decision} tone={getFeasibilityTone(result.feasibilityLevel)} />
@@ -53,29 +53,29 @@ function MissionResultContent({ object, result }: MissionResultPanelProps) {
 
       <View style={styles.metricGrid}>
         <Metric
-          detail="Prototype suitability"
-          label="Feasibility"
+          detail="Adequação no protótipo"
+          label="Viabilidade"
           tone={result.feasibilityLevel === 'high' ? 'teal' : 'warning'}
           value={result.feasibilityScore.toString()}
           style={styles.metric}
         />
         <Metric
-          detail="Estimated maneuver cost"
+          detail="Custo estimado de manobra"
           label="Delta-v m/s"
           tone="cyan"
           value={formatDeltaV(result.estimatedDeltaVMps)}
           style={styles.metric}
         />
         <Metric
-          detail="Modeled timeline"
-          label="Duration days"
+          detail="Prazo modelado"
+          label="Duração em dias"
           tone="blue"
           value={result.estimatedDurationDays.toString()}
           style={styles.metric}
         />
         <Metric
-          detail="Safety benefit"
-          label="Risk reduction"
+          detail="Benefício de segurança"
+          label="Redução de risco"
           tone="teal"
           value={result.riskReductionScore.toString()}
           style={styles.metric}
@@ -84,27 +84,27 @@ function MissionResultContent({ object, result }: MissionResultPanelProps) {
 
       <View style={styles.scoreRow}>
         <Badge
-          label="Operational risk"
-          reason="Risk reflects mission complexity and target uncertainty."
+          label="Risco operacional"
+          reason="O risco reflete complexidade da missão e incerteza do alvo."
           score={result.operationalRiskLevel === 'high' ? 3 : result.operationalRiskLevel === 'medium' ? 2 : 1}
           tone={getOperationalRiskTone(result.operationalRiskLevel)}
         />
         <Badge
-          label="Circular value"
-          reason="Value blends object forge score with mission recovery intent."
+          label="Valor circular"
+          reason="O valor combina reuso do objeto com intenção de recuperação da missão."
           score={result.circularValueScore}
           tone={result.circularValueScore >= 70 ? 'success' : result.circularValueScore >= 40 ? 'warning' : 'info'}
         />
         <Badge
-          label="Confidence"
-          reason="Confidence reflects source quality and mission complexity."
+          label="Confiança"
+          reason="A confiança reflete qualidade da fonte e complexidade da missão."
           score={result.confidenceScore}
           tone={result.confidenceScore >= 70 ? 'success' : result.confidenceScore >= 40 ? 'warning' : 'danger'}
         />
       </View>
 
       <View style={styles.factorList}>
-        <Text style={styles.factorTitle}>Why this estimate changed</Text>
+        <Text style={styles.factorTitle}>Por que esta estimativa mudou</Text>
         {result.factors.map((factor) => (
           <View key={factor.label} style={styles.factor}>
             <View style={styles.factorHeader}>
