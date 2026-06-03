@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Button, Card } from '@/components/ui';
+import { Badge, Button, Card } from '@/components/ui';
 import { formatMissionTypeLabel } from '@/content/pt-br';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { SavedMissionScenario } from '@/services/persistence';
 import { colors, radius, spacing, typography } from '@/theme';
 
@@ -20,30 +21,47 @@ export function SavedMissionScenarios({
   onRemoveScenario,
   scenarios,
 }: SavedMissionScenariosProps) {
+  const { isPhone } = useBreakpoint();
+
   return (
     <Card style={styles.card}>
       <View style={styles.header}>
-        <Text style={styles.title}>Cenários salvos</Text>
-        <Text style={styles.description}>{scenarios.length} registros locais de missão</Text>
+        <View style={styles.headerCopy}>
+          <Badge label="AsyncStorage" tone="success" />
+          <Text style={styles.title}>Histórico recente</Text>
+          <Text style={styles.description}>
+            Informações salvas localmente neste dispositivo para comparar decisões depois.
+          </Text>
+        </View>
+
+        <View style={styles.countPill}>
+          <Text style={styles.countValue}>{scenarios.length}</Text>
+          <Text style={styles.countLabel}>salvos</Text>
+        </View>
       </View>
 
       {scenarios.length === 0 ? (
         <View style={styles.emptyState}>
-          <Text style={styles.emptyTitle}>Nenhum cenário salvo ainda.</Text>
+          <Text style={styles.emptyTitle}>Nenhum registro local ainda.</Text>
           <Text style={styles.emptyBody}>
-            Salve um resultado de simulação para manter um registro local leve para comparação.
+            Salve uma simulação para criar um histórico recente no aparelho e mostrar a
+            persistência local do app.
           </Text>
         </View>
       ) : (
         <View style={styles.list}>
           {scenarios.map((scenario) => (
             <View key={scenario.id} style={styles.item}>
-              <View style={styles.itemCopy}>
-                <Text style={styles.itemTitle}>
-                  {formatMissionTypeLabel(scenario.missionType)} · {scenario.objectName}
-                </Text>
-                <Text style={styles.itemMeta}>{formatSavedAt(scenario.savedAt)}</Text>
-                <Text style={styles.itemDecision}>{scenario.decision}</Text>
+              <View style={styles.itemHeader}>
+                <View style={styles.itemCopy}>
+                  <Text style={styles.itemTitle}>
+                    {formatMissionTypeLabel(scenario.missionType)} · {scenario.objectName}
+                  </Text>
+                  <Text style={styles.itemMeta}>Salvo em {formatSavedAt(scenario.savedAt)}</Text>
+                  <Text style={styles.itemDecision}>{scenario.decision}</Text>
+                </View>
+
+                <Badge label="Registro local" tone="info" />
               </View>
 
               <View style={styles.scoreRow}>
@@ -61,14 +79,16 @@ export function SavedMissionScenarios({
                 </View>
               </View>
 
-              <View style={styles.actions}>
+              <View style={[styles.actions, isPhone && styles.actionsPhone]}>
                 <Button
+                  fullWidth={isPhone}
                   size="small"
                   variant="secondary"
                   onPress={() => onApplyScenario(scenario)}>
                   Carregar
                 </Button>
                 <Button
+                  fullWidth={isPhone}
                   size="small"
                   variant="danger"
                   onPress={() => onRemoveScenario(scenario.id)}>
@@ -88,7 +108,16 @@ const styles = StyleSheet.create({
     gap: spacing[5],
   },
   header: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: spacing[2],
+    justifyContent: 'space-between',
+  },
+  headerCopy: {
+    flex: 1,
+    gap: spacing[2],
+    minWidth: 220,
   },
   title: {
     ...typography.h3,
@@ -97,6 +126,26 @@ const styles = StyleSheet.create({
   description: {
     ...typography.caption,
     color: colors.text.muted,
+    maxWidth: 560,
+  },
+  countPill: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(34, 197, 94, 0.12)',
+    borderColor: 'rgba(34, 197, 94, 0.3)',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    minWidth: 84,
+    paddingHorizontal: spacing[3],
+    paddingVertical: spacing[2],
+  },
+  countValue: {
+    ...typography.h3,
+    color: colors.text.primary,
+  },
+  countLabel: {
+    ...typography.caption,
+    color: colors.semantic.success,
+    textTransform: 'uppercase',
   },
   emptyState: {
     backgroundColor: colors.background.surface,
@@ -126,8 +175,17 @@ const styles = StyleSheet.create({
     gap: spacing[4],
     padding: spacing[4],
   },
+  itemHeader: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing[3],
+    justifyContent: 'space-between',
+  },
   itemCopy: {
+    flex: 1,
     gap: spacing[1],
+    minWidth: 220,
   },
   itemTitle: {
     ...typography.bodySmall,
@@ -172,5 +230,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing[3],
+  },
+  actionsPhone: {
+    alignItems: 'stretch',
+    flexDirection: 'column',
   },
 });

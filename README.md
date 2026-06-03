@@ -58,7 +58,7 @@ O projeto conversa diretamente com temas da economia espacial:
 - Estima possibilidades de Reaproveitamento Orbital.
 - Explica práticas de Prevenção para missões mais responsáveis.
 - Resume o projeto em um Painel de Impacto.
-- Salva cenários localmente com AsyncStorage.
+- Salva cenários localmente com AsyncStorage e mantém um histórico recente no dispositivo.
 - Consome dados externos da CelesTrak, com fallback local para manter a demo funcionando.
 
 ## Tecnologias Utilizadas

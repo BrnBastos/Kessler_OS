@@ -48,7 +48,9 @@ export function MissionSimulatorScreen() {
   );
   const [missionType, setMissionType] = useState<MissionType>(requestedMissionType);
   const [savedScenarios, setSavedScenarios] = useState<SavedMissionScenario[]>([]);
-  const [persistenceMessage, setPersistenceMessage] = useState('Persistência local pronta.');
+  const [persistenceMessage, setPersistenceMessage] = useState(
+    'Histórico local pronto neste dispositivo.'
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -98,19 +100,19 @@ export function MissionSimulatorScreen() {
 
     const nextScenarios = await saveMissionScenario(selectedObject, result);
     setSavedScenarios(nextScenarios);
-    setPersistenceMessage('Cenário salvo localmente para comparação.');
+    setPersistenceMessage('Informação salva localmente no histórico recente.');
   }
 
   async function handleRemoveScenario(scenarioId: string) {
     const nextScenarios = await removeSavedMissionScenario(scenarioId);
     setSavedScenarios(nextScenarios);
-    setPersistenceMessage('Cenário salvo removido.');
+    setPersistenceMessage('Registro local removido do histórico.');
   }
 
   function handleApplyScenario(scenario: SavedMissionScenario) {
     setSelectedObjectId(scenario.objectId);
     setMissionType(scenario.missionType);
-    setPersistenceMessage('Cenário salvo carregado no simulador.');
+    setPersistenceMessage('Registro do histórico carregado no simulador.');
   }
 
   return (
@@ -189,7 +191,7 @@ export function MissionSimulatorScreen() {
               />
               <Metric
                 detail="Armazenados neste dispositivo"
-                label="Cenários salvos"
+                label="Histórico recente"
                 tone="teal"
                 value={savedScenarios.length.toString()}
                 style={styles.metricCard}
@@ -213,10 +215,15 @@ export function MissionSimulatorScreen() {
                 <View style={styles.resultColumn}>
                   <Card style={[styles.saveCard, isPhone && styles.saveCardPhone]} variant="action">
                     <View style={styles.saveCopy}>
-                      <Text style={styles.saveTitle}>Cenário atual</Text>
-                      <Text style={styles.saveBody}>{persistenceMessage}</Text>
+                      <Text style={styles.saveTitle}>Salvar informação localmente</Text>
+                      <Text style={styles.saveBody}>
+                        {persistenceMessage} O registro guarda alvo, tipo de missão, decisão e
+                        pontuações principais via AsyncStorage.
+                      </Text>
                     </View>
-                    <Button fullWidth={isPhone} onPress={handleSaveScenario}>Salvar cenário</Button>
+                    <Button fullWidth={isPhone} onPress={handleSaveScenario}>
+                      Salvar no histórico
+                    </Button>
                   </Card>
                   <MissionResultPanel object={selectedObject} result={result} />
                 </View>
