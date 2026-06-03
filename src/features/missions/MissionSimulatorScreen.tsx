@@ -19,7 +19,7 @@ import {
   saveMissionScenario,
   SavedMissionScenario,
 } from '@/services/persistence';
-import { colors, layout, spacing, typography } from '@/theme';
+import { colors, layout, spacing, typography, useKesslerTheme } from '@/theme';
 
 import { getObjectVisualAsset } from '../objects/object-visuals';
 import { MissionResultPanel } from './components/MissionResultPanel';
@@ -37,6 +37,7 @@ function isMissionType(value: unknown): value is MissionType {
 
 export function MissionSimulatorScreen() {
   const { isDesktop, isPhone } = useBreakpoint();
+  const theme = useKesslerTheme();
   const params = useLocalSearchParams<{ missionType?: string; objectId?: string }>();
   const requestedObjectId = typeof params.objectId === 'string' ? params.objectId : undefined;
   const requestedMissionType = isMissionType(params.missionType) ? params.missionType : 'inspect';
@@ -92,6 +93,7 @@ export function MissionSimulatorScreen() {
   const removableCount = catalogObjects.filter((object) =>
     ['Inspecionar antes da remoção', 'Priorizar remoção'].includes(object.scores.priority.decision)
   ).length;
+  const pageBackgroundStyle = { backgroundColor: theme.colors.background.app };
 
   async function handleSaveScenario() {
     if (!selectedObject || !result) {
@@ -116,9 +118,9 @@ export function MissionSimulatorScreen() {
   }
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, pageBackgroundStyle]}>
       <ScrollView
-        style={styles.scroll}
+        style={[styles.scroll, pageBackgroundStyle]}
         contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}>
         <SafeAreaView>
           <View style={styles.stack}>

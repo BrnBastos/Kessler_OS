@@ -16,7 +16,7 @@ import {
 import { ScoredOrbitalObject } from '@/domain/scoring';
 import { DecisionReportPanel } from '@/features/reports/DecisionReportPanel';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { colors, layout, radius, spacing, typography } from '@/theme';
+import { colors, layout, radius, spacing, typography, useKesslerTheme } from '@/theme';
 
 import {
   formatObjectStatus,
@@ -71,6 +71,7 @@ function getEstimatesForObject(object?: ScoredOrbitalObject) {
 
 export function CircularEconomyScreen() {
   const { isDesktop, isPhone } = useBreakpoint();
+  const theme = useKesslerTheme();
   const params = useLocalSearchParams<{ objectId?: string }>();
   const requestedObjectId = typeof params.objectId === 'string' ? params.objectId : undefined;
   const [catalogObjects, setCatalogObjects] = useState<ScoredOrbitalObject[]>(initialObjects);
@@ -120,18 +121,31 @@ export function CircularEconomyScreen() {
     (total, estimate) => total + estimate.estimatedSharePct,
     0
   );
+  const pageBackgroundStyle = { backgroundColor: theme.colors.background.app };
+  const heroOverlayColors = [
+    'rgba(2, 6, 23, 0.96)',
+    'rgba(2, 6, 23, 0.48)',
+    'rgba(2, 6, 23, 0.94)',
+  ] as const;
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, pageBackgroundStyle]}>
       <ScrollView
-        style={styles.scroll}
+        style={[styles.scroll, pageBackgroundStyle]}
         contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}>
         <SafeAreaView>
           <View style={styles.stack}>
-            <View style={styles.heroPanel}>
+            <View
+              style={[
+                styles.heroPanel,
+                {
+                  backgroundColor: theme.colors.background.surface,
+                  borderColor: theme.colors.border.subtle,
+                },
+              ]}>
               <Image source={visualAssets.backgrounds.reuseLab} contentFit="cover" style={styles.heroImage} />
               <LinearGradient
-                colors={['rgba(2, 6, 23, 0.96)', 'rgba(2, 6, 23, 0.48)', 'rgba(2, 6, 23, 0.94)']}
+                colors={heroOverlayColors}
                 start={{ x: 0, y: 0.1 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.heroOverlay}
@@ -173,7 +187,16 @@ export function CircularEconomyScreen() {
                   )}
                 </View>
 
-                <View style={styles.heroObjectStage}>
+                <View
+                  style={[
+                    styles.heroObjectStage,
+                    {
+                      backgroundColor: theme.isLightMode
+                        ? 'rgba(64, 109, 140, 0.52)'
+                        : 'rgba(2, 6, 23, 0.42)',
+                      borderColor: theme.colors.border.subtle,
+                    },
+                  ]}>
                   <View style={[styles.heroOrbitRing, styles.heroOrbitOuter]} />
                   <View style={[styles.heroOrbitRing, styles.heroOrbitInner]} />
                   <Image
@@ -181,9 +204,21 @@ export function CircularEconomyScreen() {
                     contentFit="contain"
                     style={styles.heroObject}
                   />
-                  <View style={styles.heroTag}>
-                    <Text style={styles.heroTagLabel}>fluxo circular</Text>
-                    <Text style={styles.heroTagValue}>material útil</Text>
+                  <View
+                    style={[
+                      styles.heroTag,
+                      {
+                        backgroundColor: theme.isLightMode
+                          ? 'rgba(52, 91, 118, 0.88)'
+                          : 'rgba(7, 17, 30, 0.76)',
+                      },
+                    ]}>
+                    <Text style={[styles.heroTagLabel, { color: theme.colors.text.muted }]}>
+                      fluxo circular
+                    </Text>
+                    <Text style={[styles.heroTagValue, { color: theme.colors.text.primary }]}>
+                      material útil
+                    </Text>
                   </View>
                 </View>
               </View>

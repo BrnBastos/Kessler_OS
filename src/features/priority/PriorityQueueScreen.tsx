@@ -12,7 +12,7 @@ import {
 } from '@/domain/repositories';
 import { ScoredOrbitalObject } from '@/domain/scoring';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { colors, layout, spacing, typography } from '@/theme';
+import { colors, layout, spacing, typography, useKesslerTheme } from '@/theme';
 
 import {
   PriorityDecisionFilter,
@@ -40,6 +40,7 @@ function getSortedObjects(objects: ScoredOrbitalObject[], sortMode: PrioritySort
 
 export function PriorityQueueScreen() {
   const { isDesktop, isPhone } = useBreakpoint();
+  const theme = useKesslerTheme();
   const [allPriorityObjects, setAllPriorityObjects] =
     useState<ScoredOrbitalObject[]>(initialPriorityObjects);
   const [repositoryStatus, setRepositoryStatus] = useState(getOrbitalObjectRepositoryStatus);
@@ -102,6 +103,7 @@ export function PriorityQueueScreen() {
       allPriorityObjects.reduce((total, object) => total + object.scores.risk.score, 0) /
         allPriorityObjects.length
     ) || 0;
+  const pageBackgroundStyle = { backgroundColor: theme.colors.background.app };
 
   function handleReset() {
     setObjectType('all');
@@ -112,9 +114,9 @@ export function PriorityQueueScreen() {
   }
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, pageBackgroundStyle]}>
       <ScrollView
-        style={styles.scroll}
+        style={[styles.scroll, pageBackgroundStyle]}
         contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}>
         <SafeAreaView>
           <View style={styles.stack}>

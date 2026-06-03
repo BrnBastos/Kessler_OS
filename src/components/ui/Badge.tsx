@@ -1,6 +1,6 @@
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
-import { colors, radius, spacing, typography } from '@/theme';
+import { colors, radius, spacing, typography, useKesslerTheme } from '@/theme';
 
 export type BadgeTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'simulated';
 
@@ -13,15 +13,18 @@ type BadgeProps = {
 };
 
 export function Badge({ label, reason, score, style, tone = 'neutral' }: BadgeProps) {
+  const theme = useKesslerTheme();
   const toneStyle = toneStyles[tone];
 
   return (
     <View style={[styles.base, toneStyle, style]}>
       <View style={styles.row}>
-        {typeof score === 'number' && <Text style={styles.score}>{score}</Text>}
-        <Text style={styles.label}>{label}</Text>
+        {typeof score === 'number' && (
+          <Text style={[styles.score, { color: theme.colors.text.primary }]}>{score}</Text>
+        )}
+        <Text style={[styles.label, { color: theme.colors.text.primary }]}>{label}</Text>
       </View>
-      {reason && <Text style={styles.reason}>{reason}</Text>}
+      {reason && <Text style={[styles.reason, { color: theme.colors.text.secondary }]}>{reason}</Text>}
     </View>
   );
 }

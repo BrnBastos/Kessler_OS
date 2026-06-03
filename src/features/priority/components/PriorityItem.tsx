@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Badge, Button, Card } from '@/components/ui';
 import { ScoredOrbitalObject } from '@/domain/scoring';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { colors, radius, spacing, typography } from '@/theme';
+import { colors, radius, spacing, typography, useKesslerTheme } from '@/theme';
 
 import {
   formatObjectStatus,
@@ -21,18 +21,26 @@ type PriorityItemProps = {
 
 export function PriorityItem({ object, rank }: PriorityItemProps) {
   const { isPhone } = useBreakpoint();
+  const theme = useKesslerTheme();
 
   return (
     <Card style={styles.card}>
       <View style={styles.header}>
-        <View style={styles.rankBadge}>
-          <Text style={styles.rankLabel}>Posição</Text>
-          <Text style={styles.rankValue}>{rank}</Text>
+        <View
+          style={[
+            styles.rankBadge,
+            {
+              backgroundColor: theme.colors.background.surface,
+              borderColor: theme.colors.border.subtle,
+            },
+          ]}>
+          <Text style={[styles.rankLabel, { color: theme.colors.text.muted }]}>Posição</Text>
+          <Text style={[styles.rankValue, { color: theme.colors.text.primary }]}>{rank}</Text>
         </View>
 
         <View style={styles.titleGroup}>
-          <Text style={styles.name}>{object.name}</Text>
-          <Text style={styles.meta}>
+          <Text style={[styles.name, { color: theme.colors.text.primary }]}>{object.name}</Text>
+          <Text style={[styles.meta, { color: theme.colors.text.muted }]}>
             {formatObjectType(object.type)} · {object.orbitRegion} ·{' '}
             {formatObjectStatus(object.status)}
           </Text>
@@ -62,10 +70,23 @@ export function PriorityItem({ object, rank }: PriorityItemProps) {
         />
       </View>
 
-      <View style={styles.decisionPanel}>
-        <Text style={styles.decisionLabel}>Decisão recomendada</Text>
-        <Text style={styles.decision}>{object.scores.priority.decision}</Text>
-        <Text style={styles.reason}>{object.scores.priority.summary}</Text>
+      <View
+        style={[
+          styles.decisionPanel,
+          {
+            backgroundColor: theme.colors.background.surface,
+            borderColor: theme.colors.border.subtle,
+          },
+        ]}>
+        <Text style={[styles.decisionLabel, { color: theme.colors.text.muted }]}>
+          Decisão recomendada
+        </Text>
+        <Text style={[styles.decision, { color: theme.colors.text.primary }]}>
+          {object.scores.priority.decision}
+        </Text>
+        <Text style={[styles.reason, { color: theme.colors.text.secondary }]}>
+          {object.scores.priority.summary}
+        </Text>
       </View>
 
       <View style={[styles.actions, isPhone && styles.actionsPhone]}>

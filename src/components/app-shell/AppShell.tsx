@@ -4,13 +4,14 @@ import { StyleSheet, View } from 'react-native';
 import { BottomTabs } from '@/components/navigation/BottomTabs';
 import { TopNavigation } from '@/components/navigation/TopNavigation';
 import { usePlatformLayout } from '@/hooks/use-platform-layout';
-import { colors } from '@/theme';
+import { colors, useKesslerTheme } from '@/theme';
 
 export function AppShell() {
   const { showBottomTabs, showTopNavigation } = usePlatformLayout();
+  const theme = useKesslerTheme();
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { backgroundColor: theme.colors.background.app }]}>
       {showTopNavigation && <TopNavigation />}
       <View style={styles.content}>
         <Slot />

@@ -1,6 +1,6 @@
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
-import { colors, spacing, typography } from '@/theme';
+import { colors, spacing, typography, useKesslerTheme } from '@/theme';
 
 import { Card } from './Card';
 
@@ -15,12 +15,14 @@ type MetricProps = {
 };
 
 export function Metric({ detail, label, style, tone = 'cyan', value }: MetricProps) {
+  const theme = useKesslerTheme();
+
   return (
     <Card variant="metric" style={[styles.card, style]}>
       <View style={[styles.marker, markerStyles[tone]]} />
-      <Text style={styles.value}>{value}</Text>
-      <Text style={styles.label}>{label}</Text>
-      {detail && <Text style={styles.detail}>{detail}</Text>}
+      <Text style={[styles.value, { color: theme.colors.text.primary }]}>{value}</Text>
+      <Text style={[styles.label, { color: theme.colors.text.secondary }]}>{label}</Text>
+      {detail && <Text style={[styles.detail, { color: theme.colors.text.muted }]}>{detail}</Text>}
     </Card>
   );
 }

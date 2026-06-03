@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Badge, Button, Card } from '@/components/ui';
 import { ScoredOrbitalObject } from '@/domain/scoring';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { colors, radius, spacing, typography } from '@/theme';
+import { colors, radius, spacing, typography, useKesslerTheme } from '@/theme';
 
 import {
   formatEstimate,
@@ -48,40 +48,86 @@ function getStatusLead(status: ScoredOrbitalObject['status']) {
 }
 
 function Signal({ label, value }: { label: string; value: string }) {
+  const theme = useKesslerTheme();
+
   return (
-    <View style={styles.signal}>
-      <Text style={styles.signalValue}>{value}</Text>
-      <Text style={styles.signalLabel}>{label}</Text>
+    <View
+      style={[
+        styles.signal,
+        {
+          backgroundColor: theme.colors.background.surface,
+          borderColor: theme.colors.border.subtle,
+        },
+      ]}>
+      <Text style={[styles.signalValue, { color: theme.colors.text.primary }]}>{value}</Text>
+      <Text style={[styles.signalLabel, { color: theme.colors.text.muted }]}>{label}</Text>
     </View>
   );
 }
 
 export function ObjectCard({ object, onOpenPassport, onSelect, selected }: ObjectCardProps) {
   const { isPhone } = useBreakpoint();
+  const theme = useKesslerTheme();
   const riskTone = getScoreTone(object.scores.risk.level);
 
   return (
-    <Card variant="action" style={[styles.card, selected && styles.cardSelected]}>
-      <View style={styles.visualStage}>
+    <Card
+      variant="action"
+      style={[styles.card, selected && { borderColor: theme.colors.border.strong }]}>
+      <View
+        style={[
+          styles.visualStage,
+          {
+            backgroundColor: theme.isLightMode
+              ? 'rgba(64, 109, 140, 0.66)'
+              : 'rgba(2, 6, 23, 0.50)',
+            borderBottomColor: theme.colors.border.subtle,
+          },
+        ]}>
         <View style={[styles.orbitRing, styles.orbitRingOuter]} />
         <View style={[styles.orbitRing, styles.orbitRingInner]} />
         <Image source={getObjectVisualAsset(object)} contentFit="contain" style={styles.objectImage} />
-        <View style={styles.statusPill}>
-          <Text style={styles.statusPillText}>{getStatusLead(object.status)}</Text>
+        <View
+          style={[
+            styles.statusPill,
+            {
+              backgroundColor: theme.isLightMode
+                ? 'rgba(52, 91, 118, 0.88)'
+                : 'rgba(7, 17, 30, 0.76)',
+              borderColor: theme.colors.border.subtle,
+            },
+          ]}>
+          <Text style={[styles.statusPillText, { color: theme.colors.text.primary }]}>
+            {getStatusLead(object.status)}
+          </Text>
         </View>
-        <View style={[styles.riskPlate, riskTone === 'danger' && styles.riskPlateDanger]}>
-          <Text style={styles.riskScore}>{object.scores.risk.score}</Text>
-          <Text style={styles.riskLabel}>risco {formatRiskLevel(object.scores.risk.level)}</Text>
+        <View
+          style={[
+            styles.riskPlate,
+            {
+              backgroundColor: theme.isLightMode
+                ? 'rgba(186, 230, 253, 0.22)'
+                : 'rgba(14, 165, 233, 0.16)',
+              borderColor: theme.colors.border.strong,
+            },
+            riskTone === 'danger' && styles.riskPlateDanger,
+          ]}>
+          <Text style={[styles.riskScore, { color: theme.colors.text.primary }]}>
+            {object.scores.risk.score}
+          </Text>
+          <Text style={[styles.riskLabel, { color: theme.colors.text.secondary }]}>
+            risco {formatRiskLevel(object.scores.risk.level)}
+          </Text>
         </View>
       </View>
 
       <View style={styles.body}>
         <View style={styles.header}>
           <View style={styles.titleGroup}>
-            <Text numberOfLines={2} style={styles.name}>
+            <Text numberOfLines={2} style={[styles.name, { color: theme.colors.text.primary }]}>
               {object.name}
             </Text>
-            <Text style={styles.meta}>
+            <Text style={[styles.meta, { color: theme.colors.text.muted }]}>
               {formatObjectType(object.type)} · {object.orbitRegion} ·{' '}
               {formatObjectStatus(object.status)}
             </Text>
@@ -92,7 +138,7 @@ export function ObjectCard({ object, onOpenPassport, onSelect, selected }: Objec
           />
         </View>
 
-        <Text numberOfLines={3} style={styles.summary}>
+        <Text numberOfLines={3} style={[styles.summary, { color: theme.colors.text.secondary }]}>
           {object.summary}
         </Text>
 
@@ -102,9 +148,22 @@ export function ObjectCard({ object, onOpenPassport, onSelect, selected }: Objec
           <Signal label="altitude" value={formatEstimate(object.altitudeKm, ' km')} />
         </View>
 
-        <View style={styles.decisionPanel}>
-          <Text style={styles.decisionLabel}>Sinal principal</Text>
-          <Text numberOfLines={2} style={styles.decision}>
+        <View
+          style={[
+            styles.decisionPanel,
+            {
+              backgroundColor: theme.isLightMode
+                ? 'rgba(153, 246, 228, 0.16)'
+                : 'rgba(45, 212, 191, 0.08)',
+              borderColor: theme.isLightMode
+                ? 'rgba(153, 246, 228, 0.38)'
+                : 'rgba(45, 212, 191, 0.20)',
+            },
+          ]}>
+          <Text style={[styles.decisionLabel, { color: theme.colors.accent.teal }]}>
+            Sinal principal
+          </Text>
+          <Text numberOfLines={2} style={[styles.decision, { color: theme.colors.text.primary }]}>
             {object.scores.priority.decision}
           </Text>
         </View>

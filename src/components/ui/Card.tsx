@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
-import { colors, radius, shadows, spacing } from '@/theme';
+import { colors, radius, shadows, spacing, useKesslerTheme } from '@/theme';
 
 type CardVariant = 'default' | 'feature' | 'metric' | 'score' | 'action';
 
@@ -12,7 +12,30 @@ type CardProps = {
 };
 
 export function Card({ children, style, variant = 'default' }: CardProps) {
-  return <View style={[styles.base, styles[variant], style]}>{children}</View>;
+  const theme = useKesslerTheme();
+
+  return (
+    <View
+      style={[
+        styles.base,
+        {
+          backgroundColor:
+            variant === 'feature'
+              ? theme.colors.background.surface
+              : variant === 'metric'
+                ? theme.colors.background.surfaceSoft
+                : theme.colors.background.surfaceElevated,
+          borderColor:
+            variant === 'score' || variant === 'action'
+              ? theme.colors.border.strong
+              : theme.colors.border.subtle,
+        },
+        styles[variant],
+        style,
+      ]}>
+      {children}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

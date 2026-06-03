@@ -3,8 +3,9 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { navigationItems, type NavigationItem } from './navigation-items';
+import { ThemeModeToggle } from './ThemeModeToggle';
 
-import { colors, radius, spacing, typography } from '@/theme';
+import { colors, radius, spacing, typography, useKesslerTheme } from '@/theme';
 
 function isRouteActive(pathname: string, item: NavigationItem) {
   return item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
@@ -12,10 +13,19 @@ function isRouteActive(pathname: string, item: NavigationItem) {
 
 export function BottomTabs() {
   const pathname = usePathname();
+  const theme = useKesslerTheme();
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeArea}>
-      <View style={styles.container}>
+    <SafeAreaView
+      edges={['bottom']}
+      style={[
+        styles.safeArea,
+        {
+          backgroundColor: theme.colors.background.app,
+          borderTopColor: theme.colors.border.subtle,
+        },
+      ]}>
+      <View style={[styles.container, { backgroundColor: theme.colors.background.surface }]}>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -31,14 +41,32 @@ export function BottomTabs() {
                 onPress={() => router.push(item.href)}
                 style={({ pressed }) => [
                   styles.tab,
-                  active && styles.tabActive,
+                  active && [
+                    styles.tabActive,
+                    {
+                      backgroundColor: theme.colors.background.surfaceElevated,
+                      borderColor: theme.colors.border.strong,
+                    },
+                  ],
                   pressed && styles.pressed,
                 ]}>
-                <View style={[styles.indicator, active && styles.indicatorActive]} />
-                <Text style={[styles.label, active && styles.labelActive]}>{item.label}</Text>
+                <View
+                  style={[
+                    styles.indicator,
+                    active && [styles.indicatorActive, { backgroundColor: theme.colors.accent.cyan }],
+                  ]}
+                />
+                <Text
+                  style={[
+                    styles.label,
+                    { color: active ? theme.colors.text.primary : theme.colors.text.muted },
+                  ]}>
+                  {item.label}
+                </Text>
               </Pressable>
             );
           })}
+          <ThemeModeToggle compact />
         </ScrollView>
       </View>
     </SafeAreaView>

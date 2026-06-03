@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Card } from '@/components/ui';
 import { formatObjectTypePluralLabel, ptBR } from '@/content/pt-br';
 import { OrbitalObjectType, OrbitRegion } from '@/domain/models';
-import { colors, radius, spacing, typography } from '@/theme';
+import { colors, radius, spacing, typography, useKesslerTheme } from '@/theme';
 
 export type ObjectTypeFilter = OrbitalObjectType | 'all';
 export type OrbitRegionFilter = OrbitRegion | 'all';
@@ -45,20 +45,37 @@ export function ObjectFilters({
   resultCount,
   searchQuery,
 }: ObjectFiltersProps) {
+  const theme = useKesslerTheme();
+  const chipStyle = {
+    backgroundColor: theme.colors.background.surface,
+    borderColor: theme.colors.border.subtle,
+  };
+  const activeChipStyle = {
+    backgroundColor: theme.isLightMode ? 'rgba(186, 230, 253, 0.24)' : 'rgba(34, 211, 238, 0.14)',
+    borderColor: theme.colors.border.strong,
+  };
+
   return (
     <Card style={styles.card}>
       <View style={styles.header}>
         <View style={styles.headerCopy}>
-          <Text style={styles.title}>Filtros de objetos</Text>
-          <Text style={styles.resultCount}>{resultCount} objetos encontrados</Text>
+          <Text style={[styles.title, { color: theme.colors.text.primary }]}>Filtros de objetos</Text>
+          <Text style={[styles.resultCount, { color: theme.colors.text.muted }]}>
+            {resultCount} objetos encontrados
+          </Text>
         </View>
-        <Pressable accessibilityRole="button" onPress={onReset} style={styles.resetButton}>
-          <Text style={styles.resetLabel}>{ptBR.common.reset}</Text>
+        <Pressable
+          accessibilityRole="button"
+          onPress={onReset}
+          style={[styles.resetButton, { borderColor: theme.colors.border.subtle }]}>
+          <Text style={[styles.resetLabel, { color: theme.colors.accent.cyan }]}>
+            {ptBR.common.reset}
+          </Text>
         </Pressable>
       </View>
 
       <View style={styles.filterGroup}>
-        <Text style={styles.filterLabel}>Busca</Text>
+        <Text style={[styles.filterLabel, { color: theme.colors.text.muted }]}>Busca</Text>
         <TextInput
           accessibilityLabel="Buscar objetos orbitais"
           autoCapitalize="none"
@@ -66,16 +83,23 @@ export function ObjectFilters({
           clearButtonMode="while-editing"
           onChangeText={onSearchQueryChange}
           placeholder="Buscar por nome, NORAD, tipo ou região"
-          placeholderTextColor={colors.text.disabled}
+          placeholderTextColor={theme.colors.text.disabled}
           returnKeyType="search"
-          selectionColor={colors.accent.cyan}
-          style={styles.searchInput}
+          selectionColor={theme.colors.accent.cyan}
+          style={[
+            styles.searchInput,
+            {
+              backgroundColor: theme.colors.background.surface,
+              borderColor: theme.colors.border.subtle,
+              color: theme.colors.text.primary,
+            },
+          ]}
           value={searchQuery}
         />
       </View>
 
       <View style={styles.filterGroup}>
-        <Text style={styles.filterLabel}>Tipo</Text>
+        <Text style={[styles.filterLabel, { color: theme.colors.text.muted }]}>Tipo</Text>
         <View style={styles.chips}>
           {objectTypeOptions.map((option) => {
             const active = objectType === option.value;
@@ -87,10 +111,15 @@ export function ObjectFilters({
                 onPress={() => onObjectTypeChange(option.value)}
                 style={({ pressed }) => [
                   styles.chip,
-                  active && styles.chipActive,
+                  chipStyle,
+                  active && activeChipStyle,
                   pressed && styles.pressed,
                 ]}>
-                <Text style={[styles.chipLabel, active && styles.chipLabelActive]}>
+                <Text
+                  style={[
+                    styles.chipLabel,
+                    { color: active ? theme.colors.text.primary : theme.colors.text.secondary },
+                  ]}>
                   {option.label}
                 </Text>
               </Pressable>
@@ -100,7 +129,7 @@ export function ObjectFilters({
       </View>
 
       <View style={styles.filterGroup}>
-        <Text style={styles.filterLabel}>Região orbital</Text>
+        <Text style={[styles.filterLabel, { color: theme.colors.text.muted }]}>Região orbital</Text>
         <View style={styles.chips}>
           {orbitRegionOptions.map((option) => {
             const active = orbitRegion === option.value;
@@ -112,10 +141,15 @@ export function ObjectFilters({
                 onPress={() => onOrbitRegionChange(option.value)}
                 style={({ pressed }) => [
                   styles.chip,
-                  active && styles.chipActive,
+                  chipStyle,
+                  active && activeChipStyle,
                   pressed && styles.pressed,
                 ]}>
-                <Text style={[styles.chipLabel, active && styles.chipLabelActive]}>
+                <Text
+                  style={[
+                    styles.chipLabel,
+                    { color: active ? theme.colors.text.primary : theme.colors.text.secondary },
+                  ]}>
                   {option.label}
                 </Text>
               </Pressable>

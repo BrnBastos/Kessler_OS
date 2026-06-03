@@ -14,7 +14,7 @@ import {
 } from '@/domain/repositories';
 import { ScoredOrbitalObject } from '@/domain/scoring';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { colors, layout, radius, spacing, typography } from '@/theme';
+import { colors, layout, radius, spacing, typography, useKesslerTheme } from '@/theme';
 
 import { ObjectFilters, ObjectTypeFilter, OrbitRegionFilter } from './components/ObjectFilters';
 import { ObjectList } from './components/ObjectList';
@@ -139,6 +139,7 @@ function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
 
 export function ObjectExplorerScreen() {
   const { isDesktop, isPhone } = useBreakpoint();
+  const theme = useKesslerTheme();
   const [catalogObjects, setCatalogObjects] =
     useState<ScoredOrbitalObject[]>(initialCatalogObjects);
   const [repositoryStatus, setRepositoryStatus] = useState(getOrbitalObjectRepositoryStatus);
@@ -194,6 +195,12 @@ export function ObjectExplorerScreen() {
   );
   const selectedObject =
     filteredObjects.find((object) => object.id === selectedObjectId) ?? filteredObjects[0];
+  const pageBackgroundStyle = { backgroundColor: theme.colors.background.app };
+  const heroOverlayColors = [
+    'rgba(2, 6, 23, 0.96)',
+    'rgba(2, 6, 23, 0.58)',
+    'rgba(2, 6, 23, 0.94)',
+  ] as const;
 
   function handleSelectObject(object: ScoredOrbitalObject) {
     setSelectedObjectId(object.id);
@@ -226,20 +233,27 @@ export function ObjectExplorerScreen() {
   );
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, pageBackgroundStyle]}>
       <ScrollView
-        style={styles.scroll}
+        style={[styles.scroll, pageBackgroundStyle]}
         contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}>
         <SafeAreaView>
           <View style={styles.stack}>
-            <View style={styles.heroPanel}>
+            <View
+              style={[
+                styles.heroPanel,
+                {
+                  backgroundColor: theme.colors.background.surface,
+                  borderColor: theme.colors.border.subtle,
+                },
+              ]}>
               <Image
                 source={visualAssets.backgrounds.satelliteOverEarth}
                 contentFit="cover"
                 style={styles.heroImage}
               />
               <LinearGradient
-                colors={['rgba(2, 6, 23, 0.96)', 'rgba(2, 6, 23, 0.58)', 'rgba(2, 6, 23, 0.94)']}
+                colors={heroOverlayColors}
                 start={{ x: 0, y: 0.1 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.heroOverlay}
@@ -258,8 +272,26 @@ export function ObjectExplorerScreen() {
                 </View>
 
                 {selectedObject && (
-                  <View style={styles.heroFocusCard}>
-                    <View style={styles.heroObjectStage}>
+                  <View
+                    style={[
+                      styles.heroFocusCard,
+                      {
+                        backgroundColor: theme.isLightMode
+                          ? 'rgba(52, 91, 118, 0.84)'
+                          : 'rgba(2, 6, 23, 0.62)',
+                        borderColor: theme.colors.border.subtle,
+                      },
+                    ]}>
+                    <View
+                      style={[
+                        styles.heroObjectStage,
+                        {
+                          backgroundColor: theme.isLightMode
+                            ? 'rgba(64, 109, 140, 0.56)'
+                            : 'rgba(7, 17, 30, 0.48)',
+                          borderColor: theme.colors.border.subtle,
+                        },
+                      ]}>
                       <View style={[styles.heroOrbitRing, styles.heroOrbitOuter]} />
                       <View style={[styles.heroOrbitRing, styles.heroOrbitInner]} />
                       <Image
@@ -269,11 +301,13 @@ export function ObjectExplorerScreen() {
                       />
                     </View>
                     <View style={styles.heroFocusCopy}>
-                      <Text style={styles.heroFocusLabel}>Objeto em foco</Text>
+                      <Text style={[styles.heroFocusLabel, { color: theme.colors.text.muted }]}>
+                        Objeto em foco
+                      </Text>
                       <Text numberOfLines={2} style={styles.heroFocusTitle}>
                         {selectedObject.name}
                       </Text>
-                      <Text style={styles.heroFocusMeta}>
+                      <Text style={[styles.heroFocusMeta, { color: theme.colors.text.muted }]}>
                         {formatObjectType(selectedObject.type)} · {selectedObject.orbitRegion} ·{' '}
                         {formatObjectStatus(selectedObject.status)}
                       </Text>

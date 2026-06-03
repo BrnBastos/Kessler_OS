@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Badge, Button, Card, SectionHeader } from '@/components/ui';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { colors, layout, spacing, typography } from '@/theme';
+import { colors, layout, spacing, typography, useKesslerTheme } from '@/theme';
 
 type PlaceholderCard = {
   body: string;
@@ -31,11 +31,13 @@ export function SectionPlaceholderScreen({
   title,
 }: SectionPlaceholderScreenProps) {
   const { isDesktop } = useBreakpoint();
+  const theme = useKesslerTheme();
+  const pageBackgroundStyle = { backgroundColor: theme.colors.background.app };
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, pageBackgroundStyle]}>
       <ScrollView
-        style={styles.scroll}
+        style={[styles.scroll, pageBackgroundStyle]}
         contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}>
         <SafeAreaView>
           <View style={styles.stack}>

@@ -16,7 +16,7 @@ import { Badge, Button } from '@/components/ui';
 import { visualAssets } from '@/config/visualAssets';
 import { mockMissions, mockOrbitalObjects } from '@/data';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { colors, layout, radius, shadows, spacing, typography } from '@/theme';
+import { colors, layout, radius, shadows, spacing, typography, useKesslerTheme } from '@/theme';
 
 const problemCards = [
   {
@@ -67,10 +67,21 @@ const audienceCards = [
 const inactiveObjects = mockOrbitalObjects.filter((object) => object.status !== 'active');
 
 function HeroMetric({ label, value }: { label: string; value: string }) {
+  const theme = useKesslerTheme();
+
   return (
-    <View style={styles.heroMetric}>
-      <Text style={styles.heroMetricValue}>{value}</Text>
-      <Text style={styles.heroMetricLabel}>{label}</Text>
+    <View
+      style={[
+        styles.heroMetric,
+        {
+          backgroundColor: theme.isLightMode
+            ? 'rgba(52, 91, 118, 0.84)'
+            : 'rgba(7, 17, 30, 0.76)',
+          borderColor: theme.colors.border.subtle,
+        },
+      ]}>
+      <Text style={[styles.heroMetricValue, { color: theme.colors.text.primary }]}>{value}</Text>
+      <Text style={[styles.heroMetricLabel, { color: theme.colors.text.muted }]}>{label}</Text>
     </View>
   );
 }
@@ -86,12 +97,26 @@ function SectionTitle({
   subtitle?: string;
   title: string;
 }) {
+  const theme = useKesslerTheme();
+
   return (
     <View style={[styles.sectionTitle, align === 'center' && styles.sectionTitleCenter]}>
-      <Text style={styles.eyebrow}>{eyebrow}</Text>
-      <Text style={[styles.sectionHeading, align === 'center' && styles.textCenter]}>{title}</Text>
+      <Text style={[styles.eyebrow, { color: theme.colors.accent.cyan }]}>{eyebrow}</Text>
+      <Text
+        style={[
+          styles.sectionHeading,
+          { color: theme.colors.text.primary },
+          align === 'center' && styles.textCenter,
+        ]}>
+        {title}
+      </Text>
       {subtitle && (
-        <Text style={[styles.sectionSubtitle, align === 'center' && styles.textCenter]}>
+        <Text
+          style={[
+            styles.sectionSubtitle,
+            { color: theme.colors.text.secondary },
+            align === 'center' && styles.textCenter,
+          ]}>
           {subtitle}
         </Text>
       )}
@@ -106,11 +131,21 @@ function VisualPanel({
   children?: ReactNode;
   source: ImageSourcePropType;
 }) {
+  const theme = useKesslerTheme();
+  const visualOverlayColors = ['rgba(2, 6, 23, 0.10)', 'rgba(2, 6, 23, 0.78)'] as const;
+
   return (
-    <View style={styles.visualPanel}>
+    <View
+      style={[
+        styles.visualPanel,
+        {
+          backgroundColor: theme.colors.background.surface,
+          borderColor: theme.colors.border.subtle,
+        },
+      ]}>
       <Image source={source} contentFit="cover" style={styles.visualImage} />
       <LinearGradient
-        colors={['rgba(2, 6, 23, 0.10)', 'rgba(2, 6, 23, 0.78)']}
+        colors={visualOverlayColors}
         style={styles.visualOverlay}
       />
       {children}
@@ -119,9 +154,27 @@ function VisualPanel({
 }
 
 function OrbitPreview() {
+  const theme = useKesslerTheme();
+
   return (
-    <View style={styles.orbitPreview}>
-      <View style={styles.orbitGlow} />
+    <View
+      style={[
+        styles.orbitPreview,
+        {
+          backgroundColor: theme.colors.background.surface,
+          borderColor: theme.colors.border.subtle,
+        },
+      ]}>
+      <View
+        style={[
+          styles.orbitGlow,
+          {
+            backgroundColor: theme.isLightMode
+              ? 'rgba(186, 230, 253, 0.22)'
+              : 'rgba(56, 232, 255, 0.12)',
+          },
+        ]}
+      />
       <View style={[styles.orbitRing, styles.orbitRingOuter]} />
       <View style={[styles.orbitRing, styles.orbitRingMiddle]} />
       <View style={[styles.orbitRing, styles.orbitRingInner]} />
@@ -135,12 +188,21 @@ function OrbitPreview() {
         contentFit="contain"
         style={styles.orbitObject}
       />
-      <View style={[styles.orbitDot, styles.orbitDotDanger]} />
-      <View style={[styles.orbitDot, styles.orbitDotCyan]} />
-      <View style={[styles.orbitDot, styles.orbitDotTeal]} />
-      <View style={styles.orbitCaption}>
-        <Text style={styles.orbitCaptionTitle}>Mapa orbital</Text>
-        <Text style={styles.orbitCaptionText}>
+      <View style={[styles.orbitDot, { borderColor: theme.colors.background.app }, styles.orbitDotDanger]} />
+      <View style={[styles.orbitDot, { borderColor: theme.colors.background.app }, styles.orbitDotCyan]} />
+      <View style={[styles.orbitDot, { borderColor: theme.colors.background.app }, styles.orbitDotTeal]} />
+      <View
+        style={[
+          styles.orbitCaption,
+          {
+            backgroundColor: theme.isLightMode
+              ? 'rgba(52, 91, 118, 0.86)'
+              : 'rgba(2, 6, 23, 0.70)',
+            borderColor: theme.colors.border.subtle,
+          },
+        ]}>
+        <Text style={[styles.orbitCaptionTitle, { color: theme.colors.text.primary }]}>Mapa orbital</Text>
+        <Text style={[styles.orbitCaptionText, { color: theme.colors.text.secondary }]}>
           Cada ponto representa um objeto, uma origem e uma decisão possível.
         </Text>
       </View>
@@ -151,22 +213,34 @@ function OrbitPreview() {
 export function HomeScreen() {
   const { height } = useWindowDimensions();
   const { isDesktop, isPhone } = useBreakpoint();
+  const theme = useKesslerTheme();
   const heroMinHeight = Math.min(Math.max(650, height * (isPhone ? 0.82 : 0.76)), isPhone ? 700 : 760);
+  const pageBackgroundStyle = { backgroundColor: theme.colors.background.app };
+  const heroOverlayColors = [
+    'rgba(2, 6, 23, 0.98)',
+    'rgba(2, 6, 23, 0)',
+    'rgba(2, 6, 23, 0.92)',
+  ] as const;
+  const finalOverlayColors = [
+    'rgba(2, 6, 23, 0.86)',
+    'rgba(2, 6, 23, 0.58)',
+    'rgba(2, 6, 23, 0.92)',
+  ] as const;
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, pageBackgroundStyle]}>
       <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={[styles.scrollContent, { paddingBottom: spacing[16] }]}
+        style={[styles.scroll, pageBackgroundStyle]}
+        contentContainerStyle={[styles.scrollContent, pageBackgroundStyle, { paddingBottom: spacing[16] }]}
         showsVerticalScrollIndicator={false}>
-        <View style={[styles.hero, { minHeight: heroMinHeight }]}>
+        <View style={[styles.hero, pageBackgroundStyle, { minHeight: heroMinHeight }]}>
           <Image
             source={visualAssets.backgrounds.heroOrbit}
             contentFit="cover"
             style={styles.heroImage}
           />
           <LinearGradient
-            colors={['rgba(2, 6, 23, 0.98)', 'rgba(2, 6, 23, 0)', 'rgba(2, 6, 23, 0.92)']}
+            colors={heroOverlayColors}
             start={{ x: 0, y: 0.35 }}
             end={{ x: 1, y: 1 }}
             style={styles.heroOverlay}
@@ -199,7 +273,7 @@ export function HomeScreen() {
           </SafeAreaView>
         </View>
 
-        <View style={styles.sectionBand}>
+        <View style={[styles.sectionBand, pageBackgroundStyle]}>
           <View style={[styles.inner, styles.problemGrid, isDesktop && styles.twoColumnGrid]}>
             <View style={styles.sectionCopy}>
               <SectionTitle
@@ -209,21 +283,45 @@ export function HomeScreen() {
               />
               <View style={styles.cardGrid}>
                 {problemCards.map((card) => (
-                  <View key={card.title} style={styles.storyCard}>
-                    <Text style={styles.storyCardTitle}>{card.title}</Text>
-                    <Text style={styles.storyCardBody}>{card.body}</Text>
+                  <View
+                    key={card.title}
+                    style={[
+                      styles.storyCard,
+                      {
+                        backgroundColor: theme.colors.background.surface,
+                        borderColor: theme.colors.border.subtle,
+                      },
+                    ]}>
+                    <Text style={[styles.storyCardTitle, { color: theme.colors.text.primary }]}>
+                      {card.title}
+                    </Text>
+                    <Text style={[styles.storyCardBody, { color: theme.colors.text.secondary }]}>
+                      {card.body}
+                    </Text>
                   </View>
                 ))}
               </View>
             </View>
 
             <VisualPanel source={visualAssets.backgrounds.skyFamily}>
-              <Text style={styles.visualKicker}>O espaço também é infraestrutura da vida diária.</Text>
+              <Text
+                style={[
+                  styles.visualKicker,
+                  {
+                    backgroundColor: theme.isLightMode
+                      ? 'rgba(52, 91, 118, 0.86)'
+                      : 'rgba(2, 6, 23, 0.64)',
+                    borderColor: theme.colors.border.subtle,
+                    color: theme.colors.text.primary,
+                  },
+                ]}>
+                O espaço também é infraestrutura da vida diária.
+              </Text>
             </VisualPanel>
           </View>
         </View>
 
-        <View style={[styles.sectionBand, styles.sectionBandRaised]}>
+        <View style={[styles.sectionBand, { backgroundColor: theme.colors.background.surfaceGlow }]}>
           <View style={[styles.inner, styles.orbitSection, isDesktop && styles.twoColumnGrid]}>
             <OrbitPreview />
             <View style={styles.sectionCopy}>
@@ -241,7 +339,7 @@ export function HomeScreen() {
           </View>
         </View>
 
-        <View style={styles.sectionBand}>
+        <View style={[styles.sectionBand, pageBackgroundStyle]}>
           <View style={styles.inner}>
             <SectionTitle
               align="center"
@@ -251,16 +349,36 @@ export function HomeScreen() {
             />
             <View style={[styles.decisionGrid, isDesktop && styles.decisionGridDesktop]}>
               {decisionCards.map((card) => (
-                <View key={card.label} style={styles.decisionCard}>
-                  <Text style={styles.decisionLabel}>{card.label}</Text>
-                  <Text style={styles.decisionBody}>{card.body}</Text>
+                <View
+                  key={card.label}
+                  style={[
+                    styles.decisionCard,
+                    {
+                      backgroundColor: theme.colors.background.surface,
+                      borderColor: theme.colors.border.subtle,
+                    },
+                  ]}>
+                  <Text style={[styles.decisionLabel, { color: theme.colors.accent.cyan }]}>
+                    {card.label}
+                  </Text>
+                  <Text style={[styles.decisionBody, { color: theme.colors.text.secondary }]}>
+                    {card.body}
+                  </Text>
                 </View>
               ))}
             </View>
           </View>
         </View>
 
-        <View style={[styles.sectionBand, styles.reuseBand]}>
+        <View
+          style={[
+            styles.sectionBand,
+            {
+              backgroundColor: theme.isLightMode
+                ? 'rgba(153, 246, 228, 0.16)'
+                : 'rgba(45, 212, 191, 0.05)',
+            },
+          ]}>
           <View style={[styles.inner, styles.reuseGrid, isDesktop && styles.twoColumnGrid]}>
             <VisualPanel source={visualAssets.backgrounds.reuseLab}>
               <Image
@@ -278,8 +396,22 @@ export function HomeScreen() {
               />
               <View style={styles.reuseCards}>
                 {reuseCards.map((item) => (
-                  <View key={item} style={styles.reuseChip}>
-                    <Text style={styles.reuseChipText}>{item}</Text>
+                  <View
+                    key={item}
+                    style={[
+                      styles.reuseChip,
+                      {
+                        backgroundColor: theme.isLightMode
+                          ? 'rgba(153, 246, 228, 0.18)'
+                          : 'rgba(45, 212, 191, 0.10)',
+                        borderColor: theme.isLightMode
+                          ? 'rgba(153, 246, 228, 0.42)'
+                          : 'rgba(45, 212, 191, 0.26)',
+                      },
+                    ]}>
+                    <Text style={[styles.reuseChipText, { color: theme.colors.text.primary }]}>
+                      {item}
+                    </Text>
                   </View>
                 ))}
               </View>
@@ -290,7 +422,7 @@ export function HomeScreen() {
           </View>
         </View>
 
-        <View style={styles.sectionBand}>
+        <View style={[styles.sectionBand, pageBackgroundStyle]}>
           <View style={styles.inner}>
             <SectionTitle
               align="center"
@@ -299,18 +431,28 @@ export function HomeScreen() {
             />
             <View style={styles.audienceGrid}>
               {audienceCards.map((audience) => (
-                <View key={audience} style={styles.audienceChip}>
-                  <Text style={styles.audienceText}>{audience}</Text>
+                <View
+                  key={audience}
+                  style={[
+                    styles.audienceChip,
+                    {
+                      backgroundColor: theme.colors.background.surface,
+                      borderColor: theme.colors.border.subtle,
+                    },
+                  ]}>
+                  <Text style={[styles.audienceText, { color: theme.colors.text.secondary }]}>
+                    {audience}
+                  </Text>
                 </View>
               ))}
             </View>
           </View>
         </View>
 
-        <View style={styles.finalCta}>
+        <View style={[styles.finalCta, pageBackgroundStyle]}>
           <Image source={visualAssets.backgrounds.cityImpact} contentFit="cover" style={styles.heroImage} />
           <LinearGradient
-            colors={['rgba(2, 6, 23, 0.86)', 'rgba(2, 6, 23, 0.58)', 'rgba(2, 6, 23, 0.92)']}
+            colors={finalOverlayColors}
             style={styles.heroOverlay}
           />
           <View style={[styles.inner, styles.finalInner]}>

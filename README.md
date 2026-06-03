@@ -60,6 +60,8 @@ O projeto conversa diretamente com temas da economia espacial:
 - Resume o projeto em um Painel de Impacto.
 - Salva cenários localmente com AsyncStorage e mantém um histórico recente no dispositivo.
 - Consome dados externos da CelesTrak, com fallback local para manter a demo funcionando.
+- Mostra estados de carregamento com skeleton enquanto os dados públicos são verificados.
+- Abre em modo escuro por padrão e oferece um modo claro suave pela navegação.
 
 ## Tecnologias Utilizadas
 

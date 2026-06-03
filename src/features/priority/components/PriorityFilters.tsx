@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Card } from '@/components/ui';
 import { formatObjectTypePluralLabel, ptBR } from '@/content/pt-br';
 import { OrbitalObjectType, OrbitRegion } from '@/domain/models';
-import { colors, radius, spacing, typography } from '@/theme';
+import { colors, radius, spacing, typography, useKesslerTheme } from '@/theme';
 
 export type PriorityDecisionFilter = string | 'all';
 export type PriorityObjectTypeFilter = OrbitalObjectType | 'all';
@@ -59,9 +59,19 @@ function FilterChips<TValue extends string>({
   onChange: (value: TValue) => void;
   options: { label: string; value: TValue }[];
 }) {
+  const theme = useKesslerTheme();
+  const chipStyle = {
+    backgroundColor: theme.colors.background.surface,
+    borderColor: theme.colors.border.subtle,
+  };
+  const activeChipStyle = {
+    backgroundColor: theme.isLightMode ? 'rgba(186, 230, 253, 0.24)' : 'rgba(34, 211, 238, 0.14)',
+    borderColor: theme.colors.border.strong,
+  };
+
   return (
     <View style={styles.filterGroup}>
-      <Text style={styles.filterLabel}>{label}</Text>
+      <Text style={[styles.filterLabel, { color: theme.colors.text.muted }]}>{label}</Text>
       <View style={styles.chips}>
         {options.map((option) => {
           const active = activeValue === option.value;
@@ -73,10 +83,15 @@ function FilterChips<TValue extends string>({
               onPress={() => onChange(option.value)}
               style={({ pressed }) => [
                 styles.chip,
-                active && styles.chipActive,
+                chipStyle,
+                active && activeChipStyle,
                 pressed && styles.pressed,
               ]}>
-              <Text style={[styles.chipLabel, active && styles.chipLabelActive]}>
+              <Text
+                style={[
+                  styles.chipLabel,
+                  { color: active ? theme.colors.text.primary : theme.colors.text.secondary },
+                ]}>
                 {option.label}
               </Text>
             </Pressable>
@@ -102,6 +117,7 @@ export function PriorityFilters({
   searchQuery,
   sortMode,
 }: PriorityFiltersProps) {
+  const theme = useKesslerTheme();
   const decisionFilterOptions = [
     { label: ptBR.common.all, value: 'all' },
     ...decisionOptions.map((value) => ({ label: value, value })),
@@ -111,16 +127,23 @@ export function PriorityFilters({
     <Card style={styles.card}>
       <View style={styles.header}>
         <View style={styles.headerCopy}>
-          <Text style={styles.title}>Filtros de prioridade</Text>
-          <Text style={styles.resultCount}>{resultCount} objetos priorizados</Text>
+          <Text style={[styles.title, { color: theme.colors.text.primary }]}>Filtros de prioridade</Text>
+          <Text style={[styles.resultCount, { color: theme.colors.text.muted }]}>
+            {resultCount} objetos priorizados
+          </Text>
         </View>
-        <Pressable accessibilityRole="button" onPress={onReset} style={styles.resetButton}>
-          <Text style={styles.resetLabel}>{ptBR.common.reset}</Text>
+        <Pressable
+          accessibilityRole="button"
+          onPress={onReset}
+          style={[styles.resetButton, { borderColor: theme.colors.border.subtle }]}>
+          <Text style={[styles.resetLabel, { color: theme.colors.accent.cyan }]}>
+            {ptBR.common.reset}
+          </Text>
         </Pressable>
       </View>
 
       <View style={styles.filterGroup}>
-        <Text style={styles.filterLabel}>Busca</Text>
+        <Text style={[styles.filterLabel, { color: theme.colors.text.muted }]}>Busca</Text>
         <TextInput
           accessibilityLabel="Buscar na fila de prioridade"
           autoCapitalize="none"
@@ -128,10 +151,17 @@ export function PriorityFilters({
           clearButtonMode="while-editing"
           onChangeText={onSearchQueryChange}
           placeholder="Buscar por nome, NORAD, decisão ou região"
-          placeholderTextColor={colors.text.disabled}
+          placeholderTextColor={theme.colors.text.disabled}
           returnKeyType="search"
-          selectionColor={colors.accent.cyan}
-          style={styles.searchInput}
+          selectionColor={theme.colors.accent.cyan}
+          style={[
+            styles.searchInput,
+            {
+              backgroundColor: theme.colors.background.surface,
+              borderColor: theme.colors.border.subtle,
+              color: theme.colors.text.primary,
+            },
+          ]}
           value={searchQuery}
         />
       </View>

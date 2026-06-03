@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 import { ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
 
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { colors, radius, shadows, spacing, typography } from '@/theme';
+import { colors, radius, shadows, spacing, typography, useKesslerTheme } from '@/theme';
 
 type VisualPageHeroProps = {
   actions?: ReactNode;
@@ -30,12 +30,26 @@ export function VisualPageHero({
   title,
 }: VisualPageHeroProps) {
   const { isDesktop, isPhone } = useBreakpoint();
+  const theme = useKesslerTheme();
+  const overlayColors = [
+    'rgba(2, 6, 23, 0.98)',
+    'rgba(2, 6, 23, 0.52)',
+    'rgba(2, 6, 23, 0.94)',
+  ] as const;
 
   return (
-    <View style={[styles.hero, isPhone && styles.heroPhone]}>
+    <View
+      style={[
+        styles.hero,
+        {
+          backgroundColor: theme.colors.background.surfaceElevated,
+          borderColor: theme.colors.border.subtle,
+        },
+        isPhone && styles.heroPhone,
+      ]}>
       <Image source={backgroundImage} contentFit="cover" style={styles.backgroundImage} />
       <LinearGradient
-        colors={['rgba(2, 6, 23, 0.98)', 'rgba(2, 6, 23, 0.52)', 'rgba(2, 6, 23, 0.94)']}
+        colors={overlayColors}
         start={{ x: 0, y: 0.08 }}
         end={{ x: 1, y: 1 }}
         style={styles.overlay}
@@ -64,9 +78,26 @@ export function VisualPageHero({
             </View>
 
             {(foregroundLabel || foregroundDetail) && (
-              <View style={styles.foregroundTag}>
-                {foregroundLabel && <Text style={styles.foregroundLabel}>{foregroundLabel}</Text>}
-                {foregroundDetail && <Text style={styles.foregroundDetail}>{foregroundDetail}</Text>}
+              <View
+                style={[
+                  styles.foregroundTag,
+                  {
+                    backgroundColor: theme.isLightMode
+                      ? 'rgba(52, 91, 118, 0.88)'
+                      : 'rgba(7, 17, 30, 0.74)',
+                    borderColor: theme.colors.border.strong,
+                  },
+                ]}>
+                {foregroundLabel && (
+                  <Text style={[styles.foregroundLabel, { color: theme.colors.text.muted }]}>
+                    {foregroundLabel}
+                  </Text>
+                )}
+                {foregroundDetail && (
+                  <Text style={[styles.foregroundDetail, { color: theme.colors.text.primary }]}>
+                    {foregroundDetail}
+                  </Text>
+                )}
               </View>
             )}
           </View>

@@ -23,7 +23,7 @@ import { missionProfiles, ScoredOrbitalObject } from '@/domain/scoring';
 import { formatObjectStatus } from '@/features/objects/object-formatters';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { listSavedMissionScenarios, SavedMissionScenario } from '@/services/persistence';
-import { colors, layout, radius, spacing, typography } from '@/theme';
+import { colors, layout, radius, spacing, typography, useKesslerTheme } from '@/theme';
 
 const initialObjects = listScoredOrbitalObjects();
 
@@ -102,6 +102,7 @@ function formatSavedAt(value?: string) {
 
 export function ImpactDashboardScreen() {
   const { isDesktop, isPhone } = useBreakpoint();
+  const theme = useKesslerTheme();
   const [catalogObjects, setCatalogObjects] = useState<ScoredOrbitalObject[]>(initialObjects);
   const [savedScenarios, setSavedScenarios] = useState<SavedMissionScenario[]>([]);
   const [repositoryStatus, setRepositoryStatus] = useState(getOrbitalObjectRepositoryStatus);
@@ -142,11 +143,12 @@ export function ImpactDashboardScreen() {
   const averageRisk = getAverageScore(catalogObjects, 'risk');
   const averagePriority = getAverageScore(catalogObjects, 'priority');
   const latestSavedScenario = savedScenarios[0];
+  const pageBackgroundStyle = { backgroundColor: theme.colors.background.app };
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, pageBackgroundStyle]}>
       <ScrollView
-        style={styles.scroll}
+        style={[styles.scroll, pageBackgroundStyle]}
         contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}>
         <SafeAreaView>
           <View style={styles.stack}>

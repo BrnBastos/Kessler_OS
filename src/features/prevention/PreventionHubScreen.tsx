@@ -10,7 +10,7 @@ import {
   ResponsibleOrbitInput,
 } from '@/domain/scoring';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { colors, layout, spacing, typography } from '@/theme';
+import { colors, layout, spacing, typography, useKesslerTheme } from '@/theme';
 
 import { PreventionPrinciples } from './components/PreventionPrinciples';
 import { PreventionScorePreview } from './components/PreventionScorePreview';
@@ -35,9 +35,11 @@ const preventionTopics = [
 
 export function PreventionHubScreen() {
   const { isDesktop, isPhone } = useBreakpoint();
+  const theme = useKesslerTheme();
   const [missionPlan, setMissionPlan] = useState<ResponsibleOrbitInput>(defaultMissionPlan);
   const result = useMemo(() => calculateResponsibleOrbitScore(missionPlan), [missionPlan]);
   const enabledCount = Object.values(missionPlan).filter(Boolean).length;
+  const pageBackgroundStyle = { backgroundColor: theme.colors.background.app };
 
   function handleToggle(key: keyof ResponsibleOrbitInput) {
     setMissionPlan((current) => ({
@@ -47,9 +49,9 @@ export function PreventionHubScreen() {
   }
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, pageBackgroundStyle]}>
       <ScrollView
-        style={styles.scroll}
+        style={[styles.scroll, pageBackgroundStyle]}
         contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}>
         <SafeAreaView>
           <View style={styles.stack}>
@@ -117,9 +119,18 @@ export function PreventionHubScreen() {
 
             <PreventionPrinciples />
 
-            <View style={styles.note}>
-              <Text style={styles.noteTitle}>Limite do modelo</Text>
-              <Text style={styles.noteBody}>
+            <View
+              style={[
+                styles.note,
+                {
+                  backgroundColor: theme.colors.background.surface,
+                  borderColor: theme.colors.border.subtle,
+                },
+              ]}>
+              <Text style={[styles.noteTitle, { color: theme.colors.text.primary }]}>
+                Limite do modelo
+              </Text>
+              <Text style={[styles.noteBody, { color: theme.colors.text.secondary }]}>
                 Esta central explica conceitos de prevenção e gera pontuações determinísticas do
                 protótipo. Ela não verifica conformidade legal, segurança operacional ou viabilidade
                 real de missão.

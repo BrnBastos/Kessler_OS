@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Badge, Card } from '@/components/ui';
 import { ScoredOrbitalObject, ScoreLevel } from '@/domain/scoring';
-import { colors, radius, spacing, typography } from '@/theme';
+import { colors, radius, spacing, typography, useKesslerTheme } from '@/theme';
 
 import {
   formatEstimate,
@@ -57,18 +57,41 @@ function getMarkerPosition(object: ScoredOrbitalObject, index: number, total: nu
 }
 
 export function OrbitalVisual({ objects, onSelectObject, selectedObject }: OrbitalVisualProps) {
+  const theme = useKesslerTheme();
   const mappedObjects = objects.slice(0, 10);
 
   return (
     <Card style={styles.card}>
-      <View style={styles.visual}>
-        <View style={styles.glow} />
+      <View
+        style={[
+          styles.visual,
+          {
+            backgroundColor: theme.colors.background.surface,
+            borderColor: theme.colors.border.subtle,
+          },
+        ]}>
+        <View
+          style={[
+            styles.glow,
+            {
+              backgroundColor: theme.isLightMode
+                ? 'rgba(186, 230, 253, 0.22)'
+                : 'rgba(34, 211, 238, 0.12)',
+            },
+          ]}
+        />
         <View style={[styles.orbitRing, styles.geoOrbit]} />
         <View style={[styles.orbitRing, styles.meoOrbit]} />
         <View style={[styles.orbitRing, styles.leoOrbit]} />
-        <Text style={[styles.orbitLabel, styles.leoLabel]}>LEO</Text>
-        <Text style={[styles.orbitLabel, styles.meoLabel]}>MEO</Text>
-        <Text style={[styles.orbitLabel, styles.geoLabel]}>GEO</Text>
+        <Text style={[styles.orbitLabel, styles.leoLabel, { color: theme.colors.text.muted }]}>
+          LEO
+        </Text>
+        <Text style={[styles.orbitLabel, styles.meoLabel, { color: theme.colors.text.muted }]}>
+          MEO
+        </Text>
+        <Text style={[styles.orbitLabel, styles.geoLabel, { color: theme.colors.text.muted }]}>
+          GEO
+        </Text>
 
         <LinearGradient
           colors={[colors.accent.blueBright, colors.accent.blue, '#0F3E8F']}
@@ -100,7 +123,7 @@ export function OrbitalVisual({ objects, onSelectObject, selectedObject }: Orbit
               <View
                 style={[
                   styles.marker,
-                  { backgroundColor: riskColor },
+                  { backgroundColor: riskColor, borderColor: theme.colors.background.app },
                   object.status === 'active' && styles.markerActive,
                   selected && styles.markerSelected,
                 ]}
@@ -109,19 +132,28 @@ export function OrbitalVisual({ objects, onSelectObject, selectedObject }: Orbit
           );
         })}
 
-        <View style={styles.legend}>
-          <Text style={styles.legendTitle}>Cor do risco</Text>
+        <View
+          style={[
+            styles.legend,
+            {
+              backgroundColor: theme.isLightMode
+                ? 'rgba(52, 91, 118, 0.84)'
+                : 'rgba(3, 7, 18, 0.72)',
+              borderColor: theme.colors.border.subtle,
+            },
+          ]}>
+          <Text style={[styles.legendTitle, { color: theme.colors.text.primary }]}>Cor do risco</Text>
           <View style={styles.legendRow}>
             <View style={[styles.legendDot, { backgroundColor: colors.semantic.danger }]} />
-            <Text style={styles.legendText}>Alto</Text>
+            <Text style={[styles.legendText, { color: theme.colors.text.secondary }]}>Alto</Text>
           </View>
           <View style={styles.legendRow}>
             <View style={[styles.legendDot, { backgroundColor: colors.semantic.warning }]} />
-            <Text style={styles.legendText}>Médio</Text>
+            <Text style={[styles.legendText, { color: theme.colors.text.secondary }]}>Médio</Text>
           </View>
           <View style={styles.legendRow}>
             <View style={[styles.legendDot, { backgroundColor: colors.accent.cyan }]} />
-            <Text style={styles.legendText}>Baixo</Text>
+            <Text style={[styles.legendText, { color: theme.colors.text.secondary }]}>Baixo</Text>
           </View>
         </View>
       </View>
@@ -129,9 +161,11 @@ export function OrbitalVisual({ objects, onSelectObject, selectedObject }: Orbit
       <View style={styles.detailPanel}>
         <View style={styles.detailHeader}>
           <View style={styles.detailCopy}>
-            <Text style={styles.kicker}>Objeto selecionado</Text>
-            <Text style={styles.title}>{selectedObject?.name ?? 'Escolha um objeto'}</Text>
-            <Text style={styles.description}>
+            <Text style={[styles.kicker, { color: theme.colors.accent.cyan }]}>Objeto selecionado</Text>
+            <Text style={[styles.title, { color: theme.colors.text.primary }]}>
+              {selectedObject?.name ?? 'Escolha um objeto'}
+            </Text>
+            <Text style={[styles.description, { color: theme.colors.text.secondary }]}>
               {selectedObject
                 ? `${formatObjectType(selectedObject.type)} · ${selectedObject.orbitRegion} · ${formatObjectStatus(
                     selectedObject.status

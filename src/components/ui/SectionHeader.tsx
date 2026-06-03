@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
-import { colors, spacing, typography } from '@/theme';
+import { colors, spacing, typography, useKesslerTheme } from '@/theme';
 
 type SectionHeaderProps = {
   action?: ReactNode;
@@ -12,12 +12,18 @@ type SectionHeaderProps = {
 };
 
 export function SectionHeader({ action, description, eyebrow, style, title }: SectionHeaderProps) {
+  const theme = useKesslerTheme();
+
   return (
     <View style={[styles.container, style]}>
       <View style={styles.copy}>
-        {eyebrow && <Text style={styles.eyebrow}>{eyebrow}</Text>}
-        <Text style={styles.title}>{title}</Text>
-        {description && <Text style={styles.description}>{description}</Text>}
+        {eyebrow && <Text style={[styles.eyebrow, { color: theme.colors.accent.cyan }]}>{eyebrow}</Text>}
+        <Text style={[styles.title, { color: theme.colors.text.primary }]}>{title}</Text>
+        {description && (
+          <Text style={[styles.description, { color: theme.colors.text.secondary }]}>
+            {description}
+          </Text>
+        )}
       </View>
       {action}
     </View>

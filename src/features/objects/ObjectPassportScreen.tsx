@@ -9,7 +9,7 @@ import { visualAssets } from '@/config/visualAssets';
 import { getScoredOrbitalObjectById } from '@/domain/repositories';
 import { DecisionReportPanel } from '@/features/reports/DecisionReportPanel';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { colors, layout, radius, spacing, typography } from '@/theme';
+import { colors, layout, radius, spacing, typography, useKesslerTheme } from '@/theme';
 
 import { DataConfidenceNote } from './components/DataConfidenceNote';
 import { ObjectScorePanel } from './components/ObjectScorePanel';
@@ -30,13 +30,20 @@ type ObjectPassportScreenProps = {
 
 export function ObjectPassportScreen({ objectId }: ObjectPassportScreenProps) {
   const { isDesktop, isPhone } = useBreakpoint();
+  const theme = useKesslerTheme();
   const object = getScoredOrbitalObjectById(objectId);
+  const pageBackgroundStyle = { backgroundColor: theme.colors.background.app };
+  const heroOverlayColors = [
+    'rgba(2, 6, 23, 0.97)',
+    'rgba(2, 6, 23, 0.56)',
+    'rgba(2, 6, 23, 0.95)',
+  ] as const;
 
   if (!object) {
     return (
-      <View style={styles.root}>
+      <View style={[styles.root, pageBackgroundStyle]}>
         <ScrollView
-          style={styles.scroll}
+          style={[styles.scroll, pageBackgroundStyle]}
           contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}>
           <SafeAreaView>
             <Card style={styles.notFoundCard}>
@@ -54,20 +61,27 @@ export function ObjectPassportScreen({ objectId }: ObjectPassportScreenProps) {
   }
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, pageBackgroundStyle]}>
       <ScrollView
-        style={styles.scroll}
+        style={[styles.scroll, pageBackgroundStyle]}
         contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}>
         <SafeAreaView>
           <View style={styles.stack}>
-            <View style={styles.heroPanel}>
+            <View
+              style={[
+                styles.heroPanel,
+                {
+                  backgroundColor: theme.colors.background.surface,
+                  borderColor: theme.colors.border.subtle,
+                },
+              ]}>
               <Image
                 source={visualAssets.backgrounds.satelliteOverEarth}
                 contentFit="cover"
                 style={styles.heroImage}
               />
               <LinearGradient
-                colors={['rgba(2, 6, 23, 0.97)', 'rgba(2, 6, 23, 0.56)', 'rgba(2, 6, 23, 0.95)']}
+                colors={heroOverlayColors}
                 start={{ x: 0, y: 0.1 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.heroOverlay}
@@ -110,8 +124,26 @@ export function ObjectPassportScreen({ objectId }: ObjectPassportScreenProps) {
                   </View>
                 </View>
 
-                <View style={styles.heroObjectCard}>
-                  <View style={styles.heroObjectStage}>
+                <View
+                  style={[
+                    styles.heroObjectCard,
+                    {
+                      backgroundColor: theme.isLightMode
+                        ? 'rgba(52, 91, 118, 0.84)'
+                        : 'rgba(2, 6, 23, 0.62)',
+                      borderColor: theme.colors.border.subtle,
+                    },
+                  ]}>
+                  <View
+                    style={[
+                      styles.heroObjectStage,
+                      {
+                        backgroundColor: theme.isLightMode
+                          ? 'rgba(64, 109, 140, 0.56)'
+                          : 'rgba(7, 17, 30, 0.48)',
+                        borderColor: theme.colors.border.subtle,
+                      },
+                    ]}>
                     <View style={[styles.heroOrbitRing, styles.heroOrbitOuter]} />
                     <View style={[styles.heroOrbitRing, styles.heroOrbitInner]} />
                     <Image

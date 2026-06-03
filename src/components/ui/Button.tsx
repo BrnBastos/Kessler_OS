@@ -11,7 +11,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { colors, gradients, radius, spacing, typography } from '@/theme';
+import { colors, gradients, radius, spacing, typography, useKesslerTheme } from '@/theme';
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
 type ButtonSize = 'small' | 'medium';
@@ -37,6 +37,7 @@ export function Button({
   variant = 'primary',
   ...pressableProps
 }: ButtonProps) {
+  const theme = useKesslerTheme();
   const fillStyle = [
     styles.fill,
     size === 'small' ? styles.fillSmall : styles.fillMedium,
@@ -51,8 +52,14 @@ export function Button({
         numberOfLines={2}
         style={[
           styles.label,
-          variant === 'ghost' && styles.ghostLabel,
-          disabled && styles.disabledLabel,
+          {
+            color:
+              variant === 'ghost'
+                ? theme.colors.accent.cyan
+                : disabled
+                  ? theme.colors.text.disabled
+                  : theme.colors.text.primary,
+          },
           textStyle,
         ]}>
         {children}
@@ -78,7 +85,17 @@ export function Button({
           {content}
         </LinearGradient>
       ) : (
-        <View style={[fillStyle, variantStyles[variant]]}>{content}</View>
+        <View
+          style={[
+            fillStyle,
+            variantStyles[variant],
+            variant === 'secondary' && {
+              backgroundColor: theme.colors.background.surfaceElevated,
+              borderColor: theme.colors.border.strong,
+            },
+          ]}>
+          {content}
+        </View>
       )}
     </Pressable>
   );
@@ -139,14 +156,8 @@ const styles = StyleSheet.create({
     includeFontPadding: false,
     textAlign: 'center',
   },
-  ghostLabel: {
-    color: colors.accent.cyan,
-  },
   disabled: {
     opacity: 0.48,
-  },
-  disabledLabel: {
-    color: colors.text.disabled,
   },
   pressed: {
     opacity: 0.78,

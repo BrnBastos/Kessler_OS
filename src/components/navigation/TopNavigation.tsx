@@ -3,8 +3,9 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { navigationItems, type NavigationItem } from './navigation-items';
+import { ThemeModeToggle } from './ThemeModeToggle';
 
-import { colors, layout, radius, spacing, typography } from '@/theme';
+import { colors, layout, radius, spacing, typography, useKesslerTheme } from '@/theme';
 
 function isRouteActive(pathname: string, item: NavigationItem) {
   return item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
@@ -12,16 +13,27 @@ function isRouteActive(pathname: string, item: NavigationItem) {
 
 export function TopNavigation() {
   const pathname = usePathname();
+  const theme = useKesslerTheme();
 
   return (
-    <SafeAreaView edges={['top']} style={styles.safeArea}>
+    <SafeAreaView
+      edges={['top']}
+      style={[
+        styles.safeArea,
+        {
+          backgroundColor: theme.colors.background.app,
+          borderBottomColor: theme.colors.border.subtle,
+        },
+      ]}>
       <View style={styles.container}>
         <Pressable
           accessibilityRole="link"
           onPress={() => router.push('/')}
           style={({ pressed }) => [styles.brand, pressed && styles.pressed]}>
-          <Text style={styles.brandText}>Kessler OS</Text>
-          <Text style={styles.brandSubtext}>Inteligência orbital</Text>
+          <Text style={[styles.brandText, { color: theme.colors.text.primary }]}>Kessler OS</Text>
+          <Text style={[styles.brandSubtext, { color: theme.colors.text.muted }]}>
+            Inteligência orbital
+          </Text>
         </Pressable>
 
         <View style={styles.navItems}>
@@ -36,13 +48,26 @@ export function TopNavigation() {
                 onPress={() => router.push(item.href)}
                 style={({ pressed }) => [
                   styles.navItem,
-                  active && styles.navItemActive,
+                  active && [
+                    styles.navItemActive,
+                    {
+                      backgroundColor: theme.colors.background.surfaceElevated,
+                      borderColor: theme.colors.border.strong,
+                    },
+                  ],
                   pressed && styles.pressed,
                 ]}>
-                <Text style={[styles.navLabel, active && styles.navLabelActive]}>{item.label}</Text>
+                <Text
+                  style={[
+                    styles.navLabel,
+                    { color: active ? theme.colors.text.primary : theme.colors.text.muted },
+                  ]}>
+                  {item.label}
+                </Text>
               </Pressable>
             );
           })}
+          <ThemeModeToggle />
         </View>
       </View>
     </SafeAreaView>
