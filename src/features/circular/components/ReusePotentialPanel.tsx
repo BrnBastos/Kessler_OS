@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Badge, BadgeTone, Card, Metric } from '@/components/ui';
+import { Badge, BadgeTone, Card, DisclosureSection, Metric } from '@/components/ui';
 import {
   formatReuseMaterialLabel,
   formatReusePathLabel,
@@ -78,35 +78,37 @@ export function ReusePotentialPanel({ estimates, object }: ReusePotentialPanelPr
         />
       </View>
 
-      <View style={styles.materialList}>
-        {estimates.map((estimate) => {
-          const progressWidth = `${Math.min(100, estimate.estimatedSharePct)}%` as `${number}%`;
+      <DisclosureSection title="Materiais estimados">
+        <View style={styles.materialList}>
+          {estimates.map((estimate) => {
+            const progressWidth = `${Math.min(100, estimate.estimatedSharePct)}%` as `${number}%`;
 
-          return (
-            <View key={estimate.id} style={styles.materialItem}>
-              <View style={styles.materialHeader}>
-                <View style={styles.materialCopy}>
-                  <Text style={styles.materialName}>{formatMaterial(estimate.material)}</Text>
-                  <Text style={styles.materialPath}>Caminho preferido: {formatPath(estimate.preferredPath)}</Text>
+            return (
+              <View key={estimate.id} style={styles.materialItem}>
+                <View style={styles.materialHeader}>
+                  <View style={styles.materialCopy}>
+                    <Text style={styles.materialName}>{formatMaterial(estimate.material)}</Text>
+                    <Text style={styles.materialPath}>Caminho preferido: {formatPath(estimate.preferredPath)}</Text>
+                  </View>
+                  <Badge
+                    label={formatReusePotentialLabel(estimate.potential)}
+                    tone={getPotentialTone(estimate.potential)}
+                  />
                 </View>
-                <Badge
-                  label={formatReusePotentialLabel(estimate.potential)}
-                  tone={getPotentialTone(estimate.potential)}
-                />
-              </View>
 
-              <View style={styles.track}>
-                <View style={[styles.fill, { width: progressWidth }]} />
-              </View>
+                <View style={styles.track}>
+                  <View style={[styles.fill, { width: progressWidth }]} />
+                </View>
 
-              <View style={styles.materialFooter}>
-                <Text style={styles.share}>{estimate.estimatedSharePct}% de participação estimada</Text>
-                <Text style={styles.notes}>{estimate.notes}</Text>
+                <View style={styles.materialFooter}>
+                  <Text style={styles.share}>{estimate.estimatedSharePct}% de participação estimada</Text>
+                  <Text style={styles.notes}>{estimate.notes}</Text>
+                </View>
               </View>
-            </View>
-          );
-        })}
-      </View>
+            );
+          })}
+        </View>
+      </DisclosureSection>
     </Card>
   );
 }

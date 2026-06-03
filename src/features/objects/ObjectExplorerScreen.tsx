@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Badge, Button, Card, DataSourceNotice, Metric } from '@/components/ui';
+import { Badge, Button, Card, DataSourceNotice, DisclosureSection, Metric } from '@/components/ui';
 import { visualAssets } from '@/config/visualAssets';
 import {
   getOrbitalObjectRepositoryStatus,
@@ -74,53 +74,55 @@ function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
 
       <Text style={styles.detailBody}>{object.summary}</Text>
 
-      <View style={styles.scoreGrid}>
-        <Badge
-          label="Nível de risco"
-          reason={object.scores.risk.summary}
-          score={object.scores.risk.score}
-          tone={getScoreTone(object.scores.risk.level)}
-          style={styles.scoreBadge}
-        />
-        <Badge
-          label="Valor de reuso"
-          reason={object.scores.forgeValue.summary}
-          score={object.scores.forgeValue.score}
-          tone={getScoreTone(object.scores.forgeValue.level)}
-          style={styles.scoreBadge}
-        />
-        <Badge
-          label="Prioridade"
-          reason={object.scores.priority.summary}
-          score={object.scores.priority.score}
-          tone={getScoreTone(object.scores.priority.level)}
-          style={styles.scoreBadge}
-        />
-      </View>
+      <DisclosureSection title="Pontuações e decisão">
+        <View style={styles.scoreGrid}>
+          <Badge
+            label="Nível de risco"
+            reason={object.scores.risk.summary}
+            score={object.scores.risk.score}
+            tone={getScoreTone(object.scores.risk.level)}
+            style={styles.scoreBadge}
+          />
+          <Badge
+            label="Valor de reuso"
+            reason={object.scores.forgeValue.summary}
+            score={object.scores.forgeValue.score}
+            tone={getScoreTone(object.scores.forgeValue.level)}
+            style={styles.scoreBadge}
+          />
+          <Badge
+            label="Prioridade"
+            reason={object.scores.priority.summary}
+            score={object.scores.priority.score}
+            tone={getScoreTone(object.scores.priority.level)}
+            style={styles.scoreBadge}
+          />
+        </View>
 
-      <View style={styles.detailFacts}>
-        <View style={styles.detailFact}>
-          <Text style={styles.factLabel}>Altitude</Text>
-          <Text style={styles.factValue}>{formatEstimate(object.altitudeKm, ' km')}</Text>
+        <View style={styles.detailFacts}>
+          <View style={styles.detailFact}>
+            <Text style={styles.factLabel}>Altitude</Text>
+            <Text style={styles.factValue}>{formatEstimate(object.altitudeKm, ' km')}</Text>
+          </View>
+          <View style={styles.detailFact}>
+            <Text style={styles.factLabel}>Massa</Text>
+            <Text style={styles.factValue}>{formatEstimate(object.estimatedMassKg, ' kg')}</Text>
+          </View>
+          <View style={styles.detailFact}>
+            <Text style={styles.factLabel}>Inclinação</Text>
+            <Text style={styles.factValue}>{formatEstimate(object.inclinationDeg, '°')}</Text>
+          </View>
+          <View style={styles.detailFact}>
+            <Text style={styles.factLabel}>Lançamento</Text>
+            <Text style={styles.factValue}>{object.launchYear ?? 'Desconhecido'}</Text>
+          </View>
         </View>
-        <View style={styles.detailFact}>
-          <Text style={styles.factLabel}>Massa</Text>
-          <Text style={styles.factValue}>{formatEstimate(object.estimatedMassKg, ' kg')}</Text>
-        </View>
-        <View style={styles.detailFact}>
-          <Text style={styles.factLabel}>Inclinação</Text>
-          <Text style={styles.factValue}>{formatEstimate(object.inclinationDeg, '°')}</Text>
-        </View>
-        <View style={styles.detailFact}>
-          <Text style={styles.factLabel}>Lançamento</Text>
-          <Text style={styles.factValue}>{object.launchYear ?? 'Desconhecido'}</Text>
-        </View>
-      </View>
 
-      <View style={styles.decisionPanel}>
-        <Text style={styles.decisionLabel}>Decisão recomendada</Text>
-        <Text style={styles.decisionText}>{object.scores.priority.decision}</Text>
-      </View>
+        <View style={styles.decisionPanel}>
+          <Text style={styles.decisionLabel}>Decisão recomendada</Text>
+          <Text style={styles.decisionText}>{object.scores.priority.decision}</Text>
+        </View>
+      </DisclosureSection>
 
       <Button
         fullWidth={isPhone}
@@ -270,55 +272,6 @@ export function ObjectExplorerScreen() {
                     profissionais de colisão.
                   </Text>
                 </View>
-
-                {selectedObject && (
-                  <View
-                    style={[
-                      styles.heroFocusCard,
-                      {
-                        backgroundColor: theme.isLightMode
-                          ? 'rgba(52, 91, 118, 0.84)'
-                          : 'rgba(2, 6, 23, 0.62)',
-                        borderColor: theme.colors.border.subtle,
-                      },
-                    ]}>
-                    <View
-                      style={[
-                        styles.heroObjectStage,
-                        {
-                          backgroundColor: theme.isLightMode
-                            ? 'rgba(64, 109, 140, 0.56)'
-                            : 'rgba(7, 17, 30, 0.48)',
-                          borderColor: theme.colors.border.subtle,
-                        },
-                      ]}>
-                      <View style={[styles.heroOrbitRing, styles.heroOrbitOuter]} />
-                      <View style={[styles.heroOrbitRing, styles.heroOrbitInner]} />
-                      <Image
-                        source={getObjectVisualAsset(selectedObject)}
-                        contentFit="contain"
-                        style={styles.heroObjectImage}
-                      />
-                    </View>
-                    <View style={styles.heroFocusCopy}>
-                      <Text style={[styles.heroFocusLabel, { color: theme.colors.text.muted }]}>
-                        Objeto em foco
-                      </Text>
-                      <Text numberOfLines={2} style={styles.heroFocusTitle}>
-                        {selectedObject.name}
-                      </Text>
-                      <Text style={[styles.heroFocusMeta, { color: theme.colors.text.muted }]}>
-                        {formatObjectType(selectedObject.type)} · {selectedObject.orbitRegion} ·{' '}
-                        {formatObjectStatus(selectedObject.status)}
-                      </Text>
-                      <Badge
-                        label="Risco"
-                        score={selectedObject.scores.risk.score}
-                        tone={getScoreTone(selectedObject.scores.risk.level)}
-                      />
-                    </View>
-                  </View>
-                )}
               </View>
             </View>
 
@@ -362,33 +315,35 @@ export function ObjectExplorerScreen() {
 
             <DataSourceNotice isLoading={isLoadingPublicData} status={repositoryStatus} />
 
-            {isDesktop && filtersControl}
+            {filtersControl}
 
-            <View style={[styles.explorerGrid, isDesktop && styles.explorerGridDesktop]}>
-              <View style={styles.visualColumn}>
+            <View style={[styles.focusGrid, isDesktop && styles.focusGridDesktop]}>
+              <View style={styles.mapColumn}>
                 <OrbitalVisual
                   objects={filteredObjects}
                   selectedObject={selectedObject}
                   onSelectObject={handleSelectObject}
                 />
-                {!isDesktop && filtersControl}
-                <SelectedObjectDetails object={selectedObject} />
               </View>
 
-              <View style={styles.listColumn}>
-                <View style={styles.sectionTitleRow}>
-                  <Text style={styles.sectionTitle}>Catálogo de objetos</Text>
-                  <Text style={styles.sectionNote}>
-                    Foque um objeto para comparar sinais ou abra a ficha para ver os detalhes.
-                  </Text>
-                </View>
-                <ObjectList
-                  objects={filteredObjects}
-                  onOpenPassport={handleOpenPassport}
-                  selectedObjectId={selectedObject?.id}
-                  onSelectObject={handleSelectObject}
-                />
+              <View style={styles.focusColumn}>
+                <SelectedObjectDetails object={selectedObject} />
               </View>
+            </View>
+
+            <View style={styles.catalogSection}>
+              <View style={styles.sectionTitleRow}>
+                <Text style={styles.sectionTitle}>Catálogo de objetos</Text>
+                <Text style={styles.sectionNote}>
+                  Foque um objeto para comparar sinais ou abra a ficha para ver os detalhes.
+                </Text>
+              </View>
+              <ObjectList
+                objects={filteredObjects}
+                onOpenPassport={handleOpenPassport}
+                selectedObjectId={selectedObject?.id}
+                onSelectObject={handleSelectObject}
+              />
             </View>
           </View>
         </SafeAreaView>
@@ -549,19 +504,24 @@ const styles = StyleSheet.create({
     flexBasis: 220,
     flexGrow: 1,
   },
-  explorerGrid: {
+  focusGrid: {
     gap: spacing[5],
   },
-  explorerGridDesktop: {
+  focusGridDesktop: {
     alignItems: 'flex-start',
     flexDirection: 'row',
   },
-  visualColumn: {
-    flex: 0.92,
+  mapColumn: {
+    flex: 1,
     gap: spacing[4],
+    minWidth: 0,
   },
-  listColumn: {
-    flex: 1.08,
+  focusColumn: {
+    flex: 1,
+    gap: spacing[4],
+    minWidth: 0,
+  },
+  catalogSection: {
     gap: spacing[4],
   },
   sectionTitleRow: {

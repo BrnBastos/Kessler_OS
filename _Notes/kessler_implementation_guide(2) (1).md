@@ -42,7 +42,7 @@ This repository is an **Expo React Native app**, not a Next.js app.
 Use:
 
 ```txt
-Expo SDK 56
+Expo SDK 55
 React Native
 Expo Router
 TypeScript

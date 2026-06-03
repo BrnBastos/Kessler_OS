@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Badge, Button, Card } from '@/components/ui';
+import { Badge, Button, Card, DisclosureSection } from '@/components/ui';
 import { ScoredOrbitalObject } from '@/domain/scoring';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { colors, radius, spacing, typography, useKesslerTheme } from '@/theme';
@@ -138,35 +138,37 @@ export function ObjectCard({ object, onOpenPassport, onSelect, selected }: Objec
           />
         </View>
 
-        <Text numberOfLines={3} style={[styles.summary, { color: theme.colors.text.secondary }]}>
-          {object.summary}
-        </Text>
-
-        <View style={styles.signalRow}>
-          <Signal label="prioridade" value={object.scores.priority.score.toString()} />
-          <Signal label="reuso" value={object.scores.forgeValue.score.toString()} />
-          <Signal label="altitude" value={formatEstimate(object.altitudeKm, ' km')} />
-        </View>
-
-        <View
-          style={[
-            styles.decisionPanel,
-            {
-              backgroundColor: theme.isLightMode
-                ? 'rgba(153, 246, 228, 0.16)'
-                : 'rgba(45, 212, 191, 0.08)',
-              borderColor: theme.isLightMode
-                ? 'rgba(153, 246, 228, 0.38)'
-                : 'rgba(45, 212, 191, 0.20)',
-            },
-          ]}>
-          <Text style={[styles.decisionLabel, { color: theme.colors.accent.teal }]}>
-            Sinal principal
+        <DisclosureSection title="Detalhes do objeto">
+          <Text style={[styles.summary, { color: theme.colors.text.secondary }]}>
+            {object.summary}
           </Text>
-          <Text numberOfLines={2} style={[styles.decision, { color: theme.colors.text.primary }]}>
-            {object.scores.priority.decision}
-          </Text>
-        </View>
+
+          <View style={styles.signalRow}>
+            <Signal label="prioridade" value={object.scores.priority.score.toString()} />
+            <Signal label="reuso" value={object.scores.forgeValue.score.toString()} />
+            <Signal label="altitude" value={formatEstimate(object.altitudeKm, ' km')} />
+          </View>
+
+          <View
+            style={[
+              styles.decisionPanel,
+              {
+                backgroundColor: theme.isLightMode
+                  ? 'rgba(153, 246, 228, 0.16)'
+                  : 'rgba(45, 212, 191, 0.08)',
+                borderColor: theme.isLightMode
+                  ? 'rgba(153, 246, 228, 0.38)'
+                  : 'rgba(45, 212, 191, 0.20)',
+              },
+            ]}>
+            <Text style={[styles.decisionLabel, { color: theme.colors.accent.teal }]}>
+              Sinal principal
+            </Text>
+            <Text style={[styles.decision, { color: theme.colors.text.primary }]}>
+              {object.scores.priority.decision}
+            </Text>
+          </View>
+        </DisclosureSection>
 
         <View style={[styles.actions, isPhone && styles.actionsPhone]}>
           <Button

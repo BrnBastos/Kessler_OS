@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Badge, Card } from '@/components/ui';
+import { Badge, Card, DisclosureSection } from '@/components/ui';
 import { ReuseMaterialEstimate } from '@/domain/models';
 import { MissionEstimate, ScoredOrbitalObject } from '@/domain/scoring';
 import { generateDecisionReport, DecisionReportContext } from '@/services/ai/report-generator';
@@ -37,33 +37,35 @@ export function DecisionReportPanel({
         <Badge label={report.modelLabel} tone="simulated" />
       </View>
 
-      <View style={styles.sectionList}>
-        {report.sections.map((section) => (
-          <View key={section.title} style={styles.section}>
-            <Text style={styles.sectionTitle}>{section.title}</Text>
-            <Text style={styles.sectionBody}>{section.body}</Text>
-          </View>
-        ))}
-      </View>
+      <DisclosureSection title="Ler relatório completo">
+        <View style={styles.sectionList}>
+          {report.sections.map((section) => (
+            <View key={section.title} style={styles.section}>
+              <Text style={styles.sectionTitle}>{section.title}</Text>
+              <Text style={styles.sectionBody}>{section.body}</Text>
+            </View>
+          ))}
+        </View>
 
-      <View style={styles.nextActions}>
-        <Text style={styles.groupTitle}>Próximas ações</Text>
-        {report.nextActions.map((action) => (
-          <View key={action} style={styles.actionRow}>
-            <View style={styles.actionDot} />
-            <Text style={styles.actionText}>{action}</Text>
-          </View>
-        ))}
-      </View>
+        <View style={styles.nextActions}>
+          <Text style={styles.groupTitle}>Próximas ações</Text>
+          {report.nextActions.map((action) => (
+            <View key={action} style={styles.actionRow}>
+              <View style={styles.actionDot} />
+              <Text style={styles.actionText}>{action}</Text>
+            </View>
+          ))}
+        </View>
 
-      <View style={styles.assumptions}>
-        <Text style={styles.groupTitle}>Limites do relatório</Text>
-        {report.assumptions.map((assumption) => (
-          <Text key={assumption} style={styles.assumption}>
-            {assumption}
-          </Text>
-        ))}
-      </View>
+        <View style={styles.assumptions}>
+          <Text style={styles.groupTitle}>Limites do relatório</Text>
+          {report.assumptions.map((assumption) => (
+            <Text key={assumption} style={styles.assumption}>
+              {assumption}
+            </Text>
+          ))}
+        </View>
+      </DisclosureSection>
     </Card>
   );
 }

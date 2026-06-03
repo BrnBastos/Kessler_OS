@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { RiskBar, ScoreRing } from '@/components/charts';
-import { Card } from '@/components/ui';
+import { Card, DisclosureSection } from '@/components/ui';
 import { ScoredOrbitalObject } from '@/domain/scoring';
 import { colors, spacing, typography } from '@/theme';
 
@@ -34,16 +34,18 @@ export function ObjectScorePanel({ object }: ObjectScorePanelProps) {
         />
       </View>
 
-      <View style={styles.summaryList}>
-        <Text style={styles.summary}>{object.scores.risk.summary}</Text>
-        <Text style={styles.summary}>{object.scores.forgeValue.summary}</Text>
-        <Text style={styles.summary}>{object.scores.priority.summary}</Text>
-      </View>
+      <DisclosureSection title="Explicações e fatores">
+        <View style={styles.summaryList}>
+          <Text style={styles.summary}>{object.scores.risk.summary}</Text>
+          <Text style={styles.summary}>{object.scores.forgeValue.summary}</Text>
+          <Text style={styles.summary}>{object.scores.priority.summary}</Text>
+        </View>
 
-      <View style={styles.breakdown}>
-        <Text style={styles.breakdownTitle}>Fatores que compõem o risco</Text>
-        <RiskBar factors={object.scores.risk.factors} />
-      </View>
+        <View style={styles.breakdown}>
+          <Text style={styles.breakdownTitle}>Fatores que compõem o risco</Text>
+          <RiskBar factors={object.scores.risk.factors} />
+        </View>
+      </DisclosureSection>
     </Card>
   );
 }

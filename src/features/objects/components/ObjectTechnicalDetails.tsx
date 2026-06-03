@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Card } from '@/components/ui';
+import { Card, DisclosureSection } from '@/components/ui';
 import { ScoredOrbitalObject } from '@/domain/scoring';
 import { colors, spacing, typography } from '@/theme';
 
@@ -27,14 +27,16 @@ export function ObjectTechnicalDetails({ object }: ObjectTechnicalDetailsProps) 
   return (
     <Card style={styles.card}>
       <Text style={styles.title}>Detalhes técnicos</Text>
-      <View style={styles.grid}>
-        {facts.map((fact) => (
-          <View key={fact.label} style={styles.fact}>
-            <Text style={styles.label}>{fact.label}</Text>
-            <Text style={styles.value}>{fact.value}</Text>
-          </View>
-        ))}
-      </View>
+      <DisclosureSection title="Exibir dados técnicos">
+        <View style={styles.grid}>
+          {facts.map((fact) => (
+            <View key={fact.label} style={styles.fact}>
+              <Text style={styles.label}>{fact.label}</Text>
+              <Text style={styles.value}>{fact.value}</Text>
+            </View>
+          ))}
+        </View>
+      </DisclosureSection>
     </Card>
   );
 }

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Badge, Card } from '@/components/ui';
+import { Badge, Card, DisclosureSection } from '@/components/ui';
 import { colors, spacing, typography } from '@/theme';
 
 type PreventionPrinciple = {
@@ -72,8 +72,10 @@ export function PreventionPrinciples() {
               <Text style={styles.principleTitle}>{principle.title}</Text>
               <Badge label={principle.category} tone="info" />
             </View>
-            <Text style={styles.body}>{principle.body}</Text>
-            <Text style={styles.impact}>{principle.impact}</Text>
+            <DisclosureSection title="Como ajuda">
+              <Text style={styles.body}>{principle.body}</Text>
+              <Text style={styles.impact}>{principle.impact}</Text>
+            </DisclosureSection>
           </View>
         ))}
       </View>

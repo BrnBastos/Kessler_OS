@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Badge, Button, Card } from '@/components/ui';
+import { Badge, Button, Card, DisclosureSection } from '@/components/ui';
 import { formatMissionTypeLabel } from '@/content/pt-br';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { SavedMissionScenario } from '@/services/persistence';
@@ -64,20 +64,22 @@ export function SavedMissionScenarios({
                 <Badge label="Registro local" tone="info" />
               </View>
 
-              <View style={styles.scoreRow}>
-                <View style={styles.scoreBox}>
-                  <Text style={styles.scoreLabel}>Viabilidade</Text>
-                  <Text style={styles.scoreValue}>{scenario.feasibilityScore}</Text>
+              <DisclosureSection title="Pontuações salvas">
+                <View style={styles.scoreRow}>
+                  <View style={styles.scoreBox}>
+                    <Text style={styles.scoreLabel}>Viabilidade</Text>
+                    <Text style={styles.scoreValue}>{scenario.feasibilityScore}</Text>
+                  </View>
+                  <View style={styles.scoreBox}>
+                    <Text style={styles.scoreLabel}>Redução de risco</Text>
+                    <Text style={styles.scoreValue}>{scenario.riskReductionScore}</Text>
+                  </View>
+                  <View style={styles.scoreBox}>
+                    <Text style={styles.scoreLabel}>Valor circular</Text>
+                    <Text style={styles.scoreValue}>{scenario.circularValueScore}</Text>
+                  </View>
                 </View>
-                <View style={styles.scoreBox}>
-                  <Text style={styles.scoreLabel}>Redução de risco</Text>
-                  <Text style={styles.scoreValue}>{scenario.riskReductionScore}</Text>
-                </View>
-                <View style={styles.scoreBox}>
-                  <Text style={styles.scoreLabel}>Valor circular</Text>
-                  <Text style={styles.scoreValue}>{scenario.circularValueScore}</Text>
-                </View>
-              </View>
+              </DisclosureSection>
 
               <View style={[styles.actions, isPhone && styles.actionsPhone]}>
                 <Button

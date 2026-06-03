@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Badge, BadgeTone, Card, Metric } from '@/components/ui';
+import { Badge, BadgeTone, Card, DisclosureSection, Metric } from '@/components/ui';
 import { MissionEstimate, ScoredOrbitalObject } from '@/domain/scoring';
 import { DecisionReportPanel } from '@/features/reports/DecisionReportPanel';
 import { colors, radius, spacing, typography } from '@/theme';
@@ -82,42 +82,44 @@ function MissionResultContent({ object, result }: MissionResultPanelProps) {
         />
       </View>
 
-      <View style={styles.scoreRow}>
-        <Badge
-          label="Risco operacional"
-          reason="O risco reflete complexidade da missão e incerteza do alvo."
-          score={result.operationalRiskLevel === 'high' ? 3 : result.operationalRiskLevel === 'medium' ? 2 : 1}
-          tone={getOperationalRiskTone(result.operationalRiskLevel)}
-        />
-        <Badge
-          label="Valor circular"
-          reason="O valor combina reuso do objeto com intenção de recuperação da missão."
-          score={result.circularValueScore}
-          tone={result.circularValueScore >= 70 ? 'success' : result.circularValueScore >= 40 ? 'warning' : 'info'}
-        />
-        <Badge
-          label="Confiança"
-          reason="A confiança reflete qualidade da fonte e complexidade da missão."
-          score={result.confidenceScore}
-          tone={result.confidenceScore >= 70 ? 'success' : result.confidenceScore >= 40 ? 'warning' : 'danger'}
-        />
-      </View>
+      <DisclosureSection title="Detalhes da estimativa">
+        <View style={styles.scoreRow}>
+          <Badge
+            label="Risco operacional"
+            reason="O risco reflete complexidade da missão e incerteza do alvo."
+            score={result.operationalRiskLevel === 'high' ? 3 : result.operationalRiskLevel === 'medium' ? 2 : 1}
+            tone={getOperationalRiskTone(result.operationalRiskLevel)}
+          />
+          <Badge
+            label="Valor circular"
+            reason="O valor combina reuso do objeto com intenção de recuperação da missão."
+            score={result.circularValueScore}
+            tone={result.circularValueScore >= 70 ? 'success' : result.circularValueScore >= 40 ? 'warning' : 'info'}
+          />
+          <Badge
+            label="Confiança"
+            reason="A confiança reflete qualidade da fonte e complexidade da missão."
+            score={result.confidenceScore}
+            tone={result.confidenceScore >= 70 ? 'success' : result.confidenceScore >= 40 ? 'warning' : 'danger'}
+          />
+        </View>
 
-      <View style={styles.factorList}>
-        <Text style={styles.factorTitle}>Por que esta estimativa mudou</Text>
-        {result.factors.map((factor) => (
-          <View key={factor.label} style={styles.factor}>
-            <View style={styles.factorHeader}>
-              <Text style={styles.factorLabel}>{factor.label}</Text>
-              <Text style={[styles.factorValue, factor.value < 0 && styles.factorPenalty]}>
-                {factor.value > 0 ? '+' : ''}
-                {factor.value}
-              </Text>
+        <View style={styles.factorList}>
+          <Text style={styles.factorTitle}>Por que esta estimativa mudou</Text>
+          {result.factors.map((factor) => (
+            <View key={factor.label} style={styles.factor}>
+              <View style={styles.factorHeader}>
+                <Text style={styles.factorLabel}>{factor.label}</Text>
+                <Text style={[styles.factorValue, factor.value < 0 && styles.factorPenalty]}>
+                  {factor.value > 0 ? '+' : ''}
+                  {factor.value}
+                </Text>
+              </View>
+              <Text style={styles.factorDescription}>{factor.description}</Text>
             </View>
-            <Text style={styles.factorDescription}>{factor.description}</Text>
-          </View>
-        ))}
-      </View>
+          ))}
+        </View>
+      </DisclosureSection>
     </Card>
   );
 }

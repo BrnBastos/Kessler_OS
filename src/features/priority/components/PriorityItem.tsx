@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Badge, Button, Card } from '@/components/ui';
+import { Badge, Button, Card, DisclosureSection } from '@/components/ui';
 import { ScoredOrbitalObject } from '@/domain/scoring';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { colors, radius, spacing, typography, useKesslerTheme } from '@/theme';
@@ -52,42 +52,62 @@ export function PriorityItem({ object, rank }: PriorityItemProps) {
         />
       </View>
 
-      <View style={styles.scoreRow}>
-        <Badge
-          label="Risco"
-          score={object.scores.risk.score}
-          tone={getScoreTone(object.scores.risk.level)}
-        />
-        <Badge
-          label="Reuso"
-          score={object.scores.forgeValue.score}
-          tone={getScoreTone(object.scores.forgeValue.level)}
-        />
-        <Badge
-          label="Prioridade"
-          score={object.scores.priority.score}
-          tone={getScoreTone(object.scores.priority.level)}
-        />
-      </View>
-
       <View
         style={[
-          styles.decisionPanel,
+          styles.priorityPreview,
           {
             backgroundColor: theme.colors.background.surface,
             borderColor: theme.colors.border.subtle,
           },
         ]}>
-        <Text style={[styles.decisionLabel, { color: theme.colors.text.muted }]}>
-          Decisão recomendada
-        </Text>
-        <Text style={[styles.decision, { color: theme.colors.text.primary }]}>
+        <Badge
+          label="Prioridade"
+          score={object.scores.priority.score}
+          tone={getScoreTone(object.scores.priority.level)}
+        />
+        <Text numberOfLines={2} style={[styles.previewDecision, { color: theme.colors.text.primary }]}>
           {object.scores.priority.decision}
         </Text>
-        <Text style={[styles.reason, { color: theme.colors.text.secondary }]}>
-          {object.scores.priority.summary}
-        </Text>
       </View>
+
+      <DisclosureSection title="Comparar sinais">
+        <View style={styles.scoreRow}>
+          <Badge
+            label="Risco"
+            score={object.scores.risk.score}
+            tone={getScoreTone(object.scores.risk.level)}
+          />
+          <Badge
+            label="Reuso"
+            score={object.scores.forgeValue.score}
+            tone={getScoreTone(object.scores.forgeValue.level)}
+          />
+          <Badge
+            label="Prioridade"
+            score={object.scores.priority.score}
+            tone={getScoreTone(object.scores.priority.level)}
+          />
+        </View>
+
+        <View
+          style={[
+            styles.decisionPanel,
+            {
+              backgroundColor: theme.colors.background.surface,
+              borderColor: theme.colors.border.subtle,
+            },
+          ]}>
+          <Text style={[styles.decisionLabel, { color: theme.colors.text.muted }]}>
+            Decisão recomendada
+          </Text>
+          <Text style={[styles.decision, { color: theme.colors.text.primary }]}>
+            {object.scores.priority.decision}
+          </Text>
+          <Text style={[styles.reason, { color: theme.colors.text.secondary }]}>
+            {object.scores.priority.summary}
+          </Text>
+        </View>
+      </DisclosureSection>
 
       <View style={[styles.actions, isPhone && styles.actionsPhone]}>
         <Button
@@ -165,6 +185,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing[2],
+  },
+  priorityPreview: {
+    alignItems: 'center',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing[3],
+    padding: spacing[3],
+  },
+  previewDecision: {
+    ...typography.bodySmall,
+    flex: 1,
+    fontWeight: '700',
+    minWidth: 180,
   },
   decisionPanel: {
     backgroundColor: colors.background.surface,

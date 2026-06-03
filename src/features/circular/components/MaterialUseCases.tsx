@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Badge, Card } from '@/components/ui';
+import { Badge, Card, DisclosureSection } from '@/components/ui';
 import { ReuseMaterialEstimate } from '@/domain/models';
 import { colors, radius, spacing, typography } from '@/theme';
 
@@ -91,8 +91,10 @@ export function MaterialUseCases({ estimates }: MaterialUseCasesProps) {
                   tone={getUseCaseTone(matches)}
                 />
               </View>
-              <Text style={styles.body}>{useCase.body}</Text>
-              <Text style={styles.signal}>{useCase.signal}</Text>
+              <DisclosureSection title="Detalhes do uso">
+                <Text style={styles.body}>{useCase.body}</Text>
+                <Text style={styles.signal}>{useCase.signal}</Text>
+              </DisclosureSection>
             </View>
           );
         })}

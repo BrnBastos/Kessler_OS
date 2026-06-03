@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Badge, Card } from '@/components/ui';
+import { Badge, Card, DisclosureSection } from '@/components/ui';
 import { ScoreResult } from '@/domain/scoring';
 import { colors, radius, spacing, typography } from '@/theme';
 
@@ -65,24 +65,26 @@ export function PreventionScorePreview({ result }: PreventionScorePreviewProps) 
         <Text style={styles.summary}>{result.summary}</Text>
       </View>
 
-      <View style={styles.factorList}>
-        {result.factors.map((factor) => {
-          const factorWidth = `${factor.value}%` as `${number}%`;
+      <DisclosureSection title="Fatores da pontuação">
+        <View style={styles.factorList}>
+          {result.factors.map((factor) => {
+            const factorWidth = `${factor.value}%` as `${number}%`;
 
-          return (
-            <View key={factor.label} style={styles.factor}>
-              <View style={styles.factorHeader}>
-                <Text style={styles.factorLabel}>{factor.label}</Text>
-                <Text style={styles.factorValue}>{factor.value} pts</Text>
+            return (
+              <View key={factor.label} style={styles.factor}>
+                <View style={styles.factorHeader}>
+                  <Text style={styles.factorLabel}>{factor.label}</Text>
+                  <Text style={styles.factorValue}>{factor.value} pts</Text>
+                </View>
+                <View style={styles.factorTrack}>
+                  <View style={[styles.factorFill, { width: factorWidth }]} />
+                </View>
+                <Text style={styles.factorDescription}>{factor.description}</Text>
               </View>
-              <View style={styles.factorTrack}>
-                <View style={[styles.factorFill, { width: factorWidth }]} />
-              </View>
-              <Text style={styles.factorDescription}>{factor.description}</Text>
-            </View>
-          );
-        })}
-      </View>
+            );
+          })}
+        </View>
+      </DisclosureSection>
     </Card>
   );
 }
