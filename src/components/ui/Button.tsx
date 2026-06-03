@@ -37,10 +37,18 @@ export function Button({
   variant = 'primary',
   ...pressableProps
 }: ButtonProps) {
+  const fillStyle = [
+    styles.fill,
+    size === 'small' ? styles.fillSmall : styles.fillMedium,
+    fullWidth && styles.fillFullWidth,
+  ];
+
   const content = (
     <View style={styles.content}>
       {icon}
       <Text
+        maxFontSizeMultiplier={1.25}
+        numberOfLines={2}
         style={[
           styles.label,
           variant === 'ghost' && styles.ghostLabel,
@@ -66,11 +74,11 @@ export function Button({
       ]}
       {...pressableProps}>
       {variant === 'primary' ? (
-        <LinearGradient colors={gradients.primaryButton} style={styles.fill}>
+        <LinearGradient colors={gradients.primaryButton} style={fillStyle}>
           {content}
         </LinearGradient>
       ) : (
-        <View style={[styles.fill, variantStyles[variant]]}>{content}</View>
+        <View style={[fillStyle, variantStyles[variant]]}>{content}</View>
       )}
     </Pressable>
   );
@@ -80,6 +88,8 @@ const styles = StyleSheet.create({
   base: {
     alignSelf: 'flex-start',
     borderRadius: radius.pill,
+    flexShrink: 1,
+    maxWidth: '100%',
     minHeight: 48,
     minWidth: 48,
     overflow: 'hidden',
@@ -92,26 +102,42 @@ const styles = StyleSheet.create({
   },
   fullWidth: {
     alignSelf: 'stretch',
+    width: '100%',
   },
   fill: {
     alignItems: 'center',
     borderRadius: radius.pill,
-    flex: 1,
     justifyContent: 'center',
-    minHeight: 48,
+    maxWidth: '100%',
     paddingHorizontal: spacing[5],
     paddingVertical: spacing[3],
   },
+  fillSmall: {
+    minHeight: 44,
+    paddingHorizontal: spacing[4],
+    paddingVertical: spacing[2],
+  },
+  fillMedium: {
+    minHeight: 48,
+  },
+  fillFullWidth: {
+    width: '100%',
+  },
   content: {
     alignItems: 'center',
+    flexShrink: 1,
     flexDirection: 'row',
     gap: spacing[2],
     justifyContent: 'center',
+    maxWidth: '100%',
   },
   label: {
     ...typography.bodySmall,
     color: colors.text.primary,
+    flexShrink: 1,
     fontWeight: '700',
+    includeFontPadding: false,
+    textAlign: 'center',
   },
   ghostLabel: {
     color: colors.accent.cyan,
