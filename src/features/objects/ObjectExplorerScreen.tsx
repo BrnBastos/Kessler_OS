@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -24,10 +25,13 @@ import {
   getConfidenceTone,
   getScoreTone,
 } from './object-formatters';
+import { getObjectVisualAsset } from './object-visuals';
 
 const initialCatalogObjects = listScoredOrbitalObjects();
 
 function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
+  const { isPhone } = useBreakpoint();
+
   if (!object) {
     return (
       <Card style={styles.detailCard}>
@@ -41,7 +45,16 @@ function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
 
   return (
     <Card style={styles.detailCard}>
-      <View style={styles.detailHeader}>
+      <View style={styles.detailHero}>
+        <View style={styles.detailVisualStage}>
+          <View style={[styles.detailOrbitRing, styles.detailOrbitOuter]} />
+          <View style={[styles.detailOrbitRing, styles.detailOrbitInner]} />
+          <Image
+            source={getObjectVisualAsset(object)}
+            contentFit="contain"
+            style={styles.detailObjectImage}
+          />
+        </View>
         <View style={styles.detailCopy}>
           <Text style={styles.detailEyebrow}>Objeto em foco</Text>
           <Text style={styles.detailTitle}>{object.name}</Text>
@@ -49,11 +62,11 @@ function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
             {formatObjectType(object.type)} · {object.orbitRegion} ·{' '}
             {formatObjectStatus(object.status)}
           </Text>
+          <Badge
+            label={getConfidenceLabel(object.dataConfidence)}
+            tone={getConfidenceTone(object.dataConfidence)}
+          />
         </View>
-        <Badge
-          label={getConfidenceLabel(object.dataConfidence)}
-          tone={getConfidenceTone(object.dataConfidence)}
-        />
       </View>
 
       <Text style={styles.detailBody}>{object.summary}</Text>
@@ -107,6 +120,7 @@ function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
       </View>
 
       <Button
+        fullWidth={isPhone}
         variant="secondary"
         onPress={() =>
           router.push({
@@ -271,7 +285,7 @@ export function ObjectExplorerScreen() {
                 <View style={styles.sectionTitleRow}>
                   <Text style={styles.sectionTitle}>Catálogo de objetos</Text>
                   <Text style={styles.sectionNote}>
-                    Toque em um card para inspecionar pontuações e detalhes locais
+                    Foque um objeto para comparar sinais ou abra a ficha para ver os detalhes.
                   </Text>
                 </View>
                 <ObjectList
@@ -353,16 +367,53 @@ const styles = StyleSheet.create({
   detailCard: {
     gap: spacing[4],
   },
-  detailHeader: {
+  detailHero: {
     alignItems: 'flex-start',
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing[3],
-    justifyContent: 'space-between',
+  },
+  detailVisualStage: {
+    backgroundColor: 'rgba(2, 6, 23, 0.52)',
+    borderColor: colors.border.subtle,
+    borderRadius: 16,
+    borderWidth: 1,
+    flexBasis: 132,
+    flexGrow: 1,
+    height: 132,
+    maxWidth: 180,
+    overflow: 'hidden',
+  },
+  detailOrbitRing: {
+    borderColor: 'rgba(56, 232, 255, 0.22)',
+    borderRadius: 999,
+    borderWidth: 1,
+    position: 'absolute',
+  },
+  detailOrbitOuter: {
+    bottom: -54,
+    height: 180,
+    right: -42,
+    transform: [{ rotate: '-24deg' }, { scaleX: 1.24 }],
+    width: 128,
+  },
+  detailOrbitInner: {
+    bottom: -22,
+    height: 112,
+    right: 10,
+    transform: [{ rotate: '24deg' }, { scaleX: 1.18 }],
+    width: 80,
+  },
+  detailObjectImage: {
+    bottom: -12,
+    height: '86%',
+    position: 'absolute',
+    right: -8,
+    width: '84%',
   },
   detailCopy: {
     flex: 1,
-    gap: spacing[1],
+    gap: spacing[2],
     minWidth: 190,
   },
   detailEyebrow: {
