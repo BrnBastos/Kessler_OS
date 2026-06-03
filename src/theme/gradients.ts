@@ -1,5 +1,6 @@
 export const gradients = {
-  primaryButton: ['#2563EB', '#0EA5E9'],
-  earthGlow: ['rgba(37,99,235,0.35)', 'rgba(34,211,238,0.12)'],
-  surfaceGlow: ['rgba(59,130,246,0.16)', 'rgba(20,184,166,0.08)'],
+  primaryButton: ['#1D4ED8', '#0891B2', '#2DD4BF'],
+  earthGlow: ['rgba(29, 78, 216, 0.42)', 'rgba(56, 232, 255, 0.18)'],
+  surfaceGlow: ['rgba(96, 165, 250, 0.18)', 'rgba(45, 212, 191, 0.10)'],
+  deepSpace: ['#020617', '#07111E', '#0B1728'],
 } as const;

@@ -2,14 +2,11 @@ import '@/global.css';
 
 import { Platform } from 'react-native';
 
-import { colorModes, layout, spacing } from '@/theme';
+import { layout, spacing, themeColors } from '@/theme';
 
-export const Colors = {
-  light: colorModes.light,
-  dark: colorModes.dark,
-} as const;
+export const Colors = themeColors;
 
-export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
+export type ThemeColor = keyof typeof Colors;
 
 export const Fonts = Platform.select({
   ios: {

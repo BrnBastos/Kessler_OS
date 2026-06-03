@@ -11,5 +11,6 @@
 html,
 body,
 #root {
-  background: #030712;
+  background: #020617;
+  color-scheme: dark;
 }

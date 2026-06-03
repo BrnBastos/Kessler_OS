@@ -1,17 +1,17 @@
 export const typography = {
   display: {
-    fontSize: 48,
-    lineHeight: 56,
-    fontWeight: '700',
+    fontSize: 52,
+    lineHeight: 60,
+    fontWeight: '800',
   },
   h1: {
-    fontSize: 36,
-    lineHeight: 44,
-    fontWeight: '700',
+    fontSize: 38,
+    lineHeight: 46,
+    fontWeight: '800',
   },
   h2: {
-    fontSize: 28,
-    lineHeight: 36,
+    fontSize: 29,
+    lineHeight: 37,
     fontWeight: '700',
   },
   h3: {
@@ -21,7 +21,7 @@ export const typography = {
   },
   body: {
     fontSize: 16,
-    lineHeight: 24,
+    lineHeight: 25,
     fontWeight: '400',
   },
   bodySmall: {

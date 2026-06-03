@@ -4,25 +4,25 @@ export const shadows = {
   card:
     Platform.select({
       web: {
-        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.28)',
+        boxShadow: '0 18px 52px rgba(0, 0, 0, 0.34), 0 0 0 1px rgba(56, 232, 255, 0.03)',
       },
       default: {
         shadowColor: '#000',
-        shadowOpacity: 0.28,
-        shadowRadius: 18,
-        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.34,
+        shadowRadius: 22,
+        shadowOffset: { width: 0, height: 14 },
         elevation: 6,
       },
     }) ?? {},
   glowBlue:
     Platform.select({
       web: {
-        boxShadow: '0 0 34px rgba(37, 99, 235, 0.22)',
+        boxShadow: '0 0 44px rgba(56, 232, 255, 0.20), 0 0 90px rgba(29, 78, 216, 0.12)',
       },
       default: {
-        shadowColor: '#2563EB',
-        shadowOpacity: 0.22,
-        shadowRadius: 24,
+        shadowColor: '#38E8FF',
+        shadowOpacity: 0.2,
+        shadowRadius: 30,
         shadowOffset: { width: 0, height: 0 },
         elevation: 8,
       },

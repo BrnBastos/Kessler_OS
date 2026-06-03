@@ -1,13 +1,25 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import { useColorScheme } from 'react-native';
+import { DarkTheme, ThemeProvider } from 'expo-router';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import { AppShell } from '@/components/app-shell/AppShell';
+import { colors } from '@/theme';
+
+const kesslerNavigationTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    background: colors.background.app,
+    border: colors.border.subtle,
+    card: colors.background.surface,
+    notification: colors.semantic.danger,
+    primary: colors.accent.cyan,
+    text: colors.text.primary,
+  },
+} as const;
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={kesslerNavigationTheme}>
       <AnimatedSplashOverlay />
       <AppShell />
     </ThemeProvider>
