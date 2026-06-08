@@ -154,12 +154,9 @@ export function ImpactDashboardScreen() {
           <View style={styles.stack}>
             <VisualPageHero
               backgroundImage={visualAssets.backgrounds.cityImpact}
-              badge={<Badge label="Visão de avaliação" tone="simulated" />}
               description="Este painel resume análise de catálogo, prioridades, simulação de missão, reaproveitamento circular e prevenção com limites honestos de protótipo."
               eyebrow="Painel de Impacto"
-              foregroundDetail={`${catalogObjects.length} objetos analisados`}
               foregroundImage={visualAssets.objects.recyclingModule}
-              foregroundLabel="história do projeto"
               title="Mostre o valor do Kessler OS em uma visão pronta para apresentação."
               actions={
                 <>

@@ -199,9 +199,9 @@ export function ObjectExplorerScreen() {
     filteredObjects.find((object) => object.id === selectedObjectId) ?? filteredObjects[0];
   const pageBackgroundStyle = { backgroundColor: theme.colors.background.app };
   const heroOverlayColors = [
-    'rgba(2, 6, 23, 0.96)',
-    'rgba(2, 6, 23, 0.58)',
-    'rgba(2, 6, 23, 0.94)',
+    'rgba(2, 6, 23, 0.20)',
+    'rgba(2, 6, 23, 0.38)',
+    'rgba(2, 6, 23, 0.14)',
   ] as const;
 
   function handleSelectObject(object: ScoredOrbitalObject) {
@@ -262,7 +262,7 @@ export function ObjectExplorerScreen() {
               />
               <View style={[styles.heroContent, isDesktop && styles.heroContentDesktop]}>
                 <View style={styles.heroCopy}>
-                  <Badge label="Mapa Orbital" tone="simulated" />
+                  
                   <Text style={[styles.heroTitle, isPhone && styles.heroTitlePhone]}>
                     Aqui você explora objetos que ainda circulam a Terra.
                   </Text>

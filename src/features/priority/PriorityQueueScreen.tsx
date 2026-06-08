@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Badge, Button, DataSourceNotice, Metric, VisualPageHero } from '@/components/ui';
+import { Button, DataSourceNotice, Metric, VisualPageHero } from '@/components/ui';
 import { visualAssets } from '@/config/visualAssets';
 import {
   getOrbitalObjectRepositoryStatus,
@@ -122,14 +122,9 @@ export function PriorityQueueScreen() {
           <View style={styles.stack}>
             <VisualPageHero
               backgroundImage={visualAssets.backgrounds.satelliteOverEarth}
-              badge={<Badge label="Fila determinística" tone="simulated" />}
               description="A fila combina risco, valor de reuso, viabilidade e confiança em um sinal transparente. Ela serve para comparação, não para operações profissionais de colisão."
               eyebrow="Fila de Prioridade"
-              foregroundDetail={
-                topObject ? `${topObject.scores.priority.score} pontos de prioridade` : 'Sem alvo ativo'
-              }
               foregroundImage={topObject ? getObjectVisualAsset(topObject) : visualAssets.objects.damagedSatellite}
-              foregroundLabel={topObject ? topObject.name : 'objeto em foco'}
               title="Veja quais objetos orbitais merecem atenção primeiro."
               actions={
                 topObject ? (

@@ -9,24 +9,18 @@ import { colors, radius, shadows, spacing, typography, useKesslerTheme } from '@
 type VisualPageHeroProps = {
   actions?: ReactNode;
   backgroundImage: ImageSourcePropType;
-  badge?: ReactNode;
   description: string;
   eyebrow: string;
-  foregroundDetail?: string;
   foregroundImage?: ImageSourcePropType;
-  foregroundLabel?: string;
   title: string;
 };
 
 export function VisualPageHero({
   actions,
   backgroundImage,
-  badge,
   description,
   eyebrow,
-  foregroundDetail,
   foregroundImage,
-  foregroundLabel,
   title,
 }: VisualPageHeroProps) {
   const { isDesktop, isPhone } = useBreakpoint();
@@ -60,9 +54,8 @@ export function VisualPageHero({
           styles.content,
           isDesktop && styles.contentDesktop,
           isPhone && styles.contentPhone,
-        ]}>
+      ]}>
         <View style={[styles.copy, isDesktop && styles.copyDesktop]}>
-          {badge && <View style={styles.badgeRow}>{badge}</View>}
           <Text style={styles.eyebrow}>{eyebrow}</Text>
           <Text style={[styles.title, isPhone && styles.titlePhone]}>{title}</Text>
           <Text style={styles.description}>{description}</Text>
@@ -76,30 +69,6 @@ export function VisualPageHero({
               <View style={[styles.orbitRing, styles.orbitRingInner]} />
               <Image source={foregroundImage} contentFit="contain" style={styles.foregroundImage} />
             </View>
-
-            {(foregroundLabel || foregroundDetail) && (
-              <View
-                style={[
-                  styles.foregroundTag,
-                  {
-                    backgroundColor: theme.isLightMode
-                      ? 'rgba(52, 91, 118, 0.88)'
-                      : 'rgba(7, 17, 30, 0.74)',
-                    borderColor: theme.colors.border.strong,
-                  },
-                ]}>
-                {foregroundLabel && (
-                  <Text style={[styles.foregroundLabel, { color: theme.colors.text.muted }]}>
-                    {foregroundLabel}
-                  </Text>
-                )}
-                {foregroundDetail && (
-                  <Text style={[styles.foregroundDetail, { color: theme.colors.text.primary }]}>
-                    {foregroundDetail}
-                  </Text>
-                )}
-              </View>
-            )}
           </View>
         )}
       </View>
@@ -152,9 +121,6 @@ const styles = StyleSheet.create({
   },
   copyDesktop: {
     maxWidth: 660,
-  },
-  badgeRow: {
-    alignItems: 'flex-start',
   },
   eyebrow: {
     ...typography.caption,
@@ -228,25 +194,5 @@ const styles = StyleSheet.create({
   foregroundImage: {
     height: '78%',
     width: '78%',
-  },
-  foregroundTag: {
-    backgroundColor: 'rgba(7, 17, 30, 0.74)',
-    borderColor: colors.border.strong,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    gap: spacing[1],
-    maxWidth: 260,
-    paddingHorizontal: spacing[4],
-    paddingVertical: spacing[3],
-  },
-  foregroundLabel: {
-    ...typography.caption,
-    color: colors.text.muted,
-    textTransform: 'uppercase',
-  },
-  foregroundDetail: {
-    ...typography.bodySmall,
-    color: colors.text.primary,
-    fontWeight: '700',
   },
 });

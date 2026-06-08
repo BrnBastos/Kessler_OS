@@ -152,7 +152,6 @@ export function CircularEconomyScreen() {
               />
               <View style={[styles.heroContent, isDesktop && styles.heroContentDesktop]}>
                 <View style={styles.heroCopy}>
-                  <Badge label="Laboratório de economia circular" tone="simulated" />
                   <Text style={[styles.heroTitle, isPhone && styles.heroTitlePhone]}>
                     Nem todo objeto abandonado precisa continuar sendo lixo.
                   </Text>
@@ -204,22 +203,6 @@ export function CircularEconomyScreen() {
                     contentFit="contain"
                     style={styles.heroObject}
                   />
-                  <View
-                    style={[
-                      styles.heroTag,
-                      {
-                        backgroundColor: theme.isLightMode
-                          ? 'rgba(52, 91, 118, 0.88)'
-                          : 'rgba(7, 17, 30, 0.76)',
-                      },
-                    ]}>
-                    <Text style={[styles.heroTagLabel, { color: theme.colors.text.muted }]}>
-                      fluxo circular
-                    </Text>
-                    <Text style={[styles.heroTagValue, { color: theme.colors.text.primary }]}>
-                      material útil
-                    </Text>
-                  </View>
                 </View>
               </View>
             </View>
@@ -529,28 +512,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: -24,
     width: '78%',
-  },
-  heroTag: {
-    backgroundColor: 'rgba(7, 17, 30, 0.76)',
-    borderColor: 'rgba(45, 212, 191, 0.28)',
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    bottom: spacing[5],
-    gap: spacing[1],
-    left: spacing[5],
-    padding: spacing[4],
-    position: 'absolute',
-    right: spacing[5],
-  },
-  heroTagLabel: {
-    ...typography.caption,
-    color: colors.accent.teal,
-    fontWeight: '700',
-    textTransform: 'uppercase',
-  },
-  heroTagValue: {
-    ...typography.h3,
-    color: colors.text.primary,
   },
   metricGrid: {
     flexDirection: 'row',

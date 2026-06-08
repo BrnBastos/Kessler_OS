@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Badge, Button, Card, DataSourceNotice, Metric, VisualPageHero } from '@/components/ui';
+import { Button, Card, DataSourceNotice, Metric, VisualPageHero } from '@/components/ui';
 import { visualAssets } from '@/config/visualAssets';
 import { MissionType } from '@/domain/models';
 import {
@@ -126,16 +126,11 @@ export function MissionSimulatorScreen() {
           <View style={styles.stack}>
             <VisualPageHero
               backgroundImage={visualAssets.backgrounds.observatory}
-              badge={<Badge label="Simulador determinístico" tone="simulated" />}
               description="Escolha um objeto orbital e simule monitoramento, inspeção, desvio, retirada de órbita, realocação, captura ou reciclagem. O resultado apoia decisões no protótipo, mas não é planejamento operacional de voo."
               eyebrow="Simulador de Missão"
-              foregroundDetail={
-                result ? `${result.feasibilityScore} pontos de viabilidade` : 'Simulação pronta'
-              }
               foregroundImage={
                 selectedObject ? getObjectVisualAsset(selectedObject) : visualAssets.objects.servicingSatellite
               }
-              foregroundLabel={selectedObject ? selectedObject.name : 'alvo em foco'}
               title="Estime respostas práticas antes de escolher uma estratégia."
               actions={
                 selectedObject ? (

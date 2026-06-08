@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Badge, Button, Metric, VisualPageHero } from '@/components/ui';
+import { Button, Metric, VisualPageHero } from '@/components/ui';
 import { visualAssets } from '@/config/visualAssets';
 import {
   calculateResponsibleOrbitScore,
@@ -57,12 +57,9 @@ export function PreventionHubScreen() {
           <View style={styles.stack}>
             <VisualPageHero
               backgroundImage={visualAssets.backgrounds.observatory}
-              badge={<Badge label="Prevenção primeiro" tone="success" />}
               description="O Kessler conecta resposta a detritos com comportamento orbital responsável: passivação, descarte, rastreamento, desvio e desenho circular de missões."
               eyebrow="Central de Prevenção"
-              foregroundDetail={`${result.score} pontos no plano atual`}
               foregroundImage={visualAssets.objects.servicingSatellite}
-              foregroundLabel="missão responsável"
               title="Cuidar da órbita começa antes do lançamento."
               actions={
                 <>

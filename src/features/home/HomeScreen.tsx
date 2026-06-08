@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Badge, Button } from '@/components/ui';
+import { Button } from '@/components/ui';
 import { visualAssets } from '@/config/visualAssets';
 import { mockMissions, mockOrbitalObjects } from '@/data';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
@@ -178,11 +178,11 @@ function OrbitPreview() {
       <View style={[styles.orbitRing, styles.orbitRingOuter]} />
       <View style={[styles.orbitRing, styles.orbitRingMiddle]} />
       <View style={[styles.orbitRing, styles.orbitRingInner]} />
-      <Image
+      {/* <Image
         source={visualAssets.backgrounds.satelliteOverEarth}
         contentFit="cover"
         style={styles.orbitEarth}
-      />
+      /> */}
       <Image
         source={visualAssets.objects.damagedSatellite}
         contentFit="contain"
@@ -191,21 +191,6 @@ function OrbitPreview() {
       <View style={[styles.orbitDot, { borderColor: theme.colors.background.app }, styles.orbitDotDanger]} />
       <View style={[styles.orbitDot, { borderColor: theme.colors.background.app }, styles.orbitDotCyan]} />
       <View style={[styles.orbitDot, { borderColor: theme.colors.background.app }, styles.orbitDotTeal]} />
-      <View
-        style={[
-          styles.orbitCaption,
-          {
-            backgroundColor: theme.isLightMode
-              ? 'rgba(52, 91, 118, 0.86)'
-              : 'rgba(2, 6, 23, 0.70)',
-            borderColor: theme.colors.border.subtle,
-          },
-        ]}>
-        <Text style={[styles.orbitCaptionTitle, { color: theme.colors.text.primary }]}>Mapa orbital</Text>
-        <Text style={[styles.orbitCaptionText, { color: theme.colors.text.secondary }]}>
-          Cada ponto representa um objeto, uma origem e uma decisão possível.
-        </Text>
-      </View>
     </View>
   );
 }
@@ -249,7 +234,6 @@ export function HomeScreen() {
           <SafeAreaView style={styles.heroSafe}>
             <View style={[styles.inner, styles.heroInner, isDesktop && styles.heroInnerDesktop]}>
               <View style={styles.heroCopy}>
-                <Badge label="Kessler OS" tone="simulated" />
                 <Text style={[styles.heroTitle, isPhone && styles.heroTitlePhone]}>
                   A órbita da Terra está ficando cheia.
                 </Text>
@@ -303,21 +287,7 @@ export function HomeScreen() {
               </View>
             </View>
 
-            <VisualPanel source={visualAssets.backgrounds.skyFamily}>
-              <Text
-                style={[
-                  styles.visualKicker,
-                  {
-                    backgroundColor: theme.isLightMode
-                      ? 'rgba(52, 91, 118, 0.86)'
-                      : 'rgba(2, 6, 23, 0.64)',
-                    borderColor: theme.colors.border.subtle,
-                    color: theme.colors.text.primary,
-                  },
-                ]}>
-                O espaço também é infraestrutura da vida diária.
-              </Text>
-            </VisualPanel>
+            <VisualPanel source={visualAssets.backgrounds.skyFamily} />
           </View>
         </View>
 
@@ -677,21 +647,6 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
   },
-  visualKicker: {
-    ...typography.bodySmall,
-    backgroundColor: 'rgba(2, 6, 23, 0.64)',
-    borderColor: colors.border.subtle,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    bottom: spacing[4],
-    color: colors.text.primary,
-    fontWeight: '700',
-    left: spacing[4],
-    paddingHorizontal: spacing[4],
-    paddingVertical: spacing[3],
-    position: 'absolute',
-    right: spacing[4],
-  },
   orbitSection: {
     gap: spacing[8],
   },
@@ -741,7 +696,7 @@ const styles = StyleSheet.create({
   orbitEarth: {
     borderRadius: radius.pill,
     height: '30%',
-    opacity: 0.78,
+    opacity: 0.88,
     width: '42%',
   },
   orbitObject: {
@@ -774,26 +729,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.accent.teal,
     bottom: '22%',
     left: '24%',
-  },
-  orbitCaption: {
-    backgroundColor: 'rgba(2, 6, 23, 0.70)',
-    borderColor: colors.border.subtle,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    bottom: spacing[4],
-    gap: spacing[1],
-    left: spacing[4],
-    padding: spacing[4],
-    position: 'absolute',
-    right: spacing[4],
-  },
-  orbitCaptionTitle: {
-    ...typography.h3,
-    color: colors.text.primary,
-  },
-  orbitCaptionText: {
-    ...typography.caption,
-    color: colors.text.secondary,
   },
   inlineMetrics: {
     flexDirection: 'row',

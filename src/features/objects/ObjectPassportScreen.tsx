@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Badge, Button, Card } from '@/components/ui';
+import { Button, Card } from '@/components/ui';
 import { visualAssets } from '@/config/visualAssets';
 import { getScoredOrbitalObjectById } from '@/domain/repositories';
 import { DecisionReportPanel } from '@/features/reports/DecisionReportPanel';
@@ -18,9 +18,6 @@ import { ObjectTechnicalDetails } from './components/ObjectTechnicalDetails';
 import {
   formatObjectStatus,
   formatObjectType,
-  getConfidenceLabel,
-  getConfidenceTone,
-  getScoreTone,
 } from './object-formatters';
 import { getObjectVisualAsset } from './object-visuals';
 
@@ -89,13 +86,6 @@ export function ObjectPassportScreen({ objectId }: ObjectPassportScreenProps) {
 
               <View style={[styles.heroContent, isDesktop && styles.heroContentDesktop]}>
                 <View style={styles.heroCopy}>
-                  <View style={styles.heroBadges}>
-                    <Badge label="Ficha do objeto" tone="simulated" />
-                    <Badge
-                      label={getConfidenceLabel(object.dataConfidence)}
-                      tone={getConfidenceTone(object.dataConfidence)}
-                    />
-                  </View>
                   <Text style={[styles.heroTitle, isPhone && styles.heroTitlePhone]}>
                     {object.name}
                   </Text>
@@ -150,20 +140,6 @@ export function ObjectPassportScreen({ objectId }: ObjectPassportScreenProps) {
                       source={getObjectVisualAsset(object)}
                       contentFit="contain"
                       style={styles.heroObjectImage}
-                    />
-                  </View>
-                  <View style={styles.heroScoreRow}>
-                    <Badge
-                      label="Risco"
-                      score={object.scores.risk.score}
-                      tone={getScoreTone(object.scores.risk.level)}
-                      style={styles.heroScoreBadge}
-                    />
-                    <Badge
-                      label="Prioridade"
-                      score={object.scores.priority.score}
-                      tone={getScoreTone(object.scores.priority.level)}
-                      style={styles.heroScoreBadge}
                     />
                   </View>
                 </View>
@@ -252,12 +228,6 @@ const styles = StyleSheet.create({
     gap: spacing[4],
     maxWidth: 700,
   },
-  heroBadges: {
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing[2],
-  },
   heroTitle: {
     ...typography.display,
     color: colors.text.primary,
@@ -333,14 +303,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: -18,
     width: '78%',
-  },
-  heroScoreRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing[3],
-  },
-  heroScoreBadge: {
-    flexGrow: 1,
   },
   grid: {
     gap: spacing[5],

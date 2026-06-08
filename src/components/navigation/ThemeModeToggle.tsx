@@ -38,7 +38,7 @@ export function ThemeModeToggle({ compact = false }: ThemeModeToggleProps) {
           compact && styles.labelCompact,
           { color: theme.colors.text.primary },
         ]}>
-        {theme.isLightMode ? 'Escuro' : 'Claro'}
+        {theme.isLightMode ? 'Claro' : 'Escuro'}
       </Text>
     </Pressable>
   );

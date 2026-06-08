@@ -10,15 +10,13 @@ O app foi desenvolvido com React Native, Expo SDK 55 e TypeScript para a Global 
 
 ## Integrantes
 
-Preencha com os dados do grupo antes da entrega.
-
 | Nome | RM |
 | --- | --- |
-| Integrante 1 | RM |
-| Integrante 2 | RM |
-| Integrante 3 | RM |
-| Integrante 4 | RM |
-| Integrante 5 | RM |
+| Carlos Henrique | 558003 |
+| Mauricio Alves | 556214 |
+| Ian Monteiro | 558652 |
+| Bruno Silva | 550416 |
+| João Hoffmann | 550763 |
 
 ## Por que esse projeto existe
 
@@ -200,4 +198,4 @@ Cole os prints da aplicação nos espaços abaixo antes da entrega.
 - O repositório deve conter o código-fonte completo.
 - A pasta `node_modules` não deve ser enviada ao GitHub.
 - As instruções de execução estão neste README.
-- Os prints e dados dos integrantes devem ser preenchidos antes da entrega final.
+- Os prints devem ser preenchidos antes da entrega final.

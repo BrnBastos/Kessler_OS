@@ -12,7 +12,6 @@ import {
   formatObjectType,
   getConfidenceLabel,
   getConfidenceTone,
-  getScoreTone,
 } from '../object-formatters';
 import { getObjectVisualAsset } from '../object-visuals';
 
@@ -22,30 +21,6 @@ type ObjectCardProps = {
   onSelect: (object: ScoredOrbitalObject) => void;
   selected?: boolean;
 };
-
-function formatRiskLevel(level: ScoredOrbitalObject['scores']['risk']['level']) {
-  switch (level) {
-    case 'high':
-      return 'Alto';
-    case 'medium':
-      return 'Médio';
-    case 'low':
-      return 'Baixo';
-  }
-}
-
-function getStatusLead(status: ScoredOrbitalObject['status']) {
-  switch (status) {
-    case 'active':
-      return 'Ativo e acompanhado';
-    case 'inactive':
-      return 'Inativo em órbita';
-    case 'fragment':
-      return 'Fragmento monitorado';
-    case 'unknown':
-      return 'Identidade incerta';
-  }
-}
 
 function Signal({ label, value }: { label: string; value: string }) {
   const theme = useKesslerTheme();
@@ -68,7 +43,6 @@ function Signal({ label, value }: { label: string; value: string }) {
 export function ObjectCard({ object, onOpenPassport, onSelect, selected }: ObjectCardProps) {
   const { isPhone } = useBreakpoint();
   const theme = useKesslerTheme();
-  const riskTone = getScoreTone(object.scores.risk.level);
 
   return (
     <Card
@@ -87,38 +61,6 @@ export function ObjectCard({ object, onOpenPassport, onSelect, selected }: Objec
         <View style={[styles.orbitRing, styles.orbitRingOuter]} />
         <View style={[styles.orbitRing, styles.orbitRingInner]} />
         <Image source={getObjectVisualAsset(object)} contentFit="contain" style={styles.objectImage} />
-        <View
-          style={[
-            styles.statusPill,
-            {
-              backgroundColor: theme.isLightMode
-                ? 'rgba(52, 91, 118, 0.88)'
-                : 'rgba(7, 17, 30, 0.76)',
-              borderColor: theme.colors.border.subtle,
-            },
-          ]}>
-          <Text style={[styles.statusPillText, { color: theme.colors.text.primary }]}>
-            {getStatusLead(object.status)}
-          </Text>
-        </View>
-        <View
-          style={[
-            styles.riskPlate,
-            {
-              backgroundColor: theme.isLightMode
-                ? 'rgba(186, 230, 253, 0.22)'
-                : 'rgba(14, 165, 233, 0.16)',
-              borderColor: theme.colors.border.strong,
-            },
-            riskTone === 'danger' && styles.riskPlateDanger,
-          ]}>
-          <Text style={[styles.riskScore, { color: theme.colors.text.primary }]}>
-            {object.scores.risk.score}
-          </Text>
-          <Text style={[styles.riskLabel, { color: theme.colors.text.secondary }]}>
-            risco {formatRiskLevel(object.scores.risk.level)}
-          </Text>
-        </View>
       </View>
 
       <View style={styles.body}>
@@ -228,48 +170,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: -8,
     width: '64%',
-  },
-  statusPill: {
-    backgroundColor: 'rgba(7, 17, 30, 0.76)',
-    borderColor: colors.border.subtle,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    left: spacing[4],
-    paddingHorizontal: spacing[3],
-    paddingVertical: spacing[2],
-    position: 'absolute',
-    top: spacing[4],
-  },
-  statusPillText: {
-    ...typography.caption,
-    color: colors.text.primary,
-    fontWeight: '700',
-    textTransform: 'uppercase',
-  },
-  riskPlate: {
-    backgroundColor: 'rgba(14, 165, 233, 0.16)',
-    borderColor: 'rgba(56, 232, 255, 0.30)',
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    bottom: spacing[4],
-    gap: spacing[1],
-    left: spacing[4],
-    paddingHorizontal: spacing[4],
-    paddingVertical: spacing[3],
-    position: 'absolute',
-  },
-  riskPlateDanger: {
-    backgroundColor: 'rgba(239, 68, 68, 0.16)',
-    borderColor: 'rgba(239, 68, 68, 0.34)',
-  },
-  riskScore: {
-    ...typography.h2,
-    color: colors.text.primary,
-  },
-  riskLabel: {
-    ...typography.caption,
-    color: colors.text.secondary,
-    textTransform: 'uppercase',
   },
   body: {
     gap: spacing[4],
