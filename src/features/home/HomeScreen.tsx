@@ -190,7 +190,17 @@ function OrbitPreview() {
       <Image
         source={visualAssets.objects.damagedSatellite}
         contentFit="contain"
-        style={styles.orbitObject}
+        style={[styles.orbitObject, styles.orbitObjectPrimary]}
+      />
+      <Image
+        source={visualAssets.objects.rocketBody}
+        contentFit="contain"
+        style={[styles.orbitObject, styles.orbitObjectRocket]}
+      />
+      <Image
+        source={visualAssets.objects.servicingSatellite}
+        contentFit="contain"
+        style={[styles.orbitObject, styles.orbitObjectServicer]}
       />
       <View style={[styles.orbitDot, { borderColor: theme.colors.background.app }, styles.orbitDotDanger]} />
       <View style={[styles.orbitDot, { borderColor: theme.colors.background.app }, styles.orbitDotCyan]} />
@@ -725,12 +735,28 @@ const styles = StyleSheet.create({
     width: '42%',
   },
   orbitObject: {
-    height: '43%',
     position: 'absolute',
-    right: '-3%',
-    top: '8%',
+  },
+  orbitObjectPrimary: {
+    height: '34%',
+    right: '1%',
+    top: '11%',
     transform: [{ rotate: '-12deg' }],
-    width: '43%',
+    width: '34%',
+  },
+  orbitObjectRocket: {
+    height: '24%',
+    left: '8%',
+    top: '27%',
+    transform: [{ rotate: '18deg' }],
+    width: '24%',
+  },
+  orbitObjectServicer: {
+    bottom: '17%',
+    height: '21%',
+    right: '17%',
+    transform: [{ rotate: '-22deg' }],
+    width: '21%',
   },
   orbitDot: {
     borderColor: colors.background.app,

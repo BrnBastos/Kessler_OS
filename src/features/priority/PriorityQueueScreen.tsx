@@ -121,7 +121,7 @@ export function PriorityQueueScreen() {
         <SafeAreaView>
           <View style={styles.stack}>
             <VisualPageHero
-              backgroundImage={visualAssets.backgrounds.satelliteOverEarth}
+              backgroundImage={visualAssets.backgrounds.priorityQueue}
               description="A fila combina risco, valor de reuso, viabilidade e confiança em um sinal transparente. Ela serve para comparação, não para operações profissionais de colisão."
               eyebrow="Fila de Prioridade"
               foregroundImage={topObject ? getObjectVisualAsset(topObject) : visualAssets.objects.damagedSatellite}
