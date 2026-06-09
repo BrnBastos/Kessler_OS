@@ -114,13 +114,12 @@ export function ObjectCard({ object, onOpenPassport, onSelect, selected }: Objec
 
         <View style={[styles.actions, isPhone && styles.actionsPhone]}>
           <Button
-            fullWidth={isPhone}
             size="small"
             variant={selected ? 'ghost' : 'secondary'}
             onPress={() => onSelect(object)}>
             {selected ? 'Em foco' : 'Focar objeto'}
           </Button>
-          <Button fullWidth={isPhone} size="small" onPress={() => onOpenPassport(object)}>
+          <Button size="small" onPress={() => onOpenPassport(object)}>
             Ver ficha
           </Button>
         </View>
@@ -251,7 +250,7 @@ const styles = StyleSheet.create({
     gap: spacing[3],
   },
   actionsPhone: {
-    alignItems: 'stretch',
-    flexDirection: 'column',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
   },
 });

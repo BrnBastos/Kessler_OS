@@ -33,8 +33,6 @@ import { getObjectVisualAsset } from './object-visuals';
 const initialCatalogObjects = listScoredOrbitalObjects();
 
 function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
-  const { isPhone } = useBreakpoint();
-
   if (!object) {
     return (
       <Card style={styles.detailCard}>
@@ -125,7 +123,6 @@ function SelectedObjectDetails({ object }: { object?: ScoredOrbitalObject }) {
       </DisclosureSection>
 
       <Button
-        fullWidth={isPhone}
         variant="secondary"
         onPress={() =>
           router.push({
@@ -248,6 +245,7 @@ export function ObjectExplorerScreen() {
                   backgroundColor: theme.colors.background.surface,
                   borderColor: theme.colors.border.subtle,
                 },
+                isPhone && styles.heroPanelPhone,
               ]}>
               <Image
                 source={visualAssets.backgrounds.satelliteOverEarth}
@@ -260,7 +258,12 @@ export function ObjectExplorerScreen() {
                 end={{ x: 1, y: 1 }}
                 style={styles.heroOverlay}
               />
-              <View style={[styles.heroContent, isDesktop && styles.heroContentDesktop]}>
+              <View
+                style={[
+                  styles.heroContent,
+                  isDesktop && styles.heroContentDesktop,
+                  isPhone && styles.heroContentPhone,
+                ]}>
                 <View style={styles.heroCopy}>
                   
                   <Text style={[styles.heroTitle, isPhone && styles.heroTitlePhone]}>
@@ -383,6 +386,9 @@ const styles = StyleSheet.create({
     minHeight: 520,
     overflow: 'hidden',
   },
+  heroPanelPhone: {
+    minHeight: 420,
+  },
   heroImage: {
     bottom: 0,
     height: '100%',
@@ -405,6 +411,11 @@ const styles = StyleSheet.create({
     minHeight: 520,
     padding: spacing[5],
   },
+  heroContentPhone: {
+    gap: spacing[4],
+    minHeight: 420,
+    padding: spacing[4],
+  },
   heroContentDesktop: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -421,8 +432,8 @@ const styles = StyleSheet.create({
     letterSpacing: 0,
   },
   heroTitlePhone: {
-    fontSize: 39,
-    lineHeight: 46,
+    fontSize: 34,
+    lineHeight: 40,
   },
   heroDescription: {
     ...typography.body,
@@ -498,10 +509,10 @@ const styles = StyleSheet.create({
   metricGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: spacing[4],
+    gap: spacing[3],
   },
   metricCard: {
-    flexBasis: 220,
+    flexBasis: 136,
     flexGrow: 1,
   },
   focusGrid: {
@@ -611,7 +622,7 @@ const styles = StyleSheet.create({
     gap: spacing[3],
   },
   scoreBadge: {
-    flexBasis: 180,
+    flexBasis: 136,
     flexGrow: 1,
   },
   detailFacts: {

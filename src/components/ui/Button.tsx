@@ -11,6 +11,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { colors, gradients, radius, spacing, typography, useKesslerTheme } from '@/theme';
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -38,9 +39,12 @@ export function Button({
   ...pressableProps
 }: ButtonProps) {
   const theme = useKesslerTheme();
+  const { isPhone } = useBreakpoint();
   const fillStyle = [
     styles.fill,
     size === 'small' ? styles.fillSmall : styles.fillMedium,
+    isPhone && styles.fillPhone,
+    size === 'small' && isPhone && styles.fillSmallPhone,
     fullWidth && styles.fillFullWidth,
   ];
 
@@ -74,6 +78,7 @@ export function Button({
       style={({ pressed }) => [
         styles.base,
         styles[size],
+        isPhone && styles.basePhone,
         fullWidth && styles.fullWidth,
         pressed && !disabled && styles.pressed,
         disabled && styles.disabled,
@@ -111,6 +116,10 @@ const styles = StyleSheet.create({
     minWidth: 48,
     overflow: 'hidden',
   },
+  basePhone: {
+    minHeight: 44,
+    minWidth: 44,
+  },
   small: {
     minHeight: 44,
   },
@@ -129,10 +138,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing[5],
     paddingVertical: spacing[3],
   },
+  fillPhone: {
+    minHeight: 44,
+    paddingHorizontal: spacing[3],
+    paddingVertical: spacing[2],
+  },
   fillSmall: {
     minHeight: 44,
     paddingHorizontal: spacing[4],
     paddingVertical: spacing[2],
+  },
+  fillSmallPhone: {
+    minHeight: 40,
+    paddingHorizontal: spacing[3],
   },
   fillMedium: {
     minHeight: 48,

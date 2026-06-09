@@ -128,6 +128,8 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   objectGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: spacing[3],
   },
   objectOption: {
@@ -135,9 +137,11 @@ const styles = StyleSheet.create({
     borderColor: colors.border.subtle,
     borderRadius: radius.md,
     borderWidth: 1,
+    flexBasis: 150,
+    flexGrow: 1,
     gap: spacing[2],
-    minHeight: 92,
-    padding: spacing[4],
+    minHeight: 84,
+    padding: spacing[3],
   },
   objectHeader: {
     alignItems: 'flex-start',
@@ -168,11 +172,11 @@ const styles = StyleSheet.create({
     borderColor: colors.border.subtle,
     borderRadius: radius.md,
     borderWidth: 1,
-    flexBasis: 220,
+    flexBasis: 136,
     flexGrow: 1,
     gap: spacing[2],
-    minHeight: 116,
-    padding: spacing[4],
+    minHeight: 98,
+    padding: spacing[3],
   },
   missionLabel: {
     ...typography.bodySmall,

@@ -6,6 +6,7 @@ export const visualAssets = {
   backgrounds: {
     cityImpact: require('../../assets/images/generated_images/ChatGPT Image Jun 2, 2026, 03_18_42 PM (5).png') as VisualAsset,
     heroOrbit: require('../../assets/images/generated_images/ChatGPT Image Jun 2, 2026, 03_07_14 PM (2).png') as VisualAsset,
+    objectPassport: require('../../assets/images/generated_images/ChatGPT Image Jun 2, 2026, 03_07_14 PM (1).png') as VisualAsset,
     observatory: require('../../assets/images/generated_images/ChatGPT Image Jun 2, 2026, 03_18_41 PM (1).png') as VisualAsset,
     satelliteOverEarth: require('../../assets/images/generated_images/ChatGPT Image Jun 2, 2026, 03_07_08 PM (1).png') as VisualAsset,
     skyFamily: require('../../assets/images/generated_images/ChatGPT Image Jun 2, 2026, 03_18_41 PM (3).png') as VisualAsset,

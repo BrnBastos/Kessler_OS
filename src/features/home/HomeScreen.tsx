@@ -132,6 +132,7 @@ function VisualPanel({
   source: ImageSourcePropType;
 }) {
   const theme = useKesslerTheme();
+  const { isPhone } = useBreakpoint();
   const visualOverlayColors = ['rgba(2, 6, 23, 0.10)', 'rgba(2, 6, 23, 0.78)'] as const;
 
   return (
@@ -142,6 +143,7 @@ function VisualPanel({
           backgroundColor: theme.colors.background.surface,
           borderColor: theme.colors.border.subtle,
         },
+        isPhone && styles.visualPanelPhone,
       ]}>
       <Image source={source} contentFit="cover" style={styles.visualImage} />
       <LinearGradient
@@ -155,6 +157,7 @@ function VisualPanel({
 
 function OrbitPreview() {
   const theme = useKesslerTheme();
+  const { isPhone } = useBreakpoint();
 
   return (
     <View
@@ -164,6 +167,7 @@ function OrbitPreview() {
           backgroundColor: theme.colors.background.surface,
           borderColor: theme.colors.border.subtle,
         },
+        isPhone && styles.orbitPreviewPhone,
       ]}>
       <View
         style={[
@@ -199,7 +203,9 @@ export function HomeScreen() {
   const { height } = useWindowDimensions();
   const { isDesktop, isPhone } = useBreakpoint();
   const theme = useKesslerTheme();
-  const heroMinHeight = Math.min(Math.max(650, height * (isPhone ? 0.82 : 0.76)), isPhone ? 700 : 760);
+  const heroMinHeight = isPhone
+    ? Math.min(Math.max(480, height * 0.64), 560)
+    : Math.min(Math.max(650, height * 0.76), 760);
   const pageBackgroundStyle = { backgroundColor: theme.colors.background.app };
   const heroOverlayColors = [
     'rgba(2, 6, 23, 0.98)',
@@ -242,11 +248,10 @@ export function HomeScreen() {
                   material pode voltar a ter valor.
                 </Text>
                 <View style={[styles.actions, isPhone && styles.actionsPhone]}>
-                  <Button fullWidth={isPhone} onPress={() => router.push('/orbit')}>
+                  <Button onPress={() => router.push('/orbit')}>
                     Explorar mapa orbital
                   </Button>
                   <Button
-                    fullWidth={isPhone}
                     variant="secondary"
                     onPress={() => router.push('/prevention')}>
                     Entender o problema
@@ -257,7 +262,7 @@ export function HomeScreen() {
           </SafeAreaView>
         </View>
 
-        <View style={[styles.sectionBand, pageBackgroundStyle]}>
+        <View style={[styles.sectionBand, pageBackgroundStyle, isPhone && styles.sectionBandPhone]}>
           <View style={[styles.inner, styles.problemGrid, isDesktop && styles.twoColumnGrid]}>
             <View style={styles.sectionCopy}>
               <SectionTitle
@@ -291,7 +296,12 @@ export function HomeScreen() {
           </View>
         </View>
 
-        <View style={[styles.sectionBand, { backgroundColor: theme.colors.background.surfaceGlow }]}>
+        <View
+          style={[
+            styles.sectionBand,
+            { backgroundColor: theme.colors.background.surfaceGlow },
+            isPhone && styles.sectionBandPhone,
+          ]}>
           <View style={[styles.inner, styles.orbitSection, isDesktop && styles.twoColumnGrid]}>
             <OrbitPreview />
             <View style={styles.sectionCopy}>
@@ -309,7 +319,7 @@ export function HomeScreen() {
           </View>
         </View>
 
-        <View style={[styles.sectionBand, pageBackgroundStyle]}>
+        <View style={[styles.sectionBand, pageBackgroundStyle, isPhone && styles.sectionBandPhone]}>
           <View style={styles.inner}>
             <SectionTitle
               align="center"
@@ -348,6 +358,7 @@ export function HomeScreen() {
                 ? 'rgba(153, 246, 228, 0.16)'
                 : 'rgba(45, 212, 191, 0.05)',
             },
+            isPhone && styles.sectionBandPhone,
           ]}>
           <View style={[styles.inner, styles.reuseGrid, isDesktop && styles.twoColumnGrid]}>
             <VisualPanel source={visualAssets.backgrounds.reuseLab}>
@@ -392,7 +403,7 @@ export function HomeScreen() {
           </View>
         </View>
 
-        <View style={[styles.sectionBand, pageBackgroundStyle]}>
+        <View style={[styles.sectionBand, pageBackgroundStyle, isPhone && styles.sectionBandPhone]}>
           <View style={styles.inner}>
             <SectionTitle
               align="center"
@@ -419,7 +430,7 @@ export function HomeScreen() {
           </View>
         </View>
 
-        <View style={[styles.finalCta, pageBackgroundStyle]}>
+        <View style={[styles.finalCta, pageBackgroundStyle, isPhone && styles.finalCtaPhone]}>
           <Image source={visualAssets.backgrounds.cityImpact} contentFit="cover" style={styles.heroImage} />
           <LinearGradient
             colors={finalOverlayColors}
@@ -433,11 +444,10 @@ export function HomeScreen() {
               subtitle="Comece explorando objetos reais e simulados, depois avance para risco, missão, prevenção e reaproveitamento."
             />
             <View style={[styles.finalActions, isPhone && styles.finalActionsPhone]}>
-              <Button fullWidth={isPhone} onPress={() => router.push('/orbit')}>
+              <Button onPress={() => router.push('/orbit')}>
                 Começar exploração
               </Button>
               <Button
-                fullWidth={isPhone}
                 variant="secondary"
                 onPress={() => router.push('/impact')}>
                 Ver impacto do projeto
@@ -515,8 +525,8 @@ const styles = StyleSheet.create({
     letterSpacing: 0,
   },
   heroTitlePhone: {
-    fontSize: 40,
-    lineHeight: 46,
+    fontSize: 34,
+    lineHeight: 40,
   },
   heroSubtitle: {
     ...typography.body,
@@ -530,8 +540,8 @@ const styles = StyleSheet.create({
     gap: spacing[3],
   },
   actionsPhone: {
-    alignItems: 'stretch',
-    flexDirection: 'column',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
   },
   heroMetric: {
     backgroundColor: 'rgba(7, 17, 30, 0.76)',
@@ -556,6 +566,9 @@ const styles = StyleSheet.create({
   sectionBand: {
     paddingVertical: spacing[12],
     width: '100%',
+  },
+  sectionBandPhone: {
+    paddingVertical: spacing[8],
   },
   sectionBandRaised: {
     backgroundColor: colors.background.surfaceGlow,
@@ -602,6 +615,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   cardGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: spacing[3],
   },
   storyCard: {
@@ -609,6 +624,8 @@ const styles = StyleSheet.create({
     borderColor: colors.border.subtle,
     borderRadius: radius.lg,
     borderWidth: 1,
+    flexBasis: 148,
+    flexGrow: 1,
     gap: spacing[2],
     padding: spacing[4],
   },
@@ -630,6 +647,10 @@ const styles = StyleSheet.create({
     minHeight: 330,
     overflow: 'hidden',
     ...shadows.card,
+  },
+  visualPanelPhone: {
+    aspectRatio: 1.45,
+    minHeight: 220,
   },
   visualImage: {
     bottom: 0,
@@ -662,6 +683,10 @@ const styles = StyleSheet.create({
     minHeight: 360,
     overflow: 'hidden',
     ...shadows.glowBlue,
+  },
+  orbitPreviewPhone: {
+    aspectRatio: 1.28,
+    minHeight: 240,
   },
   orbitGlow: {
     backgroundColor: 'rgba(56, 232, 255, 0.12)',
@@ -736,6 +761,8 @@ const styles = StyleSheet.create({
     gap: spacing[3],
   },
   decisionGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: spacing[4],
     marginTop: spacing[6],
   },
@@ -747,10 +774,11 @@ const styles = StyleSheet.create({
     borderColor: colors.border.subtle,
     borderRadius: radius.lg,
     borderWidth: 1,
-    flex: 1,
+    flexBasis: 148,
+    flexGrow: 1,
     gap: spacing[3],
-    minHeight: 150,
-    padding: spacing[5],
+    minHeight: 132,
+    padding: spacing[4],
   },
   decisionLabel: {
     ...typography.h2,
@@ -815,6 +843,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     width: '100%',
   },
+  finalCtaPhone: {
+    minHeight: 420,
+  },
   finalInner: {
     alignItems: 'center',
     gap: spacing[6],
@@ -828,7 +859,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   finalActionsPhone: {
-    alignSelf: 'stretch',
-    flexDirection: 'column',
+    alignSelf: 'center',
+    flexDirection: 'row',
   },
 });

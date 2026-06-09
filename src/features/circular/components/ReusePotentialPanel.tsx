@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     gap: spacing[3],
   },
   metric: {
-    flexBasis: 170,
+    flexBasis: 136,
     flexGrow: 1,
   },
   materialList: {

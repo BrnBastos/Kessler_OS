@@ -71,9 +71,10 @@ export function ObjectPassportScreen({ objectId }: ObjectPassportScreenProps) {
                   backgroundColor: theme.colors.background.surface,
                   borderColor: theme.colors.border.subtle,
                 },
+                isPhone && styles.heroPanelPhone,
               ]}>
               <Image
-                source={visualAssets.backgrounds.satelliteOverEarth}
+                source={visualAssets.backgrounds.objectPassport}
                 contentFit="cover"
                 style={styles.heroImage}
               />
@@ -84,7 +85,12 @@ export function ObjectPassportScreen({ objectId }: ObjectPassportScreenProps) {
                 style={styles.heroOverlay}
               />
 
-              <View style={[styles.heroContent, isDesktop && styles.heroContentDesktop]}>
+              <View
+                style={[
+                  styles.heroContent,
+                  isDesktop && styles.heroContentDesktop,
+                  isPhone && styles.heroContentPhone,
+                ]}>
                 <View style={styles.heroCopy}>
                   <Text style={[styles.heroTitle, isPhone && styles.heroTitlePhone]}>
                     {object.name}
@@ -98,11 +104,10 @@ export function ObjectPassportScreen({ objectId }: ObjectPassportScreenProps) {
                     de reaproveitamento deste objeto orbital.
                   </Text>
                   <View style={[styles.heroActions, isPhone && styles.heroActionsPhone]}>
-                    <Button fullWidth={isPhone} variant="secondary" onPress={() => router.push('/orbit')}>
+                    <Button variant="secondary" onPress={() => router.push('/orbit')}>
                       Voltar ao mapa
                     </Button>
                     <Button
-                      fullWidth={isPhone}
                       onPress={() =>
                         router.push({
                           pathname: '/missions',
@@ -123,6 +128,7 @@ export function ObjectPassportScreen({ objectId }: ObjectPassportScreenProps) {
                         : 'rgba(2, 6, 23, 0.62)',
                       borderColor: theme.colors.border.subtle,
                     },
+                    isPhone && styles.heroObjectCardPhone,
                   ]}>
                   <View
                     style={[
@@ -196,6 +202,9 @@ const styles = StyleSheet.create({
     minHeight: 520,
     overflow: 'hidden',
   },
+  heroPanelPhone: {
+    minHeight: 430,
+  },
   heroImage: {
     bottom: 0,
     height: '100%',
@@ -218,6 +227,12 @@ const styles = StyleSheet.create({
     minHeight: 520,
     padding: spacing[5],
   },
+  heroContentPhone: {
+    gap: spacing[4],
+    minHeight: 430,
+    padding: spacing[4],
+    position: 'relative',
+  },
   heroContentDesktop: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -227,6 +242,7 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: spacing[4],
     maxWidth: 700,
+    zIndex: 1,
   },
   heroTitle: {
     ...typography.display,
@@ -234,8 +250,8 @@ const styles = StyleSheet.create({
     letterSpacing: 0,
   },
   heroTitlePhone: {
-    fontSize: 40,
-    lineHeight: 46,
+    fontSize: 34,
+    lineHeight: 40,
   },
   heroMeta: {
     ...typography.caption,
@@ -267,6 +283,16 @@ const styles = StyleSheet.create({
     minHeight: 320,
     overflow: 'hidden',
     padding: spacing[4],
+  },
+  heroObjectCardPhone: {
+    bottom: spacing[2],
+    minHeight: 190,
+    opacity: 0.84,
+    padding: spacing[3],
+    position: 'absolute',
+    right: spacing[2],
+    width: '46%',
+    zIndex: 0,
   },
   heroObjectStage: {
     backgroundColor: 'rgba(7, 17, 30, 0.48)',

@@ -101,7 +101,7 @@ function formatSavedAt(value?: string) {
 }
 
 export function ImpactDashboardScreen() {
-  const { isDesktop, isPhone } = useBreakpoint();
+  const { isDesktop } = useBreakpoint();
   const theme = useKesslerTheme();
   const [catalogObjects, setCatalogObjects] = useState<ScoredOrbitalObject[]>(initialObjects);
   const [savedScenarios, setSavedScenarios] = useState<SavedMissionScenario[]>([]);
@@ -160,10 +160,10 @@ export function ImpactDashboardScreen() {
               title="Mostre o valor do Kessler OS em uma visão pronta para apresentação."
               actions={
                 <>
-                  <Button fullWidth={isPhone} onPress={() => router.push('/missions')}>
+                  <Button onPress={() => router.push('/missions')}>
                     Rodar simulação
                   </Button>
-                  <Button fullWidth={isPhone} variant="secondary" onPress={() => router.push('/orbit')}>
+                  <Button variant="secondary" onPress={() => router.push('/orbit')}>
                     Abrir mapa orbital
                   </Button>
                 </>
@@ -330,10 +330,10 @@ const styles = StyleSheet.create({
   metricGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: spacing[4],
+    gap: spacing[3],
   },
   metricCard: {
-    flexBasis: 205,
+    flexBasis: 136,
     flexGrow: 1,
   },
   dashboardGrid: {
@@ -377,10 +377,10 @@ const styles = StyleSheet.create({
     borderColor: colors.border.subtle,
     borderRadius: radius.md,
     borderWidth: 1,
-    flexBasis: 220,
+    flexBasis: 148,
     flexGrow: 1,
     gap: spacing[2],
-    padding: spacing[4],
+    padding: spacing[3],
   },
   pillarLabel: {
     ...typography.bodySmall,
@@ -402,10 +402,10 @@ const styles = StyleSheet.create({
     borderColor: colors.border.subtle,
     borderRadius: radius.md,
     borderWidth: 1,
-    flexBasis: 150,
+    flexBasis: 118,
     flexGrow: 1,
     gap: spacing[1],
-    padding: spacing[4],
+    padding: spacing[3],
   },
   signalValue: {
     ...typography.h2,

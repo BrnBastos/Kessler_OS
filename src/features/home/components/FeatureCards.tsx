@@ -39,10 +39,10 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: spacing[4],
+    gap: spacing[3],
   },
   card: {
-    flexBasis: 260,
+    flexBasis: 148,
     flexGrow: 1,
     gap: spacing[3],
   },

@@ -83,14 +83,12 @@ export function SavedMissionScenarios({
 
               <View style={[styles.actions, isPhone && styles.actionsPhone]}>
                 <Button
-                  fullWidth={isPhone}
                   size="small"
                   variant="secondary"
                   onPress={() => onApplyScenario(scenario)}>
                   Carregar
                 </Button>
                 <Button
-                  fullWidth={isPhone}
                   size="small"
                   variant="danger"
                   onPress={() => onRemoveScenario(scenario.id)}>
@@ -234,7 +232,7 @@ const styles = StyleSheet.create({
     gap: spacing[3],
   },
   actionsPhone: {
-    alignItems: 'stretch',
-    flexDirection: 'column',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
   },
 });

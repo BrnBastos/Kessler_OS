@@ -128,10 +128,10 @@ const styles = StyleSheet.create({
     borderColor: colors.border.subtle,
     borderRadius: radius.md,
     borderWidth: 1,
-    flexBasis: 260,
+    flexBasis: 148,
     flexGrow: 1,
-    gap: spacing[3],
-    padding: spacing[4],
+    gap: spacing[2],
+    padding: spacing[3],
   },
   useCaseHeader: {
     alignItems: 'flex-start',
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
     flex: 1,
     fontWeight: '700',
-    minWidth: 150,
+    minWidth: 112,
   },
   body: {
     ...typography.bodySmall,

@@ -54,7 +54,7 @@ export function VisualPageHero({
           styles.content,
           isDesktop && styles.contentDesktop,
           isPhone && styles.contentPhone,
-      ]}>
+        ]}>
         <View style={[styles.copy, isDesktop && styles.copyDesktop]}>
           <Text style={styles.eyebrow}>{eyebrow}</Text>
           <Text style={[styles.title, isPhone && styles.titlePhone]}>{title}</Text>
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     ...shadows.card,
   },
   heroPhone: {
-    minHeight: 540,
+    minHeight: 430,
   },
   backgroundImage: {
     ...StyleSheet.absoluteFillObject,
@@ -110,8 +110,8 @@ const styles = StyleSheet.create({
     padding: spacing[8],
   },
   contentPhone: {
-    minHeight: 540,
-    padding: spacing[5],
+    minHeight: 430,
+    padding: spacing[4],
   },
   copy: {
     flex: 1,
@@ -134,6 +134,8 @@ const styles = StyleSheet.create({
   },
   titlePhone: {
     ...typography.h2,
+    fontSize: 28,
+    lineHeight: 34,
   },
   description: {
     ...typography.body,
@@ -148,9 +150,8 @@ const styles = StyleSheet.create({
     paddingTop: spacing[2],
   },
   actionsPhone: {
-    alignItems: 'stretch',
-    flexDirection: 'column',
-    width: '100%',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
   },
   visualPane: {
     alignItems: 'center',
@@ -163,7 +164,13 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   visualPanePhone: {
-    minHeight: 190,
+    bottom: spacing[2],
+    minHeight: 150,
+    opacity: 0.84,
+    position: 'absolute',
+    right: spacing[2],
+    width: '42%',
+    zIndex: 0,
   },
   objectStage: {
     alignItems: 'center',
@@ -174,7 +181,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   objectStagePhone: {
-    maxWidth: 280,
+    maxWidth: 180,
   },
   orbitRing: {
     borderColor: 'rgba(125, 211, 252, 0.2)',

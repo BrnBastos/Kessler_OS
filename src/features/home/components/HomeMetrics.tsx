@@ -71,10 +71,10 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: spacing[4],
+    gap: spacing[3],
   },
   card: {
-    flexBasis: 220,
+    flexBasis: 136,
     flexGrow: 1,
   },
 });

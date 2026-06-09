@@ -39,7 +39,7 @@ function getSortedObjects(objects: ScoredOrbitalObject[], sortMode: PrioritySort
 }
 
 export function PriorityQueueScreen() {
-  const { isDesktop, isPhone } = useBreakpoint();
+  const { isDesktop } = useBreakpoint();
   const theme = useKesslerTheme();
   const [allPriorityObjects, setAllPriorityObjects] =
     useState<ScoredOrbitalObject[]>(initialPriorityObjects);
@@ -130,7 +130,6 @@ export function PriorityQueueScreen() {
                 topObject ? (
                   <>
                     <Button
-                      fullWidth={isPhone}
                       onPress={() =>
                         router.push({
                           pathname: '/missions',
@@ -140,7 +139,6 @@ export function PriorityQueueScreen() {
                       Simular ação
                     </Button>
                     <Button
-                      fullWidth={isPhone}
                       variant="secondary"
                       onPress={() =>
                         router.push({
@@ -245,10 +243,10 @@ const styles = StyleSheet.create({
   metricGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: spacing[4],
+    gap: spacing[3],
   },
   metricCard: {
-    flexBasis: 220,
+    flexBasis: 136,
     flexGrow: 1,
   },
   sectionTitleRow: {

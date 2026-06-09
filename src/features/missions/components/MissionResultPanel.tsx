@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     gap: spacing[3],
   },
   metric: {
-    flexBasis: 160,
+    flexBasis: 136,
     flexGrow: 1,
   },
   scoreRow: {

@@ -34,7 +34,7 @@ const preventionTopics = [
 ];
 
 export function PreventionHubScreen() {
-  const { isDesktop, isPhone } = useBreakpoint();
+  const { isDesktop } = useBreakpoint();
   const theme = useKesslerTheme();
   const [missionPlan, setMissionPlan] = useState<ResponsibleOrbitInput>(defaultMissionPlan);
   const result = useMemo(() => calculateResponsibleOrbitScore(missionPlan), [missionPlan]);
@@ -63,10 +63,10 @@ export function PreventionHubScreen() {
               title="Cuidar da órbita começa antes do lançamento."
               actions={
                 <>
-                  <Button fullWidth={isPhone} onPress={() => router.push('/missions')}>
+                  <Button onPress={() => router.push('/missions')}>
                     Testar missão
                   </Button>
-                  <Button fullWidth={isPhone} variant="secondary" onPress={() => router.push('/orbit')}>
+                  <Button variant="secondary" onPress={() => router.push('/orbit')}>
                     Ver objetos atuais
                   </Button>
                 </>
@@ -166,10 +166,10 @@ const styles = StyleSheet.create({
   metricGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: spacing[4],
+    gap: spacing[3],
   },
   metricCard: {
-    flexBasis: 220,
+    flexBasis: 136,
     flexGrow: 1,
   },
   plannerGrid: {

@@ -5,9 +5,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { mockReuseMaterials } from '@/data';
 import { Badge, Button, Card, DataSourceNotice, Metric } from '@/components/ui';
 import { visualAssets } from '@/config/visualAssets';
+import { mockReuseMaterials } from '@/data';
 import {
   getOrbitalObjectRepositoryStatus,
   listScoredOrbitalObjects,
@@ -123,9 +123,9 @@ export function CircularEconomyScreen() {
   );
   const pageBackgroundStyle = { backgroundColor: theme.colors.background.app };
   const heroOverlayColors = [
-    'rgba(2, 6, 23, 0.96)',
+    'rgba(2, 6, 23, 0.86)',
     'rgba(2, 6, 23, 0.48)',
-    'rgba(2, 6, 23, 0.94)',
+    'rgba(2, 6, 23, 0.54)',
   ] as const;
 
   return (
@@ -142,6 +142,7 @@ export function CircularEconomyScreen() {
                   backgroundColor: theme.colors.background.surface,
                   borderColor: theme.colors.border.subtle,
                 },
+                isPhone && styles.heroPanelPhone,
               ]}>
               <Image source={visualAssets.backgrounds.reuseLab} contentFit="cover" style={styles.heroImage} />
               <LinearGradient
@@ -150,7 +151,12 @@ export function CircularEconomyScreen() {
                 end={{ x: 1, y: 1 }}
                 style={styles.heroOverlay}
               />
-              <View style={[styles.heroContent, isDesktop && styles.heroContentDesktop]}>
+              <View
+                style={[
+                  styles.heroContent,
+                  isDesktop && styles.heroContentDesktop,
+                  isPhone && styles.heroContentPhone,
+                ]}>
                 <View style={styles.heroCopy}>
                   <Text style={[styles.heroTitle, isPhone && styles.heroTitlePhone]}>
                     Nem todo objeto abandonado precisa continuar sendo lixo.
@@ -162,7 +168,6 @@ export function CircularEconomyScreen() {
                   {selectedObject && (
                     <View style={[styles.heroActions, isPhone && styles.heroActionsPhone]}>
                       <Button
-                        fullWidth={isPhone}
                         onPress={() =>
                           router.push({
                             pathname: '/missions',
@@ -172,7 +177,6 @@ export function CircularEconomyScreen() {
                         Simular reciclagem
                       </Button>
                       <Button
-                        fullWidth={isPhone}
                         variant="secondary"
                         onPress={() =>
                           router.push({
@@ -195,6 +199,7 @@ export function CircularEconomyScreen() {
                         : 'rgba(2, 6, 23, 0.42)',
                       borderColor: theme.colors.border.subtle,
                     },
+                    isPhone && styles.heroObjectStagePhone,
                   ]}>
                   <View style={[styles.heroOrbitRing, styles.heroOrbitOuter]} />
                   <View style={[styles.heroOrbitRing, styles.heroOrbitInner]} />
@@ -349,7 +354,6 @@ export function CircularEconomyScreen() {
                     </View>
                     <View style={[styles.actions, isPhone && styles.actionsPhone]}>
                       <Button
-                        fullWidth={isPhone}
                         variant="secondary"
                         onPress={() =>
                           router.push({
@@ -360,7 +364,6 @@ export function CircularEconomyScreen() {
                         Abrir ficha
                       </Button>
                       <Button
-                        fullWidth={isPhone}
                         onPress={() =>
                           router.push({
                             pathname: '/missions',
@@ -419,6 +422,9 @@ const styles = StyleSheet.create({
     minHeight: 560,
     overflow: 'hidden',
   },
+  heroPanelPhone: {
+    minHeight: 430,
+  },
   heroImage: {
     bottom: 0,
     height: '100%',
@@ -442,6 +448,12 @@ const styles = StyleSheet.create({
     minHeight: 560,
     padding: spacing[5],
   },
+  heroContentPhone: {
+    gap: spacing[4],
+    minHeight: 430,
+    padding: spacing[4],
+    position: 'relative',
+  },
   heroContentDesktop: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -451,6 +463,7 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: spacing[5],
     maxWidth: 720,
+    zIndex: 1,
   },
   heroTitle: {
     ...typography.display,
@@ -458,8 +471,8 @@ const styles = StyleSheet.create({
     letterSpacing: 0,
   },
   heroTitlePhone: {
-    fontSize: 39,
-    lineHeight: 46,
+    fontSize: 34,
+    lineHeight: 40,
   },
   heroDescription: {
     ...typography.body,
@@ -473,8 +486,8 @@ const styles = StyleSheet.create({
     gap: spacing[3],
   },
   heroActionsPhone: {
-    alignItems: 'stretch',
-    flexDirection: 'column',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
   },
   heroObjectStage: {
     alignSelf: 'stretch',
@@ -485,6 +498,15 @@ const styles = StyleSheet.create({
     flex: 0.72,
     minHeight: 300,
     overflow: 'hidden',
+  },
+  heroObjectStagePhone: {
+    bottom: spacing[2],
+    minHeight: 190,
+    opacity: 0.84,
+    position: 'absolute',
+    right: spacing[2],
+    width: '46%',
+    zIndex: 0,
   },
   heroOrbitRing: {
     borderColor: 'rgba(45, 212, 191, 0.22)',
@@ -516,10 +538,10 @@ const styles = StyleSheet.create({
   metricGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: spacing[4],
+    gap: spacing[3],
   },
   metricCard: {
-    flexBasis: 220,
+    flexBasis: 136,
     flexGrow: 1,
   },
   flowCard: {
@@ -715,9 +737,8 @@ const styles = StyleSheet.create({
     gap: spacing[3],
   },
   actionsPhone: {
-    alignItems: 'stretch',
-    flexDirection: 'column',
-    width: '100%',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
   },
   emptyCard: {
     gap: spacing[2],

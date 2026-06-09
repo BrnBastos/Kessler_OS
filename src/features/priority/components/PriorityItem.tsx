@@ -111,7 +111,6 @@ export function PriorityItem({ object, rank }: PriorityItemProps) {
 
       <View style={[styles.actions, isPhone && styles.actionsPhone]}>
         <Button
-          fullWidth={isPhone}
           size="small"
           variant="secondary"
           onPress={() =>
@@ -123,7 +122,6 @@ export function PriorityItem({ object, rank }: PriorityItemProps) {
           Abrir ficha
         </Button>
         <Button
-          fullWidth={isPhone}
           size="small"
           onPress={() =>
             router.push({
@@ -230,7 +228,7 @@ const styles = StyleSheet.create({
     gap: spacing[3],
   },
   actionsPhone: {
-    alignItems: 'stretch',
-    flexDirection: 'column',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
   },
 });

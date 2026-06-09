@@ -136,7 +136,6 @@ export function MissionSimulatorScreen() {
                 selectedObject ? (
                   <>
                     <Button
-                      fullWidth={isPhone}
                       onPress={() =>
                         router.push({
                           pathname: '/orbit/[id]',
@@ -145,12 +144,12 @@ export function MissionSimulatorScreen() {
                       }>
                       Abrir ficha
                     </Button>
-                    <Button fullWidth={isPhone} variant="secondary" onPress={() => router.push('/priority')}>
+                    <Button variant="secondary" onPress={() => router.push('/priority')}>
                       Ver prioridades
                     </Button>
                   </>
                 ) : (
-                  <Button fullWidth={isPhone} onPress={() => router.push('/priority')}>
+                  <Button onPress={() => router.push('/priority')}>
                     Ver prioridades
                   </Button>
                 )
@@ -218,7 +217,7 @@ export function MissionSimulatorScreen() {
                         pontuações principais via AsyncStorage.
                       </Text>
                     </View>
-                    <Button fullWidth={isPhone} onPress={handleSaveScenario}>
+                    <Button onPress={handleSaveScenario}>
                       Salvar no histórico
                     </Button>
                   </Card>
@@ -273,10 +272,10 @@ const styles = StyleSheet.create({
   metricGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: spacing[4],
+    gap: spacing[3],
   },
   metricCard: {
-    flexBasis: 220,
+    flexBasis: 136,
     flexGrow: 1,
   },
   simulatorGrid: {
