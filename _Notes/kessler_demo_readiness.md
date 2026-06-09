@@ -16,8 +16,6 @@ npm run export:web
 4. Open `/priority` to show ranked attention.
 5. Open `/missions` to simulate inspection, deorbit, capture, or recycle.
 6. Open `/circular` to show reuse potential and material categories.
-7. Open `/prevention` to explain responsible mission design.
-8. Open `/impact` to close with evaluator-friendly metrics.
 
 ## Deployment Options
 

@@ -253,8 +253,8 @@ export function HomeScreen() {
                   </Button>
                   <Button
                     variant="secondary"
-                    onPress={() => router.push('/prevention')}>
-                    Entender o problema
+                    onPress={() => router.push('/priority')}>
+                    Ver prioridades
                   </Button>
                 </View>
               </View>
@@ -441,7 +441,7 @@ export function HomeScreen() {
               align="center"
               eyebrow="O futuro da órbita"
               title="O futuro da órbita depende do que fazemos agora."
-              subtitle="Comece explorando objetos reais e simulados, depois avance para risco, missão, prevenção e reaproveitamento."
+              subtitle="Comece explorando objetos reais e simulados, depois avance para risco, missão e reaproveitamento."
             />
             <View style={[styles.finalActions, isPhone && styles.finalActionsPhone]}>
               <Button onPress={() => router.push('/orbit')}>
@@ -449,8 +449,8 @@ export function HomeScreen() {
               </Button>
               <Button
                 variant="secondary"
-                onPress={() => router.push('/impact')}>
-                Ver impacto do projeto
+                onPress={() => router.push('/missions')}>
+                Simular missão
               </Button>
             </View>
           </View>

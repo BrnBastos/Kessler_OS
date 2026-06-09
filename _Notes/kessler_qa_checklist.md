@@ -34,8 +34,6 @@ npm run export:web
 - `/priority`
 - `/missions`
 - `/circular`
-- `/prevention`
-- `/impact`
 
 ## Mobile Layout Checks
 
@@ -46,7 +44,7 @@ npm run export:web
 
 ## Web Layout Checks
 
-- Top navigation shows all routes, including Impact.
+- Top navigation shows all main routes.
 - Two-column layouts keep useful spacing on desktop.
 - Orbital map markers remain visible and selectable.
 - Report panels do not stretch text beyond readable width.

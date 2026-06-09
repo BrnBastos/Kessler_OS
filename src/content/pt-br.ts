@@ -44,16 +44,6 @@ export const ptBR = {
       href: '/circular',
       label: 'Reaproveitamento',
     },
-    {
-      description: 'Entenda práticas de prevenção',
-      href: '/prevention',
-      label: 'Prevenção',
-    },
-    {
-      description: 'Mostre o impacto do projeto',
-      href: '/impact',
-      label: 'Impacto',
-    },
   ],
 } as const;
 

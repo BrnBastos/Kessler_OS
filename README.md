@@ -54,8 +54,6 @@ O projeto conversa diretamente com temas da economia espacial:
 - Organiza uma Fila de Prioridade com busca, filtros e ordenação para comparar objetos que merecem atenção.
 - Simula missões de monitoramento, inspeção, desvio, retirada de órbita, captura e reciclagem.
 - Estima possibilidades de Reaproveitamento Orbital.
-- Explica práticas de Prevenção para missões mais responsáveis.
-- Resume o projeto em um Painel de Impacto.
 - Salva cenários localmente com AsyncStorage e mantém um histórico recente no dispositivo.
 - Consome dados externos da CelesTrak, com fallback local para manter a demo funcionando.
 - Mostra estados de carregamento com skeleton enquanto os dados públicos são verificados.
@@ -154,8 +152,6 @@ EXPO_SMOKE_BASE_URL=http://localhost:8081 npm run smoke:routes
 - `/priority` — Fila de Prioridade
 - `/missions` — Simulador de Missão
 - `/circular` — Reaproveitamento Orbital
-- `/prevention` — Central de Prevenção
-- `/impact` — Painel de Impacto
 
 ## Prints da Aplicação
 

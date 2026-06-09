@@ -9,6 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { radius, spacing, typography, useKesslerTheme } from '@/theme';
 
 type DisclosureSectionProps = {
@@ -31,6 +32,7 @@ export function DisclosureSection({
   title,
 }: DisclosureSectionProps) {
   const [expanded, setExpanded] = useState(defaultExpanded);
+  const { isPhone } = useBreakpoint();
   const theme = useKesslerTheme();
 
   return (
@@ -44,15 +46,18 @@ export function DisclosureSection({
         style,
       ]}>
       <Pressable
+        accessibilityLabel={`${expanded ? expandedLabel : collapsedLabel}: ${title}`}
         accessibilityRole="button"
         accessibilityState={{ expanded }}
         onPress={() => setExpanded((current) => !current)}
         style={({ pressed }) => [styles.header, pressed && styles.pressed]}>
         <Text style={[styles.title, { color: theme.colors.text.primary }]}>{title}</Text>
         <View style={styles.action}>
-          <Text style={[styles.actionLabel, { color: theme.colors.accent.cyan }]}>
-            {expanded ? expandedLabel : collapsedLabel}
-          </Text>
+          {!isPhone && (
+            <Text style={[styles.actionLabel, { color: theme.colors.accent.cyan }]}>
+              {expanded ? expandedLabel : collapsedLabel}
+            </Text>
+          )}
           <SymbolView
             name={{ android: 'chevron_right', ios: 'chevron.right', web: 'chevron_right' }}
             size={16}
@@ -80,6 +85,7 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: spacing[3],
     justifyContent: 'space-between',
     minHeight: 48,
@@ -90,11 +96,14 @@ const styles = StyleSheet.create({
     ...typography.bodySmall,
     flex: 1,
     fontWeight: '700',
+    minWidth: 118,
   },
   action: {
     alignItems: 'center',
     flexDirection: 'row',
+    flexShrink: 0,
     gap: spacing[2],
+    marginLeft: 'auto',
   },
   actionLabel: {
     ...typography.caption,

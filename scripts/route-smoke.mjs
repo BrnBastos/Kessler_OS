@@ -7,8 +7,6 @@ const routes = [
   '/missions',
   '/missions?missionType=recycle&objectId=obj-envisat',
   '/circular',
-  '/prevention',
-  '/impact',
 ];
 
 async function checkRoute(route) {

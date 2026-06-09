@@ -16,7 +16,7 @@ type SectionPlaceholderScreenProps = {
   cards: PlaceholderCard[];
   description: string;
   eyebrow: string;
-  primaryActionHref?: '/' | '/orbit' | '/priority' | '/missions' | '/circular' | '/prevention';
+  primaryActionHref?: '/' | '/orbit' | '/priority' | '/missions' | '/circular';
   primaryActionLabel?: string;
   title: string;
 };

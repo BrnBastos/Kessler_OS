@@ -190,25 +190,7 @@ export function CircularEconomyScreen() {
                   )}
                 </View>
 
-                <View
-                  style={[
-                    styles.heroObjectStage,
-                    {
-                      backgroundColor: theme.isLightMode
-                        ? 'rgba(64, 109, 140, 0.52)'
-                        : 'rgba(2, 6, 23, 0.42)',
-                      borderColor: theme.colors.border.subtle,
-                    },
-                    isPhone && styles.heroObjectStagePhone,
-                  ]}>
-                  <View style={[styles.heroOrbitRing, styles.heroOrbitOuter]} />
-                  <View style={[styles.heroOrbitRing, styles.heroOrbitInner]} />
-                  <Image
-                    source={visualAssets.objects.recyclingModule}
-                    contentFit="contain"
-                    style={styles.heroObject}
-                  />
-                </View>
+               
               </View>
             </View>
 

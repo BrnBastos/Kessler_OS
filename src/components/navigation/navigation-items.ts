@@ -2,7 +2,7 @@ import { ptBR } from '@/content/pt-br';
 
 export type NavigationItem = {
   description: string;
-  href: '/' | '/orbit' | '/priority' | '/missions' | '/circular' | '/prevention' | '/impact';
+  href: '/' | '/orbit' | '/priority' | '/missions' | '/circular';
   label: string;
 };
 

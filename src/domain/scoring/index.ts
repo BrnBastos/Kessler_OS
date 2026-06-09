@@ -7,7 +7,6 @@ import { calculateRiskScore } from './risk-score';
 export * from './forge-value-score';
 export * from './mission-estimator';
 export * from './priority-score';
-export * from './responsible-orbit-score';
 export * from './risk-score';
 export * from './score-types';
 

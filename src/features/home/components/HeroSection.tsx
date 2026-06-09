@@ -23,8 +23,8 @@ export function HeroSection() {
         </Text>
         <View style={styles.actions}>
           <Button onPress={() => router.push('/orbit')}>Explorar mapa orbital</Button>
-          <Button variant="secondary" onPress={() => router.push('/prevention')}>
-            Entender o problema
+          <Button variant="secondary" onPress={() => router.push('/priority')}>
+            Ver prioridades
           </Button>
         </View>
       </View>
