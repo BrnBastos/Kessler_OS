@@ -155,31 +155,23 @@ EXPO_SMOKE_BASE_URL=http://localhost:8081 npm run smoke:routes
 
 ## Prints da Aplicação
 
-Cole os prints da aplicação nos espaços abaixo antes da entrega.
+Os screenshots estão em `assets/images/prints`.
 
-### Print 1 — Home
+### Home — Desktop
 
-> Cole aqui o print da Home.
+<img src="assets/images/prints/Screenshot%202026-06-08%20at%2021.33.53.png" alt="Home do Kessler OS em desktop" width="100%" />
 
-### Print 2 — Mapa Orbital
+### Mapa Orbital — Desktop
 
-> Cole aqui o print do Mapa Orbital.
+<img src="assets/images/prints/Screenshot%202026-06-08%20at%2021.34.11.png" alt="Mapa orbital do Kessler OS em desktop" width="100%" />
 
-### Print 3 — Ficha do Objeto
+### Home — Mobile Escuro
 
-> Cole aqui o print da Ficha do Objeto.
+<img src="assets/images/prints/Screenshot%202026-06-08%20at%2021.34.46.png" alt="Home do Kessler OS em mobile no modo escuro" width="360" />
 
-### Print 4 — Simulador de Missão
+### Home — Mobile Claro
 
-> Cole aqui o print do Simulador de Missão.
-
-### Print 5 — Reaproveitamento Orbital
-
-> Cole aqui o print da tela de Reaproveitamento Orbital.
-
-### Print 6 — Mobile
-
-> Cole aqui um print da aplicação rodando em modo mobile.
+<img src="assets/images/prints/Screenshot%202026-06-08%20at%2021.35.32.png" alt="Home do Kessler OS em mobile no modo claro" width="360" />
 
 ## Dados e Limites do Protótipo
 
